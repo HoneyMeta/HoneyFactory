@@ -1,0 +1,161 @@
+{
+  "name": "示范工厂联调冒烟",
+  "plant": "foundry-housing",
+  "speed": 30,
+  "steps": [
+    {
+      "kind": "setpoint",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "value": 90
+    },
+    {
+      "kind": "assert",
+      "via": "rest",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 90
+    },
+    {
+      "kind": "assert",
+      "via": "opcua",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 90,
+      "within": 6
+    },
+    {
+      "kind": "assert",
+      "via": "mqtt",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 90,
+      "within": 6
+    },
+    {
+      "kind": "fault",
+      "station": "CNC1",
+      "fault": "failure"
+    },
+    {
+      "kind": "wait_until",
+      "cond": {
+        "kind": "tag",
+        "id": "CNC1",
+        "tag": "Common/State",
+        "op": "==",
+        "value": "Stopped"
+      },
+      "timeout": 120
+    },
+    {
+      "kind": "assert",
+      "via": "mqtt",
+      "station": "CNC1",
+      "tag": "Common/State",
+      "op": "==",
+      "value": "Stopped",
+      "within": 6
+    },
+    {
+      "kind": "assert_mes",
+      "topic": "event",
+      "match": {
+        "station": "CNC1",
+        "kind": "fault"
+      },
+      "within": 60
+    },
+    {
+      "kind": "comm_fault",
+      "protocol": "mqtt",
+      "mode": "freeze"
+    },
+    {
+      "kind": "setpoint",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "value": 80
+    },
+    {
+      "kind": "wait",
+      "seconds": 60
+    },
+    {
+      "kind": "assert",
+      "via": "mqtt",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 90,
+      "name": "MQTT 冻结期间值不更新"
+    },
+    {
+      "kind": "comm_fault",
+      "protocol": "mqtt",
+      "mode": ""
+    },
+    {
+      "kind": "assert",
+      "via": "mqtt",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 80,
+      "within": 6,
+      "name": "MQTT 恢复后收到新值"
+    },
+    {
+      "kind": "comm_fault",
+      "protocol": "opcua",
+      "mode": "freeze"
+    },
+    {
+      "kind": "setpoint",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "value": 70
+    },
+    {
+      "kind": "wait",
+      "seconds": 30
+    },
+    {
+      "kind": "assert",
+      "via": "opcua",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 80,
+      "name": "OPC UA 冻结期间值不更新"
+    },
+    {
+      "kind": "comm_fault",
+      "protocol": "opcua",
+      "mode": ""
+    },
+    {
+      "kind": "assert",
+      "via": "opcua",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "op": "==",
+      "value": 70,
+      "within": 6,
+      "name": "OPC UA 恢复后读到新值"
+    },
+    {
+      "kind": "wait",
+      "seconds": 600
+    },
+    {
+      "kind": "assert_kpi",
+      "key": "good",
+      "op": ">",
+      "value": 0
+    }
+  ]
+}

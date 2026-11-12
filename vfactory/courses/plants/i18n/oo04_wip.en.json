@@ -1,0 +1,15 @@
+{
+ "某支架厂·投料批量": "Bracket Factory · Feed Lot Size",
+ "支架": "Bracket",
+ "收货区": "Receiving Area",
+ "生产区": "Production Area",
+ "仓储区": "Storage Area",
+ "投料": "Feed Material",
+ "线边库": "Line-Side Inventory",
+ "1#冲压": "#1 Stamping",
+ "缓存 1": "Buffer 1",
+ "2#焊接": "#2 Welding",
+ "缓存 2": "Buffer 2",
+ "3#喷涂": "#3 Painting",
+ "成品库": "Finished Goods Warehouse"
+}

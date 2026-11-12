@@ -1,0 +1,661 @@
+{
+ "id": "foundry",
+ "name": "铸造厂运营（综合）",
+ "desc": "从某小型铸造厂到完整的某转向器壳体铸造厂：冷却与产能、批处理、质量追溯、熔炼能耗、排故，最后读懂一座完整工厂。",
+ "level": 3,
+ "order": 3,
+ "chapters": [
+  {
+   "id": "c1",
+   "title": "流程与产能",
+   "lessons": [
+    {
+     "id": "f01",
+     "title": "冷却线决定产能",
+     "kind": "plant",
+     "plant": "fd01_cooling",
+     "time_h": 8,
+     "warmup_h": 1,
+     "seed": 37,
+     "brief_md": "### 任务：铸型必须冷够 40 分钟\n\n某小型铸造厂：造型机约 44 秒造一型（每小时 80 多型），浇注后的铸型放上 **冷却线（COOL）** 冷却，再落砂、抛丸、打磨、终检。\n工艺要求：**每型在冷却线上至少冷却 40 分钟**，每型占 1 米。冷却线现在 **24 米长、速度 0.01 m/s**——刚好冷 40 分钟，\n但它每秒只能\"吐出\"0.01 米，也就是每 100 秒才下线一型。\n\n1. 运行 1 小时，看造型机和浇注是不是经常\"堵料\"。\n2. 回答：冷却线现在每小时最多能通过多少型？\n3. 改造冷却线（加长每米 0.4 万元，速度可以调），让 **小时产出 ≥ 65 件**，并且 **冷却时间仍然 ≥ 40 分钟**，投资不超过预算。\n\n> 冷却时间 = 长度 ÷ 速度；通过能力 = 速度 ÷ 每型间距。间距是工艺要求，不能改。",
+     "hints": [
+      "只提速不加长，冷却时间就不够；只加长不提速，通过能力不变。两个一起改。",
+      "要每小时通过 80 型，速度至少 80 × 1 米 ÷ 3600 秒 ≈ 0.022 m/s；冷 40 分钟需要多长？",
+      "在\"分析\"里看造型机的堵料比例，改完以后应该明显下降。"
+     ],
+     "rules": [
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 65,
+       "weight": 40
+      },
+      {
+       "key": "cool",
+       "kind": "limit",
+       "metric": "cool_min.COOL",
+       "op": ">=",
+       "value": 40,
+       "weight": 20,
+       "label": "冷却时间 ≥ 40 分钟"
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 220,
+       "weight": 20,
+       "label": "投资合计 ≤ 220 万元"
+      },
+      {
+       "key": "q_cap",
+       "kind": "answer",
+       "label": "冷却线现在（24 米、0.01 m/s）每小时最多通过几型",
+       "choices": [
+        "24 型",
+        "36 型",
+        "60 型",
+        "90 型"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "冷却线每秒走 0.01 米，每小时走 36 米；每型占 1 米，所以每小时最多下线 36 型。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "MOLD",
+       "POUR",
+       "SHAKE",
+       "SHOT",
+       "GRIND",
+       "QC",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ],
+       "conveyor": [
+        "pitch_m",
+        "run_kw",
+        "idle_kw"
+       ],
+       "batch": [
+        "time",
+        "run_kw",
+        "idle_kw"
+       ],
+       "inspect": [
+        "time",
+        "pod_pct",
+        "false_pct"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "COOL",
+        "set": {
+         "params.length_m": 60,
+         "params.speed_mps": 0.025
+        }
+       }
+      ],
+      "answers": {
+       "q_cap": 1
+      }
+     }
+    },
+    {
+     "id": "f02",
+     "title": "抛丸批量与在制品",
+     "kind": "plant",
+     "plant": "fd02_shot",
+     "time_h": 8,
+     "warmup_h": 1,
+     "seed": 41,
+     "brief_md": "### 任务：批量不是越大越好\n\n**吊钩抛丸机（SHOT）** 一次挂一批铸件，抛一批固定 10 分钟。现在每批要凑够 **60 件**才开机（最长等 90 分钟），\n结果铸件在\"待抛丸\"里一等就是很久，在制品多、生产周期长。\n\n1. 运行一段时间，看待抛丸缓存的件数怎么变化、抛丸机的运行比例。\n2. 回答：批量太大时，铸件大部分时间在做什么？\n3. 调整 **每批件数** 和 **凑批最长等待**，让：平均生产周期 ≤ 70 分钟，同时小时产出 ≥ 65 件。\n\n> 抛一批的时间（10 分钟）是工艺参数，不能改。",
+     "hints": [
+      "抛丸机能力 = 每批件数 × 6 批/小时；来料约每小时 69 件，批量至少要多大？",
+      "批量越大，第一件要等后面的件凑齐，平均等待约 批量 ÷ 2 个到达间隔。",
+      "凑批最长等待也要跟着改小，否则来料少时会一直等。"
+     ],
+     "rules": [
+      {
+       "key": "lead",
+       "kind": "kpi",
+       "metric": "lead_mean_min",
+       "op": "<=",
+       "value": 70,
+       "weight": 40
+      },
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 65,
+       "weight": 40
+      },
+      {
+       "key": "q_wait",
+       "kind": "answer",
+       "label": "批量太大时，铸件大部分时间在",
+       "choices": [
+        "抛丸",
+        "等着凑够一批",
+        "打磨",
+        "冷却"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "每批要凑够 60 件才开机，先到的铸件要等后面的件凑齐，抛丸本身只要 10 分钟，大部分时间都花在等凑批上。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "MOLD",
+       "POUR",
+       "COOL",
+       "SHAKE",
+       "GRIND",
+       "QC",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ],
+       "conveyor": [
+        "speed_mps",
+        "pitch_m",
+        "run_kw",
+        "idle_kw"
+       ],
+       "batch": [
+        "time",
+        "run_kw",
+        "idle_kw"
+       ],
+       "inspect": [
+        "time",
+        "pod_pct",
+        "false_pct"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "SHOT",
+        "set": {
+         "params.batch": 16,
+         "params.max_wait_min": 15
+        }
+       }
+      ],
+      "answers": {
+       "q_wait": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "title": "质量与能耗",
+   "lessons": [
+    {
+     "id": "f03",
+     "title": "质量追溯：缺陷从哪来",
+     "kind": "plant",
+     "plant": "fd03_quality",
+     "time_h": 8,
+     "warmup_h": 1,
+     "seed": 43,
+     "brief_md": "### 任务：废品率突然升到 10% 以上\n\n终检（QC）发现大量 **冷隔** 缺陷，被判废。冷隔是在落砂后才看得出来的，但它不是落砂造成的。\n\n1. 运行后打开\"零件\"面板，挑几件被判废的铸件看履历：它们经过了哪些设备、每道工序记下了什么数据（比如浇注温度 temp）。\n2. 在图上 **点选缺陷的来源工序**，并回答原因。\n3. 改该工序的工艺设定，让 **废品率 ≤ 3%**。\n\n> 提示：浇注工序的\"写入零件属性\"里有浇注温度的设定（`normal(均值, 标准差)`），铁水温度标准是 1440 ℃（不要低于 1435 ℃）。",
+     "hints": [
+      "一件铸件的履历里有每道工序的时间和属性，被判废的件和合格件比一比，哪个属性不一样？",
+      "冷隔：铁水温度太低，两股铁水汇合时没融合好。",
+      "温度平均值调回 1440 ℃（不要低于 1435），标准差 10 不变。"
+     ],
+     "rules": [
+      {
+       "key": "q_src",
+       "kind": "answer",
+       "label": "冷隔缺陷来自哪道工序",
+       "pick": true,
+       "kinds": [
+        "processor",
+        "batch",
+        "conveyor",
+        "inspect"
+       ],
+       "answer": [
+        "POUR"
+       ],
+       "weight": 25,
+       "explain": "冷隔是浇注时铁水温度太低、两股铁水没融合好造成的，只是到落砂后才看得出来，源头在浇注工序 POUR。"
+      },
+      {
+       "key": "q_cause",
+       "kind": "answer",
+       "label": "冷隔的直接原因",
+       "choices": [
+        "砂型水分高",
+        "浇注温度偏低",
+        "打磨用力过猛",
+        "终检太严"
+       ],
+       "answer": 1,
+       "weight": 25,
+       "explain": "看被判废铸件的履历：它们的浇注温度明显低于 1440 ℃ 的标准，铁水太凉，汇合处没融合好，就形成冷隔。"
+      },
+      {
+       "key": "scrap",
+       "kind": "kpi",
+       "metric": "scrap_rate",
+       "op": "<=",
+       "value": 0.03,
+       "weight": 50,
+       "label": "废品率 ≤ 3%"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "MOLD",
+       "COOL",
+       "SHAKE",
+       "SHOT",
+       "GRIND",
+       "QC",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ],
+       "conveyor": [
+        "speed_mps",
+        "pitch_m",
+        "run_kw",
+        "idle_kw"
+       ],
+       "batch": [
+        "time",
+        "run_kw",
+        "idle_kw"
+       ],
+       "inspect": [
+        "time",
+        "pod_pct",
+        "false_pct"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "POUR",
+        "set": {
+         "params.attrs": {
+          "temp": "normal(1440,10)"
+         }
+        }
+       }
+      ],
+      "answers": {
+       "q_src": "POUR",
+       "q_cause": 1
+      }
+     }
+    },
+    {
+     "id": "f04",
+     "title": "能耗：别让电炉空等",
+     "kind": "plant",
+     "plant": "fd04_energy",
+     "time_h": 8,
+     "warmup_h": 1,
+     "seed": 47,
+     "brief_md": "### 任务：把单件电耗降下来\n\n熔炼是铸造厂的用电大户。两台中频炉（每台熔一包约 52 秒 —— 这里一\"件\"代表一型所需的铁水）都开着，\n但下游造型浇注 60 秒才要一包铁水。炉子没活干时也要 **保温，待机功率 150 kW**。\n\n1. 运行后打开\"能耗\"分析，看两台电炉各自的运行比例和用电。\n2. 回答：两台炉同时开时，每台炉的利用率大约是多少？\n3. 在不降低产量的前提下，让 **单件电耗 ≤ 13 kWh**，**小时产出 ≥ 55 件**。\n\n> 电炉的熔化时间和功率是设备参数，不能改。",
+     "hints": [
+      "造型每小时要约 60 包铁水，一台炉每小时能熔约 69 包。",
+      "多开的那台炉大部分时间在保温空耗。",
+      "删除一台炉（只断开连线的话它还在保温耗电，单耗下不来）。"
+     ],
+     "rules": [
+      {
+       "key": "kwh",
+       "kind": "kpi",
+       "metric": "kwh_per_good",
+       "op": "<=",
+       "value": 13,
+       "weight": 40,
+       "label": "单件电耗 ≤ 13 kWh"
+      },
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 55,
+       "weight": 40
+      },
+      {
+       "key": "q_util",
+       "kind": "answer",
+       "label": "两台炉同时开时，每台炉的利用率约",
+       "choices": [
+        "约 25%",
+        "约 45%",
+        "约 80%",
+        "约 100%"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "造型浇注 60 秒要一包，每小时约 60 包；一台炉每小时能熔约 69 包。两台一起开，每台只分到约 30 包，利用率在 45% 左右，剩下的时间都在保温耗电。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "MOLD",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "remove_block",
+        "id": "FUR2"
+       }
+      ],
+      "answers": {
+       "q_util": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "title": "排故与综合",
+   "lessons": [
+    {
+     "id": "f05",
+     "title": "排故：产量突然下降",
+     "kind": "diagnose",
+     "plant": "fd05_diagnose",
+     "time_h": 8,
+     "warmup_h": 1,
+     "seed": 53,
+     "faults": [
+      {
+       "block": "GRIND",
+       "param": "time",
+       "value": "normal(150,6)",
+       "label": "清理打磨变慢（砂轮磨损）"
+      }
+     ],
+     "brief_md": "### 任务：昨天还好好的\n\n某小型铸造厂昨天每小时产出 65 件以上，今天只有四十多件。现场反映\"哪儿都没坏\"。请你当一回设备工程师：\n\n1. 运行后找出现在的瓶颈设备（看缓存堆积、设备状态构成）。\n2. 对照下面的 **设备档案**，找出哪台设备的参数和档案不一致。\n3. 在图上 **点选出问题的设备**，回答故障类型，然后把参数改回正常值。\n\n| 设备 | 档案节拍 | 说明 |\n|---|---|---|\n| 造型机 MOLD | normal(44,2) 秒 | |\n| 浇注 POUR | normal(30,2) 秒 | 浇注温度 normal(1440,10) |\n| 冷却线 COOL | 60 米，0.025 m/s | 冷却 40 分钟 |\n| 落砂 SHAKE | normal(38,2) 秒 | |\n| 抛丸 SHOT | 每批 12 件，600 秒 | |\n| 清理打磨 GRIND | normal(70,4) 秒，2 个工位 | |\n| 终检 QC | 20 秒，检出率 92% | |",
+     "hints": [
+      "整线变慢，先找\"前面堆满、自己一直在干活\"的设备。",
+      "找到可疑设备后打开属性面板，和档案逐项对照。",
+      "故障类型看是哪个参数变了：节拍变长是\"加工变慢\"。"
+     ],
+     "rules": [
+      {
+       "key": "q_dev",
+       "kind": "answer",
+       "label": "出问题的设备",
+       "pick": true,
+       "kinds": [
+        "processor",
+        "batch",
+        "conveyor",
+        "inspect"
+       ],
+       "answer": [
+        "GRIND"
+       ],
+       "weight": 30,
+       "explain": "清理打磨 GRIND 前面堆满了铸件，自己一直在干活，是现在的瓶颈；和档案一对，它的加工时间从 normal(70,4) 秒变成了 150 秒左右（砂轮磨损）。"
+      },
+      {
+       "key": "q_type",
+       "kind": "answer",
+       "label": "故障类型",
+       "choices": [
+        "供应中断",
+        "加工变慢",
+        "检出率下降",
+        "缓存被改小"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "供料、检出率和缓存都和档案一样，只有打磨的节拍变长了，属于\"加工变慢\"。"
+      },
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 60,
+       "weight": 50,
+       "label": "修好后小时产出 ≥ 60 件"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "MOLD",
+       "POUR",
+       "COOL",
+       "SHAKE",
+       "SHOT",
+       "GRIND",
+       "QC",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ],
+       "conveyor": [
+        "speed_mps",
+        "pitch_m",
+        "run_kw",
+        "idle_kw"
+       ],
+       "batch": [
+        "time",
+        "run_kw",
+        "idle_kw"
+       ],
+       "inspect": [
+        "time",
+        "pod_pct",
+        "false_pct"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "GRIND",
+        "set": {
+         "params.time": "normal(70,4)"
+        }
+       }
+      ],
+      "answers": {
+       "q_dev": "GRIND",
+       "q_type": 1
+      }
+     }
+    },
+    {
+     "id": "f06",
+     "title": "综合：某转向器壳体铸造厂",
+     "kind": "plant",
+     "plant": "fd06_full",
+     "time_h": 4,
+     "seed": 59,
+     "brief_md": "### 综合任务：读懂一座完整的铸造 + 机加工厂\n\n这是完整的 **某转向器壳体铸造厂**：中频炉熔炼 → 球化孕育 → 造型浇注 → 冷却 → 抛丸 → 数控加工 → 去毛刺 → 内窥检测 → 立体仓库，\n设备都用了精细的工艺模型（炉温、球化衰退、砂处理水分、刀具磨损……），点位和真实工厂一样多。\n\n运行至少 4 小时（仿真），用这门课学过的方法回答：\n\n1. 整厂的瓶颈是哪台设备？（在图上点选）\n2. 全厂用电最多的是哪类设备？（在图上点选其中一台）\n3. 机加工以后才发现的气孔缺陷，应该追溯到哪个工段去改进？",
+     "hints": [
+      "\"分析\"里的时间构成和瓶颈排名；也可以看\"运行报表\"。",
+      "\"能耗\"分析按设备列出了用电。",
+      "零件履历里记录了炉次、浇包、浇注温度、型砂水分等，缺陷和这些数据有关。"
+     ],
+     "rules": [
+      {
+       "key": "q_bn",
+       "kind": "answer",
+       "label": "整厂瓶颈",
+       "pick": true,
+       "kinds": [
+        "molding_line",
+        "cnc",
+        "induction_furnace",
+        "treatment",
+        "shot_blast",
+        "inspection",
+        "deburr_cell"
+       ],
+       "answer": [
+        "MOLD1"
+       ],
+       "weight": 35,
+       "explain": "在「分析」的瓶颈排名和时间构成里，水平分型造型线 MOLD1 运行比例最高，前面的工序经常被它堵住，后面的经常等它。"
+      },
+      {
+       "key": "q_energy",
+       "kind": "answer",
+       "label": "用电最多的设备（任选一台）",
+       "pick": true,
+       "kinds": [
+        "induction_furnace",
+        "processor",
+        "batch",
+        "inspect",
+        "conveyor",
+        "buffer"
+       ],
+       "answer": [
+        "FUR1",
+        "FUR2"
+       ],
+       "weight": 30,
+       "explain": "中频炉熔化铁水功率最大，开着保温也要耗电，全厂用电最多的就是两台中频炉。点中其中一台就算对。"
+      },
+      {
+       "key": "q_trace",
+       "kind": "answer",
+       "label": "机加后发现的气孔缺陷，应该追溯到",
+       "choices": [
+        "熔炼、浇注与砂处理",
+        "数控加工",
+        "内窥检测",
+        "立体仓库"
+       ],
+       "answer": 0,
+       "weight": 35,
+       "explain": "气孔多半来自铁水含气、浇注温度和型砂水分，要回到熔炼、浇注与砂处理工段去找原因；机加只是把藏在里面的气孔切出来了。"
+      }
+     ],
+     "reference": {
+      "ops": [],
+      "answers": {
+       "q_bn": "MOLD1",
+       "q_energy": "FUR1",
+       "q_trace": 0
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

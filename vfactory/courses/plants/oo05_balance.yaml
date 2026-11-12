@@ -1,0 +1,108 @@
+version: 2
+
+plant:
+  name: 某支架厂·装配线平衡
+  product: 支架组件
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [54, 18]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 生产区, x: [10, 44], color: '#E3ECF2'}
+- {name: 仓储区, x: [44, 54], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 投料
+  pos: [3, 8]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: '20'
+- id: B0
+  type: buffer
+  name: 线边库
+  pos: [7.5, 8]
+  size: [2.5, 2.5]
+  node: [280, 160]
+  params:
+    capacity: 60
+- id: S1
+  type: processor
+  name: 1#装底座
+  pos: [12, 8]
+  size: [4, 4]
+  node: [480, 160]
+  params: {time: 'normal(60,2)', capacity: 3, run_kw: 2, idle_kw: 0.5}
+- id: B1
+  type: buffer
+  name: 缓存 1
+  pos: [16.5, 8]
+  size: [2.5, 2.5]
+  node: [680, 160]
+  params:
+    capacity: 6
+- id: S2
+  type: processor
+  name: 2#装支臂
+  pos: [21, 8]
+  size: [4, 4]
+  node: [880, 160]
+  params: {time: 'normal(120,3)', capacity: 3, run_kw: 2, idle_kw: 0.5}
+- id: B2
+  type: buffer
+  name: 缓存 2
+  pos: [25.5, 8]
+  size: [2.5, 2.5]
+  node: [1080, 160]
+  params:
+    capacity: 6
+- id: S3
+  type: processor
+  name: 3#拧紧
+  pos: [30, 8]
+  size: [4, 4]
+  node: [1280, 160]
+  params: {time: 'normal(90,2)', capacity: 2, run_kw: 2, idle_kw: 0.5}
+- id: B3
+  type: buffer
+  name: 缓存 3
+  pos: [34.5, 8]
+  size: [2.5, 2.5]
+  node: [1480, 160]
+  params:
+    capacity: 6
+- id: S4
+  type: processor
+  name: 4#贴标
+  pos: [39, 8]
+  size: [4, 4]
+  node: [1680, 160]
+  params: {time: 'normal(30,1)', capacity: 2, run_kw: 2, idle_kw: 0.5}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [48, 8]
+  size: [4, 4]
+  node: [1880, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: S1, to_port: in}
+- {id: L3, from: S1, from_port: out, to: B1, to_port: in}
+- {id: L4, from: B1, from_port: out, to: S2, to_port: in}
+- {id: L5, from: S2, from_port: out, to: B2, to_port: in}
+- {id: L6, from: B2, from_port: out, to: S3, to_port: in}
+- {id: L7, from: S3, from_port: out, to: B3, to_port: in}
+- {id: L8, from: B3, from_port: out, to: S4, to_port: in}
+- {id: L9, from: S4, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

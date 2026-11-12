@@ -1,0 +1,64 @@
+# HoneyFactory one-command start:  docker compose up
+#
+#   factory   HoneyFactory: simulation, web UI and API      http://localhost:8800
+#             OPC UA opc.tcp://localhost:4840/vfactory/, MQTT localhost:1883, Modbus TCP localhost:5020 (one port per plant)
+#
+# Default = demo mode (VF_DEMO=1): demo accounts admin / engineer / guest with password honey123, a demo class
+# (demo_teacher / teach123, students demo_s01..demo_s06 / 123456) and the demo plant "foundry-housing".
+# Do not expose a demo instance to an untrusted network: the protocol servers accept anonymous clients and writes.
+#
+# Production mode (no demo accounts, the first start asks you to create the administrator):
+#   docker compose -f docker-compose.yml -f docker/compose.production.yml up -d
+# See docs/deployment.md. Settings can go into a .env file next to this file (template: docker/env.example).
+#
+# Headless test script (JUnit written to ./test-results/junit.xml):
+#   docker compose --profile test run --rm factory-test
+#
+# HoneyMOM (https://github.com/HoneyMeta/HoneyMOM) can use this plant as its data source: point its MQTT data source
+# at mqtt://<host>:1883 (topics vfactory/<plant>/#, including vfactory/<plant>/_mes/part|event) or import the delivery
+# package from http://<host>:8800/api/p/foundry-housing/delivery.zip.
+
+name: honeyfactory
+
+x-honeyfactory-image: &honeyfactory-image
+  image: ${HONEYFACTORY_IMAGE:-honeyfactory:local}
+  build:
+    context: .
+
+services:
+  factory:
+    <<: *honeyfactory-image
+    restart: unless-stopped
+    environment:
+      VF_DEMO: ${VF_DEMO:-1}
+      VF_LANG: ${VF_LANG:-en}
+      VF_MODE: ${VF_MODE:-selfhost}
+      TZ: ${TZ:-UTC}
+      VF_SANDBOX_MAX_ACTIVE: ${VF_SANDBOX_MAX_ACTIVE:-40}   # student sandboxes running at the same time
+      VF_SANDBOX_IDLE_S: ${VF_SANDBOX_IDLE_S:-600}          # idle seconds before a student sandbox sleeps
+      # AI (OpenAI-compatible endpoint, no defaults): the assistant and the AI tutor call a model only when all three
+      # are set. Alternatively mount a config file at /data/config/llm.local.json (see config/llm.example.json).
+      VF_LLM_BASE_URL: ${VF_LLM_BASE_URL:-}
+      VF_LLM_API_KEY: ${VF_LLM_API_KEY:-}
+      VF_LLM_MODEL: ${VF_LLM_MODEL:-}
+    ports:
+      - "${VF_PORT:-8800}:8800"                  # web UI and REST API
+      - "${VF_OPCUA_PORT:-4840}:4840"            # OPC UA
+      - "${VF_MQTT_PORT:-1883}:1883"             # MQTT (embedded broker)
+      - "${VF_MODBUS_PORTS:-5020-5029}:5020-5029"  # Modbus TCP, one port per plant from 5020
+    volumes:
+      - vf-data:/data
+
+  factory-test:
+    <<: *honeyfactory-image
+    profiles: ["test"]
+    user: "0:0"
+    environment:
+      VF_LANG: ${VF_LANG:-en}
+      VF_HOME: /tmp/vf
+    command: ["python", "-m", "vfactory", "test", "tests/scripts/smoke_foundry.json", "--junit", "/out/junit.xml"]
+    volumes:
+      - ./test-results:/out
+
+volumes:
+  vf-data:

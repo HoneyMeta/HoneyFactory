@@ -1,0 +1,162 @@
+# 控制单元演示：计数装箱
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s07_count_box + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：计数装箱
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12.4]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 计数装箱
+  pos: [11.0, 6.2]
+  size: [8, 4.4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4.4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.72]
+        rot: 0
+        params:
+          interval: uniform(3,4)
+          parts:
+          - {kind: box, color: yellow, h: 0.12, w: 0.15}
+      - id: C1
+        type: belt_conveyor
+        pos: [-1.0, 0, 0]
+        rot: 0
+        size: [5.6, 0.6]
+        label: 零件输送带
+        params: {speed: 0.3, height: 0.7}
+      - {id: S1, type: diffuse_sensor, pos: [1.75, 0.35, 0.78], rot: 0, label: 落料计数光电}
+      - id: E_BOX
+        type: emitter
+        pos: [1.95, -1.65, 0.27]
+        rot: 0
+        label: 空箱料仓
+        params:
+          trigger: signal
+          parts:
+          - {kind: tote, color: blue, h: 0.3, w: 0.5}
+      - id: C2
+        type: belt_conveyor
+        pos: [1.95, 0, 0]
+        rot: 90
+        size: [4.0, 0.7]
+        label: 装箱输送带
+        params:
+          speed: 0.3
+      - id: S_BOX
+        type: diffuse_sensor
+        pos: [2.45, 0.25, 0.4]
+        rot: -90
+        label: 箱子到位光电
+        params:
+          range: 0.9
+      - id: R_BOX
+        type: remover
+        pos: [1.95, 2.0, 0]
+        rot: 0
+        size: [0.8, 0.4]
+        label: 满箱出口
+        params:
+          accept:
+            count: 5
+      - id: START
+        type: button
+        pos: [-3.6, 1.8, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.8, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.8, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.8, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      - id: LAMP_FULL
+        type: lamp
+        pos: [-2.7, 1.8, 0.95]
+        rot: 0
+        label: 满箱
+        params:
+          color: yellow
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 零件输送带 C1 正转, idle: false}
+      - {name: S1, dir: in, type: BOOL, addr: '%I0.0', comp: S1, signal: detect, comment: 落料计数光电 S1 检测到, contact: 'NO', idle: 0}
+      - {name: E_BOX_RELEASE, dir: out, type: BOOL, addr: '%Q0.1', comp: E_BOX, signal: release, comment: 空箱料仓 E_BOX 放料（上升沿放一件）, idle: false}
+      - {name: C2_FWD, dir: out, type: BOOL, addr: '%Q0.2', comp: C2, signal: fwd, comment: 装箱输送带 C2 正转, idle: false}
+      - {name: S_BOX, dir: in, type: BOOL, addr: '%I0.1', comp: S_BOX, signal: detect, comment: 箱子到位光电 S_BOX 检测到, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.2', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.3', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.4', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      - {name: LAMP_FULL, dir: out, type: BOOL, addr: '%Q0.4', comp: LAMP_FULL, signal: 'on', comment: 满箱 LAMP_FULL 点亮, idle: false}
+      metrics: [bins.R_BOX.ok, sorted_wrong, dropped, collisions]
+- id: PLC1
+  type: plc
+  name: 计数装箱 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM CountBox\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    STEP : INT := 0;        (* 0 放空箱  1 空箱到位中  2 装箱  3 等满箱离开  4 等新箱到位 *)\n    CNT : CTU;\n    S1_FALL : F_TRIG;\n    BOX_RISE : R_TRIG;\n    BOX_FALL : F_TRIG;\n    REL : BOOL;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND\
+        \ STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    S1_FALL(CLK := S1);\n    BOX_RISE(CLK := S_BOX);\n    BOX_FALL(CLK := S_BOX);\n    CNT(CU := S1 AND STEP = 2, R := STEP <> 2, PV := 5);\n    REL := FALSE;\n    CASE STEP OF\n        0:  IF RUN THEN REL := TRUE; STEP := 1; END_IF;          (* 放第一个空箱 *)\n        1:  IF S_BOX THEN STEP := 2; END_IF;                       (* 空箱到装箱位 *)\n        2:  IF\
+        \ CNT.Q AND S1_FALL.Q THEN STEP := 3; REL := TRUE; END_IF;   (* 第 5 个零件落下：放下一个空箱 *)\n        3:  IF BOX_FALL.Q THEN STEP := 4; END_IF;                  (* 满箱离开光电 *)\n        4:  IF BOX_RISE.Q THEN STEP := 2; END_IF;                  (* 新空箱到位 *)\n    END_CASE;\n    E_BOX_RELEASE := REL;\n    C1_FWD := RUN AND STEP = 2 AND NOT (CNT.Q AND NOT S1);\n    C2_FWD := RUN AND (STEP = 1 OR STEP = 3 OR\
+        \ STEP = 4);\n    LAMP_FULL := STEP = 3 OR STEP = 4;\nEND_PROGRAM\n"}
+    di: 5
+    do: 5
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: S1, ch: I0.0, dir: in}
+  - {point: E_BOX_RELEASE, ch: Q0.1, dir: out}
+  - {point: C2_FWD, ch: Q0.2, dir: out}
+  - {point: S_BOX, ch: I0.1, dir: in}
+  - {point: START, ch: I0.2, dir: in}
+  - {point: STOP, ch: I0.3, dir: in}
+  - {point: ESTOP, ch: I0.4, dir: in}
+  - {point: LAMP_RUN, ch: Q0.3, dir: out}
+  - {point: LAMP_FULL, ch: Q0.4, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s07_count_box

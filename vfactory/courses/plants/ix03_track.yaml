@@ -1,0 +1,104 @@
+version: 2
+
+plant:
+  name: 某机加车间·跟踪一件
+  product: 法兰盘
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 10
+  warmup_h: 0
+  floor: [58, 18]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 机加区, x: [10, 34], color: '#E3ECF2'}
+- {name: 检测区, x: [34, 46], color: '#E8E3F2'}
+- {name: 仓储区, x: [46, 58], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯来料
+  pos: [2, 6]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: '90'
+- id: B0
+  type: buffer
+  name: 毛坯缓存
+  pos: [7.5, 6.5]
+  size: [2.5, 2.5]
+  node: [280, 160]
+  params:
+    capacity: 20
+- id: M1
+  type: processor
+  name: 1#数控车床
+  pos: [11, 6]
+  size: [4, 3.4]
+  node: [480, 160]
+  params: {time: '40', run_kw: 10, idle_kw: 2}
+- id: B1
+  type: buffer
+  name: 车铣之间缓存
+  pos: [17, 6.5]
+  size: [2.5, 2.5]
+  node: [680, 160]
+  params:
+    capacity: 5
+- id: M2
+  type: processor
+  name: 2#加工中心
+  pos: [21, 6]
+  size: [4, 3.4]
+  node: [880, 160]
+  params:
+    time: '50'
+    run_kw: 14
+    idle_kw: 2
+    defects:
+    - {name: 尺寸超差, prob: '0.08'}
+- id: CV1
+  type: conveyor
+  name: 输送线
+  pos: [28, 7.2]
+  size: [8, 1.6]
+  node: [1080, 160]
+  params: {length_m: 8, speed_mps: 0.08, pitch_m: 1, run_kw: 1, idle_kw: 0.3}
+- id: QC
+  type: inspect
+  name: 在线检测
+  pos: [36, 6]
+  size: [4, 4]
+  node: [1280, 160]
+  params: {time: '20', pod_pct: 100, false_pct: 0}
+- id: OUT
+  type: sink
+  name: 成品仓库
+  pos: [49, 5.5]
+  size: [5, 5]
+  node: [1480, 160]
+  params: {}
+- id: NG
+  type: sink
+  name: 废品箱
+  pos: [37, 12.5]
+  size: [3, 3]
+  node: [1480, 300]
+  params: {scrap: true, scrap_cause: 检测判废}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: B1, to_port: in}
+- {id: L4, from: B1, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M2, from_port: out, to: CV1, to_port: in}
+- {id: L6, from: CV1, from_port: out, to: QC, to_port: in}
+- {id: L7, from: QC, from_port: out, to: OUT, to_port: in}
+- {id: L8, from: QC, from_port: ng, to: NG, to_port: in}
+
+groups: []
+
+notes: []

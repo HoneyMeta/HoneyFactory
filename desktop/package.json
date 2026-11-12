@@ -1,0 +1,23 @@
+{
+  "name": "honeyvf-desktop",
+  "productName": "蜂元虚拟工厂",
+  "version": "5.0.1",
+  "description": "蜂元虚拟工厂 Windows 客户端（Electron 外壳 + 本机 Python 服务）",
+  "author": "蜂元科技（郑州）有限责任公司 HoneyMeta",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder --win --config electron-builder.yml",
+    "pack": "electron-builder --win --dir --config electron-builder.yml"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.11"
+  },
+  "devDependencies": {
+    "electron": "45.2.1",
+    "electron-builder": "26.18.0"
+  }
+}

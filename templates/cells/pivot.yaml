@@ -1,0 +1,162 @@
+# 控制单元演示：测高按高度分拣（摆臂）
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s06_sort_height + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：测高按高度分拣（摆臂）
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 按高度分拣（摆臂）
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        params:
+          interval: uniform(7,9)
+          parts:
+          - {kind: box, color: orange, h: 0.3, w: 0.25, weight: 1}
+          - {kind: box, color: blue, h: 0.15, w: 0.25, weight: 1}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.0, 0, 0]
+        rot: 0
+        size: [7.6, 0.6]
+        label: 主输送带
+        params:
+          speed: 0.3
+      - {id: H1, type: height_sensor, pos: [0.3, 0, 0.9], rot: 0, label: 测高}
+      - id: PA1
+        type: pivot_arm
+        pos: [1.0, 0.33, 0.33]
+        rot: 0
+        label: 摆臂
+        params: {length: 1.1, angle: 45, speed: 180}
+      - id: C2
+        type: belt_conveyor
+        pos: [2.45, -0.65, 0]
+        rot: 0
+        size: [2.7, 0.7]
+        label: 高件输送带
+        params: {speed: 0.3, height: 0.2}
+      - id: S2
+        type: diffuse_sensor
+        pos: [1.65, -0.28, 0.28]
+        rot: 0
+        label: 高件线光电
+        params:
+          range: 0.75
+      - id: R_TALL
+        type: remover
+        pos: [3.85, -0.65, 0]
+        rot: 0
+        size: [0.4, 0.7]
+        label: 高件出口
+        params:
+          accept:
+            min_h: 0.25
+      - id: R_LOW
+        type: remover
+        pos: [3.85, 0, 0]
+        rot: 0
+        size: [0.4, 0.6]
+        label: 矮件出口
+        params:
+          accept:
+            max_h: 0.2
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.6, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 主输送带 C1 正转, idle: false}
+      - {name: H1, dir: in, type: INT, addr: '%IW100', comp: H1, signal: value, comment: 测高 H1 高度 mm, idle: 0}
+      - {name: PA1_TURNED, dir: in, type: BOOL, addr: '%I0.0', comp: PA1, signal: turned, comment: 摆臂 PA1 摆出到位, contact: 'NO', idle: 0}
+      - {name: PA1_HOME, dir: in, type: BOOL, addr: '%I0.1', comp: PA1, signal: home, comment: 摆臂 PA1 回位, contact: 'NO', idle: 1}
+      - {name: PA1_TURN, dir: out, type: BOOL, addr: '%Q0.1', comp: PA1, signal: turn, comment: 摆臂 PA1 摆出, idle: false}
+      - {name: C2_FWD, dir: out, type: BOOL, addr: '%Q0.2', comp: C2, signal: fwd, comment: 高件输送带 C2 正转, idle: false}
+      - {name: S2, dir: in, type: BOOL, addr: '%I0.2', comp: S2, signal: detect, comment: 高件线光电 S2 检测到, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.3', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.4', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.5', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      metrics: [sort_accuracy, collisions, jams, throughput_per_min]
+- id: PLC1
+  type: plc
+  name: 按高度分拣（摆臂） PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM SortHeight\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    N : INT := 0;           (* 已测到、还没到旁边输送线的高件数 *)\n    TALL : R_TRIG;\n    ARRIVE : R_TRIG;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    C2_FWD := RUN;\n  \
+        \  TALL(CLK := H1 > 220);          (* 测到一个高件 *)\n    ARRIVE(CLK := S2);              (* 一个高件到了旁边的线 *)\n    IF TALL.Q THEN N := N + 1; END_IF;\n    IF ARRIVE.Q AND N > 0 THEN N := N - 1; END_IF;\n    IF NOT RUN THEN N := 0; END_IF;\n    PA1_TURN := RUN AND N > 0;      (* 有高件在途就摆出 *)\nEND_PROGRAM\n"}
+    di: 6
+    do: 4
+    ai: 1
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: H1, ch: IW100, dir: in}
+  - {point: PA1_TURNED, ch: I0.0, dir: in}
+  - {point: PA1_HOME, ch: I0.1, dir: in}
+  - {point: PA1_TURN, ch: Q0.1, dir: out}
+  - {point: C2_FWD, ch: Q0.2, dir: out}
+  - {point: S2, ch: I0.2, dir: in}
+  - {point: START, ch: I0.3, dir: in}
+  - {point: STOP, ch: I0.4, dir: in}
+  - {point: ESTOP, ch: I0.5, dir: in}
+  - {point: LAMP_RUN, ch: Q0.3, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s06_sort_height

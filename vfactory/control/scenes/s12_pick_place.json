@@ -1,0 +1,704 @@
+{
+ "id": "s12_pick_place",
+ "name": "气动取放机械手",
+ "level": 12,
+ "order": 12,
+ "desc": "两位气缸驱动的取放机械手把零件从一条线搬到另一条线：经典的顺序控制。",
+ "cell": {
+  "size": [
+   8,
+   4
+  ],
+  "components": [
+   {
+    "id": "E1",
+    "type": "emitter",
+    "pos": [
+     -3.6,
+     0,
+     0.27
+    ],
+    "rot": 0,
+    "params": {
+     "interval": "uniform(9,11)",
+     "parts": [
+      {
+       "kind": "part",
+       "color": "grey",
+       "material": "metal",
+       "h": 0.2,
+       "w": 0.25
+      }
+     ]
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     -1.4,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     4.8,
+     0.6
+    ],
+    "label": "来料输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "ST1",
+    "type": "stopper",
+    "pos": [
+     0.93,
+     0,
+     0
+    ],
+    "rot": 0,
+    "label": "端头挡块",
+    "params": {
+     "normally_up": true
+    }
+   },
+   {
+    "id": "S1",
+    "type": "diffuse_sensor",
+    "pos": [
+     0.8,
+     0.35,
+     0.35
+    ],
+    "rot": 0,
+    "label": "取料位光电"
+   },
+   {
+    "id": "PP1",
+    "type": "pick_place",
+    "pos": [
+     0.8,
+     0,
+     0
+    ],
+    "rot": -90,
+    "label": "取放机械手",
+    "params": {
+     "mode": "pneumatic",
+     "x_stroke": 1.2,
+     "z_stroke": 0.65,
+     "z_top": 1.1,
+     "x_speed": 0.8,
+     "z_speed": 0.5
+    }
+   },
+   {
+    "id": "C2",
+    "type": "belt_conveyor",
+    "pos": [
+     1.95,
+     -1.2,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     3.9,
+     0.6
+    ],
+    "label": "出料输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "R1",
+    "type": "remover",
+    "pos": [
+     3.85,
+     -1.2,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.3,
+     0.8
+    ],
+    "label": "出口"
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.15,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -2.9000000000000004,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "来料输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "ST1_LOWER",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "ST1",
+    "signal": "lower",
+    "comment": "端头挡块 ST1 落下放行",
+    "idle": false
+   },
+   {
+    "name": "S1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "S1",
+    "signal": "detect",
+    "comment": "取料位光电 S1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "PP1_X_BACK",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "PP1",
+    "signal": "x_back",
+    "comment": "取放机械手 PP1 水平缩回到位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "PP1_X_FRONT",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "PP1",
+    "signal": "x_front",
+    "comment": "取放机械手 PP1 水平伸出到位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "PP1_Z_TOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "PP1",
+    "signal": "z_top",
+    "comment": "取放机械手 PP1 上升到位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "PP1_Z_BOTTOM",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "PP1",
+    "signal": "z_bottom",
+    "comment": "取放机械手 PP1 下降到位（或已接触）",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "PP1_GRIPPED",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.5",
+    "comp": "PP1",
+    "signal": "gripped",
+    "comment": "取放机械手 PP1 已吸住",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "PP1_X_EXT",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "PP1",
+    "signal": "x_ext",
+    "comment": "取放机械手 PP1 水平伸出",
+    "idle": false
+   },
+   {
+    "name": "PP1_Z_DOWN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "PP1",
+    "signal": "z_down",
+    "comment": "取放机械手 PP1 下降",
+    "idle": false
+   },
+   {
+    "name": "PP1_GRIP",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.4",
+    "comp": "PP1",
+    "signal": "grip",
+    "comment": "取放机械手 PP1 吸取",
+    "idle": false
+   },
+   {
+    "name": "C2_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.5",
+    "comp": "C2",
+    "signal": "fwd",
+    "comment": "出料输送带 C2 正转",
+    "idle": false
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.6",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.7",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.0",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.6",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "removed",
+   "collisions",
+   "hard_drops",
+   "dropped"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "来料输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "ST1_LOWER",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "ST1",
+   "signal": "lower",
+   "comment": "端头挡块 ST1 落下放行",
+   "idle": false
+  },
+  {
+   "name": "S1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "S1",
+   "signal": "detect",
+   "comment": "取料位光电 S1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "PP1_X_BACK",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "PP1",
+   "signal": "x_back",
+   "comment": "取放机械手 PP1 水平缩回到位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "PP1_X_FRONT",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "PP1",
+   "signal": "x_front",
+   "comment": "取放机械手 PP1 水平伸出到位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "PP1_Z_TOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "PP1",
+   "signal": "z_top",
+   "comment": "取放机械手 PP1 上升到位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "PP1_Z_BOTTOM",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "PP1",
+   "signal": "z_bottom",
+   "comment": "取放机械手 PP1 下降到位（或已接触）",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "PP1_GRIPPED",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.5",
+   "comp": "PP1",
+   "signal": "gripped",
+   "comment": "取放机械手 PP1 已吸住",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "PP1_X_EXT",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "PP1",
+   "signal": "x_ext",
+   "comment": "取放机械手 PP1 水平伸出",
+   "idle": false
+  },
+  {
+   "name": "PP1_Z_DOWN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "PP1",
+   "signal": "z_down",
+   "comment": "取放机械手 PP1 下降",
+   "idle": false
+  },
+  {
+   "name": "PP1_GRIP",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.4",
+   "comp": "PP1",
+   "signal": "grip",
+   "comment": "取放机械手 PP1 吸取",
+   "idle": false
+  },
+  {
+   "name": "C2_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.5",
+   "comp": "C2",
+   "signal": "fwd",
+   "comment": "出料输送带 C2 正转",
+   "idle": false
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.6",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.7",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.0",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.6",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：气动取放机械手\n\n机械手 `PP1` 有两个两位气缸：水平 `PP1_X_EXT`（伸出到出料线上方），垂直 `PP1_Z_DOWN`（下降），吸盘 `PP1_GRIP`；\n到位信号 `PP1_X_BACK` / `PP1_X_FRONT` / `PP1_Z_TOP` / `PP1_Z_BOTTOM`（下降碰到零件也算到底），吸住 `PP1_GRIPPED`。\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；\n2. 零件到取料位（`S1`）后：下降 → 吸取 → 上升 → 伸出 → 下降 → 松开 → 上升 → 缩回，回到原位等下一件；\n3. **必须上升到位后才能平移**（否则撞到零件/输送带记碰撞）；必须下降到位后才能松开（否则摔件）；\n4. 不能掉件；评分测试时段内至少搬运 15 件（每分钟约 5 件）。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。例外：`PP1_X_BACK`、`PP1_Z_TOP` 是\"在原位/到位\"信号，设备停在初始位置时就是 1。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `C1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 来料输送带 C1 正转 |\n| `ST1_LOWER` | 输出 | BOOL | %Q0.1 | — | 0 | 端头挡块 ST1 落下放行 |\n| `S1` | 输入 | BOOL | %I0.0 | 常开 | 0 | 取料位光电 S1 检测到 |\n| `PP1_X_BACK` | 输入 | BOOL | %I0.1 | 常开 | 1 | 取放机械手 PP1 水平缩回到位 |\n| `PP1_X_FRONT` | 输入 | BOOL | %I0.2 | 常开 | 0 | 取放机械手 PP1 水平伸出到位 |\n| `PP1_Z_TOP` | 输入 | BOOL | %I0.3 | 常开 | 1 | 取放机械手 PP1 上升到位 |\n| `PP1_Z_BOTTOM` | 输入 | BOOL | %I0.4 | 常开 | 0 | 取放机械手 PP1 下降到位（或已接触） |\n| `PP1_GRIPPED` | 输入 | BOOL | %I0.5 | 常开 | 0 | 取放机械手 PP1 已吸住 |\n| `PP1_X_EXT` | 输出 | BOOL | %Q0.2 | — | 0 | 取放机械手 PP1 水平伸出 |\n| `PP1_Z_DOWN` | 输出 | BOOL | %Q0.3 | — | 0 | 取放机械手 PP1 下降 |\n| `PP1_GRIP` | 输出 | BOOL | %Q0.4 | — | 0 | 取放机械手 PP1 吸取 |\n| `C2_FWD` | 输出 | BOOL | %Q0.5 | — | 0 | 出料输送带 C2 正转 |\n| `START` | 输入 | BOOL | %I0.6 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I0.7 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I1.0 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.6 | — | 0 | 运行 LAMP_RUN 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 搬运完成件数 ≥ 15：**30 分**\n  - 怎么试：连续运行，这里显示已经送到出口的件数\n- 碰撞次数：必须为 0（不能出现）：**20 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 高处摔落次数：必须为 0（不能出现）：**15 分**\n  - 怎么试：下降到位后才松开（这里显示高处摔落次数）\n- 掉件数：必须为 0（不能出现）：**10 分**\n  - 怎么试：零件不能掉到地上（这里显示当前掉件数）\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "典型的步进顺序控制：每一步等上一步的到位信号。",
+  "吸住（PP1_GRIPPED = 1）后等 0.3 s 再上升；松开吸盘后也等 0.3 s 再上升。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "removed",
+    "label": "搬运完成件数",
+    "op": ">=",
+    "value": 15,
+    "weight": 30,
+    "how": "连续运行，这里显示已经送到出口的件数"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 20,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "hard_drops",
+    "label": "高处摔落次数",
+    "op": "==",
+    "value": 0,
+    "weight": 15,
+    "how": "下降到位后才松开（这里显示高处摔落次数）"
+   },
+   {
+    "key": "dropped",
+    "label": "掉件数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "零件不能掉到地上（这里显示当前掉件数）"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 192,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C1_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 180.0,
+    "snapshot": true
+   },
+   {
+    "t": 181.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 181.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 182.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 184.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 185.0,
+    "press": "START"
+   },
+   {
+    "t": 186.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM PickPlace\nVAR\n    RUN : BOOL;\n    STEP : INT := 0;\n    TM : TON;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    C2_FWD := RUN;\n    TM(IN := STEP = 2 OR STEP = 6, PT := T#300MS);\n    CASE STEP OF\n        0: IF RUN AND S1 AND PP1_X_BACK AND PP1_Z_TOP THEN STEP := 1; END_IF;\n        1: IF PP1_Z_BOTTOM THEN STEP := 2; END_IF;          (* 下降到零件 *)\n        2: IF PP1_GRIPPED AND TM.Q THEN STEP := 3; END_IF;    (* 吸住 *)\n        3: IF PP1_Z_TOP THEN STEP := 4; END_IF;             (* 上升 *)\n        4: IF PP1_X_FRONT THEN STEP := 5; END_IF;           (* 伸出 *)\n        5: IF PP1_Z_BOTTOM THEN STEP := 6; END_IF;          (* 下降到出料线 *)\n        6: IF TM.Q THEN STEP := 7; END_IF;                   (* 松开 *)\n        7: IF PP1_Z_TOP THEN STEP := 8; END_IF;             (* 上升 *)\n        8: IF PP1_X_BACK THEN STEP := 0; END_IF;            (* 缩回 *)\n    END_CASE;\n    PP1_Z_DOWN := STEP = 1 OR STEP = 2 OR STEP = 5 OR STEP = 6;\n    PP1_GRIP := STEP >= 2 AND STEP <= 5;\n    PP1_X_EXT := STEP >= 4 AND STEP <= 7;\nEND_PROGRAM\n"
+  }
+ },
+ "faults": [
+  {
+   "comp": "PP1",
+   "kind": "actuator_slow",
+   "label": "PP1 执行器动作变慢",
+   "symptom": "机械手动作慢"
+  },
+  {
+   "comp": "S1",
+   "kind": "sensor_stuck_off",
+   "label": "S1 传感器常断（一直为 0）",
+   "symptom": "机械手不去取料"
+  },
+  {
+   "comp": "PP1",
+   "kind": "actuator_jam",
+   "label": "PP1 执行器卡滞",
+   "symptom": "机械手停在半路，到位信号不来"
+  },
+  {
+   "comp": "C2",
+   "kind": "motor_overload",
+   "label": "C2 电机过载跳闸",
+   "symptom": "出料线不动，零件堆在放料位"
+  }
+ ],
+ "version": 1
+}

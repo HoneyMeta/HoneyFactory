@@ -1,0 +1,49 @@
+# 模板：铸造厂（熔炼 → 球化 → 造型浇注 → 冷却落砂 → 抛丸清理 → 毛坯入库）
+plant:
+  name: 新建铸造厂
+  product: 球墨铸铁件
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 10
+  warmup_h: 2
+  floor: [100, 50]
+
+areas:
+  - {name: 熔炼区, x: [0, 22], color: '#F4E3D7'}
+  - {name: 造型区, x: [22, 70], color: '#EDE6DA'}
+  - {name: 清理区, x: [70, 84], color: '#E6E9EC'}
+  - {name: 仓储区, x: [84, 100], color: '#E3F0E6'}
+
+buffers:
+  shot_in: 240
+  raw: 300
+
+stations:
+  - {id: FUR1, type: induction_furnace, name: 1#中频炉 3t, pos: [6, 9], size: [4, 4], capacity_kg: 3000, power_kw: 2000, modbus_unit: 3, mtbf_h: 300, mttr_min: 45}
+  - {id: FUR2, type: induction_furnace, name: 2#中频炉 3t, pos: [6, 18], size: [4, 4], capacity_kg: 3000, power_kw: 2000, modbus_unit: 4, mtbf_h: 300, mttr_min: 45, heel_kg: 1800}
+  - {id: TRT1, type: treatment, name: 球化孕育站, pos: [15, 13], size: [4, 3], ladles: 2, ladle_kg: 520, mtbf_h: 500, mttr_min: 20, pour_point: [27, 8]}
+  - {id: SAND1, type: sand_system, name: 砂处理系统, pos: [33, 20], size: [10, 6], modbus_unit: 1, mtbf_h: 200, mttr_min: 30}
+  - {id: MOLD1, type: molding_line, name: 水平分型造型线, pos: [40, 8], size: [26, 4], cycle_s: 40, castings_per_mold: 2, pour_kg: 45, casting_kg: 18.5, pour_buffer: 8, mtbf_h: 80, mttr_min: 25}
+  - {id: COOL1, type: cooling_line, name: 冷却输送线, pos: [52, 14], size: [32, 3], cool_min: 45, capacity_molds: 80}
+  - {id: SHOT1, type: shot_blast, name: 吊钩抛丸机, pos: [76, 12], size: [6, 6], modbus_unit: 2, mtbf_h: 150, mttr_min: 30}
+  - id: AGV
+    type: agv_fleet
+    name: AGV 车队
+    pos: [70, -8]
+    size: [1, 1]
+    count: 2
+    speed: 1.2
+    corridor_y: -3
+    store_when: 0.05
+    nodes: {raw: [80, 4], store: [92, 12], charger: [60, -12]}
+  - id: CREW
+    type: worker_crew
+    name: 生产班组
+    pos: [50, 30]
+    size: [1, 1]
+    roles:
+      - {name: 炉前工, count: 1, stations: [FUR1, FUR2]}
+      - {name: 球化浇包工, count: 1, stations: [TRT1]}
+      - {name: 浇注工, count: 1, stations: [MOLD1]}
+      - {name: 抛丸挂件工, count: 1, stations: [SHOT1]}

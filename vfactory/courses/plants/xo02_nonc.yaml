@@ -1,0 +1,119 @@
+version: 2
+
+plant:
+  name: 实训单元·输送线启停急停（观察）
+  product: 实训零件
+  seed: 7
+  start: '2026-11-02T08:00:00'
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 传送带启停与急停
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.5, 0, 0.27]
+        rot: 0
+        params:
+          interval: uniform(4,6)
+          parts:
+          - {kind: box, color: blue, h: 0.2, w: 0.25, weight: 2}
+          - {kind: box, color: green, h: 0.2, w: 0.25, weight: 1}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.0, 0, 0]
+        rot: 0
+        size: [7.6, 0.6]
+        label: 输送带
+        params:
+          speed: 0.3
+      - {id: S_END, type: diffuse_sensor, pos: [3.4, 0.35, 0.35], rot: 0, label: 末端光电}
+      - {id: R1, type: remover, pos: [3.85, 0, 0], rot: 0, size: [0.4, 0.9]}
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.6, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      - id: LAMP_STOP
+        type: lamp
+        pos: [-2.7, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params:
+          color: red
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 输送带 C1 正转, idle: false}
+      - {name: S_END, dir: in, type: BOOL, addr: '%I0.0', comp: S_END, signal: detect, comment: 末端光电 S_END 检测到, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.1', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.2', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.3', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.1', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      - {name: LAMP_STOP, dir: out, type: BOOL, addr: '%Q0.2', comp: LAMP_STOP, signal: 'on', comment: 停止 LAMP_STOP 点亮, idle: false}
+      metrics: [removed]
+- id: PLC1
+  type: plc
+  name: 传送带启停与急停 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM Conveyor\nVAR\n    RUN : BOOL;     (* 运行标志 *)\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    LAMP_STOP := NOT RUN;\nEND_PROGRAM\n"}
+    di: 4
+    do: 3
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: S_END, ch: I0.0, dir: in}
+  - {point: START, ch: I0.1, dir: in}
+  - {point: STOP, ch: I0.2, dir: in}
+  - {point: ESTOP, ch: I0.3, dir: in}
+  - {point: LAMP_RUN, ch: Q0.1, dir: out}
+  - {point: LAMP_STOP, ch: Q0.2, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []

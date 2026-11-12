@@ -1,0 +1,91 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·三工序串行线
+  product: HSG-200 壳体
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [52, 16]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 机加区, x: [10, 44], color: '#E3ECF2'}
+- {name: 仓储区, x: [44, 52], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯来料
+  pos: [2, 6]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(50)
+- id: B0
+  type: buffer
+  name: 毛坯库
+  pos: [7, 6]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 100
+- id: M1
+  type: processor
+  name: 1#车削
+  pos: [12, 6]
+  size: [4, 3.4]
+  node: [480, 160]
+  params: {time: expo(55), run_kw: 12, idle_kw: 2}
+- id: B1
+  type: buffer
+  name: 缓存 1
+  pos: [18, 6.5]
+  size: [2.5, 2.5]
+  node: [680, 160]
+  params:
+    capacity: 1
+- id: M2
+  type: processor
+  name: 2#钻孔
+  pos: [22, 6]
+  size: [4, 3.4]
+  node: [880, 160]
+  params: {time: expo(55), run_kw: 10, idle_kw: 2}
+- id: B2
+  type: buffer
+  name: 缓存 2
+  pos: [28, 6.5]
+  size: [2.5, 2.5]
+  node: [1080, 160]
+  params:
+    capacity: 1
+- id: M3
+  type: processor
+  name: 3#铣削
+  pos: [32, 6]
+  size: [4, 3.4]
+  node: [1280, 160]
+  params: {time: expo(55), run_kw: 14, idle_kw: 2}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [46, 6]
+  size: [4, 4]
+  node: [1480, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: B1, to_port: in}
+- {id: L4, from: B1, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M2, from_port: out, to: B2, to_port: in}
+- {id: L6, from: B2, from_port: out, to: M3, to_port: in}
+- {id: L7, from: M3, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

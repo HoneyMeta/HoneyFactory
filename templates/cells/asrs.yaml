@@ -1,0 +1,196 @@
+# 控制单元演示：堆垛机立体仓库出入库
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s13_asrs + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：堆垛机立体仓库出入库
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12.4]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 立体仓库出入库
+  pos: [11.0, 6.2]
+  size: [8, 4.4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4.4]
+      components:
+      - id: RK1
+        type: rack
+        pos: [0.0, -0.85, 0]
+        rot: 0
+        size: [3.2, 0.6]
+        label: 货架
+        params: {cols: 4, rows: 3, cell_h: 0.5, base: 0.3}
+      - id: SC1
+        type: stacker_crane
+        pos: [-2.4, 0, 0]
+        rot: 0
+        size: [4.8, 0.5]
+        label: 堆垛机
+        params: {travel: 4.8, rack: RK1, fork_stroke: 0.85, fork_speed: 0.5, x_speed: 1.0, z_speed: 0.6, station_in: [0.3, 0.21], station_out: [4.5, 0.21]}
+      - id: E_IN
+        type: emitter
+        pos: [-2.1, 1.75, 0.27]
+        rot: 0
+        label: 入库来料
+        params:
+          interval: uniform(24,28)
+          max: 6
+          start_delay: 2
+          parts:
+          - {kind: pallet, color: blue, h: 0.25, w: 0.45, weight: 1}
+          - {kind: pallet, color: orange, h: 0.25, w: 0.45, weight: 1}
+      - id: C_IN
+        type: belt_conveyor
+        pos: [-2.1, 1.25, 0]
+        rot: -90
+        size: [1.3, 0.6]
+        label: 入库输送带
+        params:
+          speed: 0.3
+      - id: ST_IN
+        type: stopper
+        pos: [-2.1, 0.6, 0]
+        rot: -90
+        label: 入库口挡块
+        params:
+          normally_up: true
+      - id: S_IN
+        type: diffuse_sensor
+        pos: [-2.45, 0.85, 0.35]
+        rot: 90
+        label: 入库口光电
+        params:
+          range: 0.8
+      - id: C_OUT
+        type: belt_conveyor
+        pos: [2.1, 1.25, 0]
+        rot: 90
+        size: [1.3, 0.6]
+        label: 出库输送带
+        params:
+          speed: 0.3
+      - {id: R_OUT, type: remover, pos: [2.1, 2.05, 0], rot: 0, size: [0.9, 0.3], label: 出库口}
+      - id: START
+        type: button
+        pos: [-1.2, 1.85, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-1.0, 1.85, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-0.75, 1.85, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-0.5, 1.85, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      - id: OUT_REQ
+        type: button
+        pos: [-0.29999999999999993, 1.85, 0.95]
+        rot: 0
+        label: 出库
+        params:
+          color: yellow
+      - {id: D1, type: display, pos: [-0.09999999999999992, 1.85, 0.95], rot: 0, label: 库存}
+      io:
+      - {name: SC1_AT_TARGET, dir: in, type: BOOL, addr: '%I0.0', comp: SC1, signal: at_target, comment: 堆垛机 SC1 到达目标, contact: 'NO', idle: 1}
+      - {name: SC1_MOVING, dir: in, type: BOOL, addr: '%I0.1', comp: SC1, signal: moving, comment: 堆垛机 SC1 行走/升降中, contact: 'NO', idle: 0}
+      - {name: SC1_FORK_HOME, dir: in, type: BOOL, addr: '%I0.2', comp: SC1, signal: fork_home, comment: 堆垛机 SC1 货叉在中位, contact: 'NO', idle: 1}
+      - {name: SC1_FORK_LEFT_END, dir: in, type: BOOL, addr: '%I0.3', comp: SC1, signal: fork_left_end, comment: 堆垛机 SC1 左伸到位, contact: 'NO', idle: 0}
+      - {name: SC1_FORK_RIGHT_END, dir: in, type: BOOL, addr: '%I0.4', comp: SC1, signal: fork_right_end, comment: 堆垛机 SC1 右伸到位, contact: 'NO', idle: 0}
+      - {name: SC1_LOADED, dir: in, type: BOOL, addr: '%I0.5', comp: SC1, signal: loaded, comment: 堆垛机 SC1 货叉上有货, contact: 'NO', idle: 0}
+      - {name: SC1_POS, dir: in, type: INT, addr: '%IW100', comp: SC1, signal: pos, comment: 堆垛机 SC1 当前所在目标号（不在目标点为 -1）, idle: 0}
+      - {name: SC1_TARGET, dir: out, type: INT, addr: '%QW100', comp: SC1, signal: target, comment: 堆垛机 SC1 目标号, idle: 0}
+      - {name: SC1_FORK_LEFT, dir: out, type: BOOL, addr: '%Q0.0', comp: SC1, signal: fork_left, comment: 堆垛机 SC1 货叉左伸（+y）, idle: false}
+      - {name: SC1_FORK_RIGHT, dir: out, type: BOOL, addr: '%Q0.1', comp: SC1, signal: fork_right, comment: 堆垛机 SC1 货叉右伸（-y）, idle: false}
+      - {name: SC1_LIFT, dir: out, type: BOOL, addr: '%Q0.2', comp: SC1, signal: lift, comment: 堆垛机 SC1 货叉顶升, idle: false}
+      - {name: C_IN_FWD, dir: out, type: BOOL, addr: '%Q0.3', comp: C_IN, signal: fwd, comment: 入库输送带 C_IN 正转, idle: false}
+      - {name: ST_IN_LOWER, dir: out, type: BOOL, addr: '%Q0.4', comp: ST_IN, signal: lower, comment: 入库口挡块 ST_IN 落下放行, idle: false}
+      - {name: S_IN, dir: in, type: BOOL, addr: '%I0.6', comp: S_IN, signal: detect, comment: 入库口光电 S_IN 检测到, contact: 'NO', idle: 0}
+      - {name: C_OUT_FWD, dir: out, type: BOOL, addr: '%Q0.5', comp: C_OUT, signal: fwd, comment: 出库输送带 C_OUT 正转, idle: false}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.7', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I1.0', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I1.1', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.6', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      - {name: OUT_REQ, dir: in, type: BOOL, addr: '%I1.2', comp: OUT_REQ, signal: value, comment: 出库 OUT_REQ 触点, contact: 'NO', idle: 0}
+      - {name: D1, dir: out, type: INT, addr: '%QW102', comp: D1, signal: value, comment: 库存 D1 显示值, idle: 0}
+      metrics: [racks.RK1.stored, bins.R_OUT.n, racks.RK1.double, collisions, dropped]
+- id: PLC1
+  type: plc
+  name: 立体仓库出入库 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM Asrs\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    STEP : INT := 0;\n    NIN : INT := 0;         (* 已入库个数 *)\n    NOUT : INT := 0;        (* 已出库个数 *)\n    REQ : INT := 0;         (* 待处理出库请求 *)\n    OUTTRIG : R_TRIG;\n    TM : TON;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND\
+        \ STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C_IN_FWD := RUN;\n    C_OUT_FWD := RUN;\n    OUTTRIG(CLK := OUT_REQ);\n    IF OUTTRIG.Q THEN REQ := REQ + 1; END_IF;\n    TM(IN := STEP = 12 OR STEP = 16 OR STEP = 32 OR STEP = 36, PT := T#400MS);\n    CASE STEP OF\n        0:  SC1_FORK_LEFT := FALSE; SC1_FORK_RIGHT := FALSE; SC1_LIFT := FALSE;\n            IF RUN AND SC1_FORK_HOME THEN\n        \
+        \        IF S_IN AND NIN < 12 THEN STEP := 10;\n                ELSIF REQ > 0 AND NIN > NOUT THEN STEP := 30;\n                END_IF;\n            END_IF;\n        (* ---- 入库 ---- *)\n        10: SC1_TARGET := 0; STEP := 11;\n        11: IF SC1_AT_TARGET THEN SC1_FORK_LEFT := TRUE; STEP := 12; END_IF;\n        12: IF SC1_FORK_LEFT_END AND TM.Q THEN SC1_LIFT := TRUE; STEP := 13; END_IF;\n  \
+        \      13: IF SC1_LOADED THEN SC1_FORK_LEFT := FALSE; STEP := 14; END_IF;\n        14: IF SC1_FORK_HOME THEN SC1_TARGET := NIN + 1; STEP := 15; END_IF;\n        15: IF SC1_AT_TARGET THEN SC1_FORK_RIGHT := TRUE; STEP := 16; END_IF;\n        16: IF SC1_FORK_RIGHT_END AND TM.Q THEN SC1_LIFT := FALSE; STEP := 17; END_IF;\n        17: IF NOT SC1_LOADED THEN SC1_FORK_RIGHT := FALSE; STEP := 18; END_IF;\n\
+        \        18: IF SC1_FORK_HOME THEN NIN := NIN + 1; STEP := 0; END_IF;\n        (* ---- 出库：先进先出 ---- *)\n        30: SC1_TARGET := NOUT + 1; STEP := 31;\n        31: IF SC1_AT_TARGET THEN SC1_FORK_RIGHT := TRUE; STEP := 32; END_IF;\n        32: IF SC1_FORK_RIGHT_END AND TM.Q THEN SC1_LIFT := TRUE; STEP := 33; END_IF;\n        33: IF SC1_LOADED THEN SC1_FORK_RIGHT := FALSE; STEP := 34; END_IF;\n\
+        \        34: IF SC1_FORK_HOME THEN SC1_TARGET := 13; STEP := 35; END_IF;\n        35: IF SC1_AT_TARGET THEN SC1_FORK_LEFT := TRUE; STEP := 36; END_IF;\n        36: IF SC1_FORK_LEFT_END AND TM.Q THEN SC1_LIFT := FALSE; STEP := 37; END_IF;\n        37: IF NOT SC1_LOADED THEN SC1_FORK_LEFT := FALSE; STEP := 38; END_IF;\n        38: IF SC1_FORK_HOME THEN NOUT := NOUT + 1; REQ := REQ - 1; STEP :=\
+        \ 0; END_IF;\n    END_CASE;\n    D1 := NIN - NOUT;\nEND_PROGRAM\n"}
+    di: 11
+    do: 7
+    ai: 1
+    ao: 2
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: SC1_AT_TARGET, ch: I0.0, dir: in}
+  - {point: SC1_MOVING, ch: I0.1, dir: in}
+  - {point: SC1_FORK_HOME, ch: I0.2, dir: in}
+  - {point: SC1_FORK_LEFT_END, ch: I0.3, dir: in}
+  - {point: SC1_FORK_RIGHT_END, ch: I0.4, dir: in}
+  - {point: SC1_LOADED, ch: I0.5, dir: in}
+  - {point: SC1_POS, ch: IW100, dir: in}
+  - {point: SC1_TARGET, ch: QW100, dir: out}
+  - {point: SC1_FORK_LEFT, ch: Q0.0, dir: out}
+  - {point: SC1_FORK_RIGHT, ch: Q0.1, dir: out}
+  - {point: SC1_LIFT, ch: Q0.2, dir: out}
+  - {point: C_IN_FWD, ch: Q0.3, dir: out}
+  - {point: ST_IN_LOWER, ch: Q0.4, dir: out}
+  - {point: S_IN, ch: I0.6, dir: in}
+  - {point: C_OUT_FWD, ch: Q0.5, dir: out}
+  - {point: START, ch: I0.7, dir: in}
+  - {point: STOP, ch: I1.0, dir: in}
+  - {point: ESTOP, ch: I1.1, dir: in}
+  - {point: LAMP_RUN, ch: Q0.6, dir: out}
+  - {point: OUT_REQ, ch: I1.2, dir: in}
+  - {point: D1, ch: QW102, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s13_asrs

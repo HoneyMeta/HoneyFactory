@@ -1,0 +1,17 @@
+# 模板：空白工厂（在建模编辑器里从零搭建）
+version: 2
+plant:
+  name: 新建工厂
+  product: P1 产品
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 10
+  warmup_h: 1
+  floor: [80, 40]
+areas:
+  - {name: 生产区, x: [0, 80], color: '#E3ECF2'}
+blocks: []
+links: []
+groups: []
+notes: []

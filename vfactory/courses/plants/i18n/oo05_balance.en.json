@@ -1,0 +1,17 @@
+{
+ "某支架厂·装配线平衡": "Bracket Factory · Assembly Line Balancing",
+ "支架组件": "Bracket Assembly",
+ "收货区": "Receiving Area",
+ "生产区": "Production Area",
+ "仓储区": "Storage Area",
+ "投料": "Feed Material",
+ "线边库": "Line-Side Inventory",
+ "1#装底座": "#1 Base Assembly",
+ "缓存 1": "Buffer 1",
+ "2#装支臂": "#2 Arm Assembly",
+ "缓存 2": "Buffer 2",
+ "3#拧紧": "#3 Tightening",
+ "缓存 3": "Buffer 3",
+ "4#贴标": "#4 Labeling",
+ "成品库": "Finished Goods Warehouse"
+}

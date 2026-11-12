@@ -1,0 +1,21 @@
+{
+ "实训单元·输送线启停急停（观察）": "Lab Unit · Conveyor Start/Stop and E-Stop (Observation)",
+ "实训零件": "Lab Part",
+ "实训区": "Lab Area",
+ "传送带启停与急停": "Conveyor Start/Stop and E-Stop",
+ "输送带": "Belt Conveyor",
+ "末端光电": "End-of-line photo-eye",
+ "启动": "Start",
+ "停止": "Stop",
+ "急停": "E-Stop",
+ "运行": "Run",
+ "输送带 C1 正转": "Conveyor C1 Forward",
+ "末端光电 S_END 检测到": "End-of-line photo-eye S_END detected",
+ "启动 START 触点": "Start START Contact",
+ "停止 STOP 触点": "Stop STOP Contact",
+ "急停 ESTOP 触点": "E-Stop ESTOP Contact",
+ "运行 LAMP_RUN 点亮": "Run LAMP_RUN Lit",
+ "停止 LAMP_STOP 点亮": "Stop indicator LAMP_STOP is on",
+ "传送带启停与急停 PLC": "Belt Conveyor Start/Stop and E-Stop PLC",
+ "参考答案": "Answer Key"
+}

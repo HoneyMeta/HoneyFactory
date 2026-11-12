@@ -1,0 +1,144 @@
+# 控制单元演示：升降机两层输送
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s11_lift + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：升降机两层输送
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 升降机两层输送
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        params:
+          interval: uniform(9,11)
+          parts:
+          - {kind: box, color: blue, h: 0.2, w: 0.25, weight: 2}
+          - {kind: box, color: red, h: 0.2, w: 0.25, weight: 1}
+      - id: C1
+        type: belt_conveyor
+        pos: [-1.6, 0, 0]
+        rot: 0
+        size: [4.4, 0.6]
+        label: 下层输送带
+        params:
+          speed: 0.3
+      - id: L1
+        type: lift
+        pos: [1.0, 0, 0]
+        rot: 0
+        size: [0.8, 0.7]
+        label: 升降台
+        params: {height: 0.25, z_high: 1.0, speed: 0.4, roll_speed: 0.3}
+      - id: C2
+        type: belt_conveyor
+        pos: [2.6, 0, 0]
+        rot: 0
+        size: [2.4, 0.6]
+        label: 上层输送带
+        params: {speed: 0.3, height: 1.0}
+      - {id: S_TOP, type: diffuse_sensor, pos: [1.9, 0.35, 1.1], rot: 0, label: 上层入口光电}
+      - {id: R1, type: remover, pos: [3.85, 0, 0.95], rot: 0, size: [0.4, 0.8], label: 上层出口}
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.6, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 下层输送带 C1 正转, idle: false}
+      - {name: L1_BOTTOM, dir: in, type: BOOL, addr: '%I0.0', comp: L1, signal: bottom, comment: 升降台 L1 在下位, contact: 'NO', idle: 1}
+      - {name: L1_TOP, dir: in, type: BOOL, addr: '%I0.1', comp: L1, signal: top, comment: 升降台 L1 在上位, contact: 'NO', idle: 0}
+      - {name: L1_PART, dir: in, type: BOOL, addr: '%I0.2', comp: L1, signal: part, comment: 升降台 L1 台面中央有零件, contact: 'NO', idle: 0}
+      - {name: L1_UP, dir: out, type: BOOL, addr: '%Q0.1', comp: L1, signal: up, comment: 升降台 L1 上升（断开下降）, idle: false}
+      - {name: L1_ROLL_FWD, dir: out, type: BOOL, addr: '%Q0.2', comp: L1, signal: roll_fwd, comment: 升降台 L1 滚筒正转, idle: false}
+      - {name: L1_ROLL_REV, dir: out, type: BOOL, addr: '%Q0.3', comp: L1, signal: roll_rev, comment: 升降台 L1 滚筒反转, idle: false}
+      - {name: C2_FWD, dir: out, type: BOOL, addr: '%Q0.4', comp: C2, signal: fwd, comment: 上层输送带 C2 正转, idle: false}
+      - {name: S_TOP, dir: in, type: BOOL, addr: '%I0.3', comp: S_TOP, signal: detect, comment: 上层入口光电 S_TOP 检测到, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.4', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.5', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.6', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.5', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      metrics: [removed, collisions, jams, dropped]
+- id: PLC1
+  type: plc
+  name: 升降机两层输送 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM Lift\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    STEP : INT := 0;    (* 0 接料  1 对中  2 上升  3 出料  4 下降 *)\n    TM : TON;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C2_FWD := RUN;\n    TM(IN := STEP = 1, PT := T#600MS);\n    CASE\
+        \ STEP OF\n        0:  IF L1_PART THEN STEP := 1; END_IF;\n        1:  IF TM.Q THEN STEP := 2; END_IF;\n        2:  IF L1_TOP THEN STEP := 3; END_IF;\n        3:  IF S_TOP THEN STEP := 4; END_IF;\n        4:  IF L1_BOTTOM THEN STEP := 0; END_IF;\n    END_CASE;\n    C1_FWD := RUN AND STEP = 0 AND L1_BOTTOM;\n    L1_ROLL_FWD := RUN AND ((STEP = 0 AND L1_BOTTOM) OR STEP = 1 OR STEP = 3);\n    L1_UP\
+        \ := STEP = 2 OR STEP = 3;\nEND_PROGRAM\n"}
+    di: 7
+    do: 6
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: L1_BOTTOM, ch: I0.0, dir: in}
+  - {point: L1_TOP, ch: I0.1, dir: in}
+  - {point: L1_PART, ch: I0.2, dir: in}
+  - {point: L1_UP, ch: Q0.1, dir: out}
+  - {point: L1_ROLL_FWD, ch: Q0.2, dir: out}
+  - {point: L1_ROLL_REV, ch: Q0.3, dir: out}
+  - {point: C2_FWD, ch: Q0.4, dir: out}
+  - {point: S_TOP, ch: I0.3, dir: in}
+  - {point: START, ch: I0.4, dir: in}
+  - {point: STOP, ch: I0.5, dir: in}
+  - {point: ESTOP, ch: I0.6, dir: in}
+  - {point: LAMP_RUN, ch: Q0.5, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s11_lift

@@ -1,0 +1,593 @@
+# 示范工厂：某转向器壳体铸造厂（铸造 + 机加 + 去毛刺 + 内窥检测 + 检测后分拣段 + 立库），2.0 项目模型。
+# 坐标单位 m：x 沿厂房长度方向，y 为进深方向；size = [长, 宽]。分拣段 CELL1 由独立的 PLC 块控制（信号线连接），梯形图程序在该 PLC 块的 params.program。
+plant:
+  name: 某转向器壳体铸造厂
+  product: SGH-450 商用车转向器壳体（QT450-10）
+  seed: 42
+  start: now
+  dt: 1.0
+  speed: 10
+  modbus_port: 5020
+  warmup_h: 3
+  floor: [150, 56]
+
+areas:
+- {name: 熔炼区, x: [0, 22], color: '#F4E3D7'}
+- {name: 造型区, x: [22, 70], color: '#EDE6DA'}
+- {name: 清理区, x: [70, 84], color: '#E6E9EC'}
+- {name: 机加区, x: [84, 112], color: '#E3ECF2'}
+- {name: 检测区, x: [112, 128], color: '#E8E3F2'}
+- {name: 仓储区, x: [128, 150], color: '#E3F0E6'}
+
+version: 2
+
+blocks:
+- id: FUR1
+  type: induction_furnace
+  name: 1#中频炉 3t
+  pos: [6, 9]
+  size: [4, 4]
+  rot: 0
+  params: {capacity_kg: 3000, power_kw: 2000, modbus_unit: 3, mtbf_h: 300, mttr_min: 45}
+  node: [0, 40]
+- id: FUR2
+  type: induction_furnace
+  name: 2#中频炉 3t
+  pos: [6, 18]
+  size: [4, 4]
+  rot: 0
+  params: {capacity_kg: 3000, power_kw: 2000, modbus_unit: 4, mtbf_h: 300, mttr_min: 45, heel_kg: 1800}
+  node: [0, 160]
+- id: TRT1
+  type: treatment
+  name: 球化孕育站
+  pos: [15, 13]
+  size: [4, 3]
+  rot: 0
+  params: {ladles: 2, ladle_kg: 520, mtbf_h: 500, mttr_min: 20, pour_point: [27, 8]}
+  node: [230, 40]
+- id: SAND1
+  type: sand_system
+  name: 砂处理系统
+  pos: [33, 20]
+  size: [10, 6]
+  rot: 0
+  params: {modbus_unit: 1, mtbf_h: 200, mttr_min: 30}
+  node: [0, 520]
+- id: MOLD1
+  type: molding_line
+  name: 水平分型造型线
+  pos: [40, 8]
+  size: [26, 4]
+  rot: 0
+  params: {cycle_s: 40, castings_per_mold: 2, pour_kg: 45, casting_kg: 18.5, pour_buffer: 8, mtbf_h: 80, mttr_min: 25}
+  node: [460, 40]
+- id: COOL1
+  type: cooling_line
+  name: 冷却输送线
+  pos: [52, 14]
+  size: [32, 3]
+  rot: 0
+  params: {cool_min: 45, capacity_molds: 80}
+  node: [690, 40]
+- id: SHOT1
+  type: shot_blast
+  name: 吊钩抛丸机
+  pos: [76, 12]
+  size: [6, 6]
+  rot: 0
+  params: {modbus_unit: 2, mtbf_h: 150, mttr_min: 30}
+  node: [1150, 40]
+- id: CNC1
+  type: cnc
+  name: 1#加工中心
+  pos: [90, 10]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 40]
+- id: CNC2
+  type: cnc
+  name: 2#加工中心
+  pos: [97, 10]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 160]
+- id: CNC3
+  type: cnc
+  name: 3#加工中心
+  pos: [104, 10]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 280]
+- id: CNC4
+  type: cnc
+  name: 4#加工中心
+  pos: [90, 18]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 400]
+- id: CNC5
+  type: cnc
+  name: 5#加工中心
+  pos: [97, 18]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 520]
+- id: CNC6
+  type: cnc
+  name: 6#加工中心
+  pos: [104, 18]
+  size: [4, 3.4]
+  rot: 0
+  params: {group: CNC, mtbf_h: 120, mttr_min: 40}
+  node: [1840, 640]
+- id: DEB1
+  type: deburr_cell
+  name: 机器人去毛刺单元
+  pos: [116, 12]
+  size: [5, 5]
+  rot: 0
+  params: {mtbf_h: 200, mttr_min: 20}
+  node: [2300, 40]
+- id: INS1
+  type: inspection
+  name: 自动内窥检测站
+  pos: [123, 12]
+  size: [4, 4]
+  rot: 0
+  params: {mtbf_h: 300, mttr_min: 20}
+  node: [2760, 40]
+- id: ASRS1
+  type: warehouse
+  name: 成品立体仓库
+  pos: [139, 13]
+  size: [12, 18]
+  rot: 0
+  params: {slots: 600, ship_every_h: 4}
+  node: [3220, 40]
+- id: AGV
+  type: agv_fleet
+  name: AGV 车队
+  pos: [70, -8]
+  size: [1, 1]
+  rot: 0
+  params:
+    count: 3
+    speed: 1.2
+    corridor_y: -3
+    nodes: {raw: [80, 4], cnc_in: [97, 3], fg: [126, 4], asrs: [133, 4], store: [80, -16], charger: [60, -12]}
+  node: [1610, 620]
+- id: CREW
+  type: worker_crew
+  name: 生产班组
+  pos: [60, 30]
+  size: [1, 1]
+  rot: 0
+  params:
+    roles:
+    - {name: 炉前工, count: 1, stations: [FUR1, FUR2]}
+    - {name: 球化浇包工, count: 1, stations: [TRT1]}
+    - {name: 浇注工, count: 1, stations: [MOLD1]}
+    - {name: 抛丸挂件工, count: 1, stations: [SHOT1]}
+    - {name: CNC 操作工, count: 3, stations: [CNC1, CNC2, CNC3, CNC4, CNC5, CNC6]}
+    - {name: 去毛刺/返修工, count: 1, stations: [DEB1, INS1]}
+    - {name: 仓管员, count: 1, stations: [ASRS1]}
+    - name: 班长
+      count: 1
+      stations: []
+      home: [60, -6]
+      patrol:
+      - [10, -4]
+      - [45, -4]
+      - [80, -4]
+      - [110, -4]
+      - [130, -4]
+      - [110, 26]
+      - [60, 26]
+      - [20, 26]
+  node: [690, 740]
+- id: shot_in
+  type: buffer
+  name: 待抛丸
+  pos: [71.0, 12]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 240
+  node: [920, 40]
+- id: raw
+  type: buffer
+  name: 毛坯暂存
+  pos: [80, 4]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 300
+  node: [1380, 40]
+- id: cnc_in
+  type: buffer
+  name: 机加线边库
+  pos: [97, 3]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 40
+  node: [1610, 160]
+- id: deb_in
+  type: buffer
+  name: 待去毛刺
+  pos: [111.5, 12]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 24
+  node: [2070, 40]
+- id: ins_in
+  type: buffer
+  name: 待检测
+  pos: [119.0, 12]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 24
+  node: [2530, 40]
+- id: fg
+  type: buffer
+  name: 成品待入库
+  pos: [126, 4]
+  size: [3, 3]
+  rot: 0
+  params:
+    capacity: 200
+  node: [2990, 40]
+- id: CELL1
+  type: cell
+  name: 检测后分拣段
+  pos: [120.5, 20.5]
+  size: [8, 3.6]
+  rot: 0
+  area: 检测区
+  node: [2875, 190]
+  params:
+    cell:
+      size: [8, 3.6]
+      components:
+      - id: IN1
+        type: cell_entry
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        label: 来自内窥检测
+        params:
+          min_gap: 4.0
+          assign:
+            default: {kind: part, color: grey, material: metal, h: 0.18, w: 0.26}
+            defect:
+              color: red
+      - id: C1
+        type: belt_conveyor
+        pos: [0, 0, 0]
+        rot: 0
+        size: [7.6, 0.6]
+        label: 分拣输送带
+        params:
+          speed: 0.3
+      - id: V1
+        type: vision_sensor
+        pos: [-0.6, 0, 0.9]
+        rot: 0
+        label: 视觉复检
+        params: {radius: 0.12, mode: color}
+      - {id: S1, type: diffuse_sensor, pos: [0.6, 0.35, 0.33], rot: 0, label: 推杆前光电}
+      - id: P1
+        type: pusher
+        pos: [0.6, 0.42, 0.33]
+        rot: 0
+        label: 剔除推杆
+        params: {stroke: 0.8, speed: 1.0}
+      - id: OUT_NG
+        type: cell_exit
+        pos: [0.6, -0.76, 0]
+        rot: 0
+        size: [0.9, 0.9]
+        label: NG 料箱
+        params:
+          port: ng
+          accept:
+            color: red
+      - {id: S_END, type: diffuse_sensor, pos: [3.3, 0.35, 0.33], rot: 0, label: 线尾计数光电}
+      - id: OUT_OK
+        type: cell_exit
+        pos: [3.85, 0, 0]
+        rot: 0
+        size: [0.3, 0.9]
+        label: 合格出口
+        params:
+          accept:
+            color: grey
+      - id: START
+        type: button
+        pos: [-3.5, 1.45, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.3, 1.45, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.05, 1.45, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.8, 1.45, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      - id: LAMP_NG
+        type: lamp
+        pos: [-2.6, 1.45, 0.95]
+        rot: 0
+        label: 剔除
+        params:
+          color: red
+      - {id: D1, type: display, pos: [-2.3, 1.45, 0.95], rot: 0, label: 合格数}
+      io:
+      - {name: IN1_READY, dir: in, type: BOOL, addr: '%I0.0', comp: IN1, signal: ready, comment: 来自内窥检测 IN1 上游有料, contact: 'NO', idle: 0}
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 分拣输送带 C1 正转, idle: false}
+      - {name: V1_DETECT, dir: in, type: BOOL, addr: '%I0.1', comp: V1, signal: detect, comment: 视觉复检 V1 视野内有零件, contact: 'NO', idle: 0}
+      - {name: V1_CODE, dir: in, type: INT, addr: '%IW100', comp: V1, signal: code, comment: 视觉复检 V1 识别码, idle: 0}
+      - {name: S1, dir: in, type: BOOL, addr: '%I0.2', comp: S1, signal: detect, comment: 推杆前光电 S1 检测到, contact: 'NO', idle: 0}
+      - {name: P1_FRONT, dir: in, type: BOOL, addr: '%I0.3', comp: P1, signal: front, comment: 剔除推杆 P1 伸出到位, contact: 'NO', idle: 0}
+      - {name: P1_BACK, dir: in, type: BOOL, addr: '%I0.4', comp: P1, signal: back, comment: 剔除推杆 P1 缩回到位, contact: 'NO', idle: 1}
+      - {name: P1_EXTEND, dir: out, type: BOOL, addr: '%Q0.1', comp: P1, signal: extend, comment: 剔除推杆 P1 伸出, idle: false}
+      - {name: OUT_NG_BUSY, dir: in, type: BOOL, addr: '%I0.5', comp: OUT_NG, signal: busy, comment: NG 料箱 OUT_NG 出口占用（下游满）, contact: 'NO', idle: 0}
+      - {name: S_END, dir: in, type: BOOL, addr: '%I0.6', comp: S_END, signal: detect, comment: 线尾计数光电 S_END 检测到, contact: 'NO', idle: 0}
+      - {name: OUT_OK_BUSY, dir: in, type: BOOL, addr: '%I0.7', comp: OUT_OK, signal: busy, comment: 合格出口 OUT_OK 出口占用（下游满）, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I1.0', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I1.1', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I1.2', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.2', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      - {name: LAMP_NG, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_NG, signal: 'on', comment: 剔除 LAMP_NG 点亮, idle: false}
+      - {name: D1, dir: out, type: INT, addr: '%QW100', comp: D1, signal: value, comment: 合格数 D1 显示值, idle: 0}
+    substep_ms: 40
+    bypass_s: 30
+- id: PLC1
+  type: plc
+  name: 检测后分拣段 PLC
+  pos: [126.0, 19.2]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program:
+      id: main
+      name: 分拣段主程序
+      lang: LD
+      vars:
+      - {name: RUN, type: BOOL, init: true, comment: 运行（上电即运行）}
+      - {name: IS_NG, type: BOOL, comment: 视觉判定的缺陷件在途}
+      - {name: PUSH, type: BOOL, comment: 推杆动作中}
+      - {name: OK_FULL, type: BOOL, comment: 计数器满（不用）}
+      source:
+        rungs:
+        - comment: 启保停：上电即运行（RUN 初值为 1）；停止、急停是常闭触点
+          elements:
+          - par:
+            - - {t: 'NO', var: START}
+            - - {t: 'NO', var: RUN}
+          - {t: 'NO', var: STOP}
+          - {t: 'NO', var: ESTOP}
+          - {t: COIL, var: RUN}
+        - comment: 输送带
+          elements:
+          - {t: 'NO', var: RUN}
+          - {t: COIL, var: C1_FWD}
+        - comment: 运行指示灯
+          elements:
+          - {t: 'NO', var: RUN}
+          - {t: COIL, var: LAMP_RUN}
+        - comment: 视觉复检：识别到缺陷（红色码 4）置位 NG 标志
+          elements:
+          - {t: 'NO', var: V1_DETECT}
+          - {t: CMP, op: '=', a: V1_CODE, b: '4'}
+          - {t: SET, var: IS_NG}
+        - comment: 视觉看到合格件：复位 NG 标志
+          elements:
+          - {t: 'NO', var: V1_DETECT}
+          - {t: CMP, op: <>, a: V1_CODE, b: '4'}
+          - {t: RESET, var: IS_NG}
+        - comment: NG 件到推杆前（S1 上升沿）：推杆动作
+          elements:
+          - {t: P, var: S1}
+          - {t: 'NO', var: IS_NG}
+          - {t: 'NO', var: RUN}
+          - {t: SET, var: PUSH}
+        - comment: 推杆动作后清掉 NG 标志
+          elements:
+          - {t: 'NO', var: PUSH}
+          - {t: RESET, var: IS_NG}
+        - comment: 伸出到位或停机：推杆缩回
+          elements:
+          - par:
+            - - {t: 'NO', var: P1_FRONT}
+            - - {t: NC, var: RUN}
+          - {t: RESET, var: PUSH}
+        - comment: 推杆电磁阀
+          elements:
+          - {t: 'NO', var: PUSH}
+          - {t: COIL, var: P1_EXTEND}
+        - comment: 剔除指示灯：剔除后亮 3 秒
+          elements:
+          - {t: 'NO', var: PUSH}
+          - t: FB
+            fb: TOF
+            inst: T_NG
+            in:
+              PT: T#3s
+          - {t: COIL, var: LAMP_NG}
+        - comment: 合格件计数（线尾光电）
+          elements:
+          - {t: 'NO', var: S_END}
+          - t: FB
+            fb: CTU
+            inst: C_OK
+            in: {R: 'FALSE', PV: '32767'}
+          - {t: COIL, var: OK_FULL}
+        - comment: 数码管显示合格数
+          elements:
+          - {t: MOVE, in: C_OK.CV, out: D1}
+    di: 11
+    do: 4
+    ai: 1
+    ao: 1
+    migrated_from: CELL1
+    hmi:
+    - id: sort_panel
+      name: 分拣段操作画面
+      cell: PLC1
+      size: [940, 520]
+      widgets:
+      - {id: g1, type: rect, x: 20, y: 20, w: 430, h: 220, label: 操作台, color: '#7d8893'}
+      - {id: b1, type: button, x: 40, y: 50, w: 120, h: 50, label: 启动, var: START, panel: true, mode: momentary, color: '#1f9d55'}
+      - {id: b2, type: button, x: 175, y: 50, w: 120, h: 50, label: 停止, var: STOP, panel: true, mode: momentary, color: '#c83a3a'}
+      - {id: b3, type: button, x: 310, y: 50, w: 120, h: 50, label: 急停（按下/复位）, var: ESTOP, panel: true, mode: toggle, color: '#b91c1c'}
+      - {id: l1, type: lamp, x: 40, y: 120, w: 120, h: 44, label: 运行, var: LAMP_RUN, color: '#22c55e'}
+      - {id: l2, type: lamp, x: 175, y: 120, w: 120, h: 44, label: 剔除, var: LAMP_NG, color: '#ef4444'}
+      - {id: l3, type: lamp, x: 310, y: 120, w: 130, h: 44, label: 输送带, var: C1_FWD, color: '#3b82f6'}
+      - {id: n1, type: number, x: 40, y: 176, w: 190, h: 56, label: 合格数（数码管 D1）, var: D1, unit: 件}
+      - {id: n2, type: number, x: 245, y: 176, w: 190, h: 56, label: 视觉识别码（4=缺陷）, var: V1_CODE}
+      - {id: g2, type: rect, x: 470, y: 20, w: 450, h: 220, label: 现场信号, color: '#7d8893'}
+      - {id: s1, type: lamp, x: 490, y: 50, w: 135, h: 40, label: 视觉有件, var: V1_DETECT, color: '#f2b632'}
+      - {id: s2, type: lamp, x: 635, y: 50, w: 135, h: 40, label: 推杆前光电, var: S1, color: '#f2b632'}
+      - {id: s3, type: lamp, x: 780, y: 50, w: 135, h: 40, label: 线尾光电, var: S_END, color: '#f2b632'}
+      - {id: s4, type: lamp, x: 490, y: 100, w: 135, h: 40, label: 推杆伸出, var: P1_EXTEND, color: '#3b82f6'}
+      - {id: s5, type: lamp, x: 635, y: 100, w: 135, h: 40, label: 伸出到位, var: P1_FRONT, color: '#3b82f6'}
+      - {id: s6, type: lamp, x: 780, y: 100, w: 135, h: 40, label: 缺陷件在途, var: IS_NG, color: '#ef4444'}
+      - {id: s7, type: lamp, x: 490, y: 150, w: 135, h: 40, label: NG 箱满, var: OUT_NG_BUSY, color: '#ef4444'}
+      - {id: s8, type: lamp, x: 635, y: 150, w: 135, h: 40, label: 合格口满, var: OUT_OK_BUSY, color: '#ef4444'}
+      - {id: t1, type: trend, x: 20, y: 260, w: 900, h: 180, label: 输送带 / 推杆前光电 / 推杆, vars: [C1_FWD, S1, P1_EXTEND], min: 0, max: 1.2}
+      - {id: x1, type: text, x: 20, y: 452, w: 900, h: 50, size: 13, label: 按钮等于按单元操作台上的实体按钮（停止、急停是常闭接法，单元自动处理）。视觉看到红色（缺陷）件时，推杆在光电 S1 处把它推进 NG 料箱。}
+  area: 检测区
+  node: [2875, 360]
+- id: NG1
+  type: sink
+  name: 复检剔除品
+  pos: [126.5, 26.5]
+  size: [3, 3]
+  rot: 0
+  area: 检测区
+  node: [2990, 330]
+  params: {scrap: true, scrap_cause: 分拣段复检剔除, ship_every_h: 0}
+- id: SW1
+  type: switch
+  name: 主交换机（控制室）
+  pos: [136.0, 50.0]
+  size: [0.8, 0.3]
+  rot: 0
+  params:
+    ports: 24
+  node: [1610, 900]
+- id: GW1
+  type: gateway
+  name: 1#工业网关
+  pos: [139.0, 50.0]
+  size: [0.8, 0.5]
+  rot: 0
+  params: {south: auto, north: [opcua, mqtt, modbus], ip: 192.168.10.2}
+  node: [1840, 900]
+- id: MES1
+  type: mes
+  name: 蜂元 MES
+  pos: [143.0, 50.0]
+  size: [1, 0.8]
+  rot: 0
+  params:
+    url: http://127.0.0.1:8900
+  node: [2070, 900]
+
+links:
+- {id: L1, kind: material, from: FUR1, from_port: melt, to: TRT1, to_port: melt, fixed: true}
+- {id: L2, kind: material, from: FUR2, from_port: melt, to: TRT1, to_port: melt, fixed: true}
+- {id: L3, kind: material, from: TRT1, from_port: ladle, to: MOLD1, to_port: ladle, fixed: true}
+- {id: L4, kind: material, from: SAND1, from_port: sand, to: MOLD1, to_port: sand, fixed: true}
+- {id: L5, kind: material, from: MOLD1, from_port: mold, to: COOL1, to_port: mold, fixed: true}
+- {id: L6, kind: material, from: COOL1, from_port: out, to: shot_in, to_port: in}
+- {id: L7, kind: material, from: shot_in, from_port: out, to: SHOT1, to_port: in}
+- {id: L8, kind: material, from: SHOT1, from_port: out, to: raw, to_port: in}
+- {id: L9, kind: material, from: cnc_in, from_port: out, to: CNC1, to_port: in}
+- {id: L10, kind: material, from: CNC1, from_port: out, to: deb_in, to_port: in}
+- {id: L11, kind: material, from: cnc_in, from_port: out, to: CNC2, to_port: in}
+- {id: L12, kind: material, from: CNC2, from_port: out, to: deb_in, to_port: in}
+- {id: L13, kind: material, from: cnc_in, from_port: out, to: CNC3, to_port: in}
+- {id: L14, kind: material, from: CNC3, from_port: out, to: deb_in, to_port: in}
+- {id: L15, kind: material, from: cnc_in, from_port: out, to: CNC4, to_port: in}
+- {id: L16, kind: material, from: CNC4, from_port: out, to: deb_in, to_port: in}
+- {id: L17, kind: material, from: cnc_in, from_port: out, to: CNC5, to_port: in}
+- {id: L18, kind: material, from: CNC5, from_port: out, to: deb_in, to_port: in}
+- {id: L19, kind: material, from: cnc_in, from_port: out, to: CNC6, to_port: in}
+- {id: L20, kind: material, from: CNC6, from_port: out, to: deb_in, to_port: in}
+- {id: L21, kind: material, from: deb_in, from_port: out, to: DEB1, to_port: in}
+- {id: L22, kind: material, from: DEB1, from_port: out, to: ins_in, to_port: in}
+- {id: L23, kind: material, from: ins_in, from_port: out, to: INS1, to_port: in}
+- {id: L24, kind: material, from: INS1, from_port: out, to: CELL1, to_port: in}
+- {id: L25, kind: material, from: INS1, from_port: rework, to: deb_in, to_port: in, cond: 返修}
+- {id: L26, kind: material, from: raw, from_port: out, to: cnc_in, to_port: in, via: AGV, fixed: true}
+- {id: L27, kind: material, from: fg, from_port: out, to: ASRS1, to_port: in, via: AGV, fixed: true}
+- {id: L28, kind: material, from: CELL1, from_port: out, to: fg, to_port: in}
+- {id: L29, kind: material, from: CELL1, from_port: ng, to: NG1, to_port: in}
+- {id: NET1, kind: network, from: SW1, to: GW1, protocol: ethernet}
+- {id: NET2, kind: network, from: GW1, to: MES1, protocol: mqtt}
+- {id: NET3, kind: network, from: FUR1, to: SW1, protocol: modbus_tcp}
+- {id: NET4, kind: network, from: FUR2, to: SW1, protocol: modbus_tcp}
+- {id: NET5, kind: network, from: TRT1, to: SW1, protocol: profinet}
+- {id: NET6, kind: network, from: SAND1, to: SW1, protocol: modbus_tcp}
+- {id: NET7, kind: network, from: MOLD1, to: SW1, protocol: profinet}
+- {id: NET8, kind: network, from: COOL1, to: SW1, protocol: profinet}
+- {id: NET9, kind: network, from: SHOT1, to: SW1, protocol: modbus_tcp}
+- {id: NET10, kind: network, from: CNC1, to: SW1, protocol: opcua}
+- {id: NET11, kind: network, from: CNC2, to: SW1, protocol: opcua}
+- {id: NET12, kind: network, from: CNC3, to: SW1, protocol: opcua}
+- {id: NET13, kind: network, from: CNC4, to: SW1, protocol: opcua}
+- {id: NET14, kind: network, from: CNC5, to: SW1, protocol: opcua}
+- {id: NET15, kind: network, from: CNC6, to: SW1, protocol: opcua}
+- {id: NET16, kind: network, from: DEB1, to: SW1, protocol: profinet}
+- {id: NET17, kind: network, from: INS1, to: SW1, protocol: opcua}
+- {id: NET18, kind: network, from: ASRS1, to: SW1, protocol: profinet}
+- {id: NET19, kind: network, from: AGV, to: SW1, protocol: ethernet}
+- {id: NET20, kind: network, from: PLC1, to: SW1, protocol: profinet}
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: IN1_READY, ch: I0.0, dir: in}
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: V1_DETECT, ch: I0.1, dir: in}
+  - {point: V1_CODE, ch: IW100, dir: in}
+  - {point: S1, ch: I0.2, dir: in}
+  - {point: P1_FRONT, ch: I0.3, dir: in}
+  - {point: P1_BACK, ch: I0.4, dir: in}
+  - {point: P1_EXTEND, ch: Q0.1, dir: out}
+  - {point: OUT_NG_BUSY, ch: I0.5, dir: in}
+  - {point: S_END, ch: I0.6, dir: in}
+  - {point: OUT_OK_BUSY, ch: I0.7, dir: in}
+  - {point: START, ch: I1.0, dir: in}
+  - {point: STOP, ch: I1.1, dir: in}
+  - {point: ESTOP, ch: I1.2, dir: in}
+  - {point: LAMP_RUN, ch: Q0.2, dir: out}
+  - {point: LAMP_NG, ch: Q0.3, dir: out}
+  - {point: D1, ch: QW100, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []

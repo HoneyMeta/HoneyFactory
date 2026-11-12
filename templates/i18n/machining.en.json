@@ -1,0 +1,22 @@
+{
+ "新建机加工厂": "Create Machining Plant",
+ "外购铸件精加工": "Precision Machining of Purchased Castings",
+ "收货区": "Receiving Area",
+ "机加区": "Machining Area",
+ "检测区": "Inspection Area",
+ "仓储区": "Storage Area",
+ "毛坯来料": "Raw Casting Infeed",
+ "外购毛坯": "Purchased Raw Castings",
+ "1#加工中心": "#1 Machining Center",
+ "2#加工中心": "#2 Machining Center",
+ "3#加工中心": "#3 Machining Center",
+ "4#加工中心": "#4 Machining Center",
+ "机器人去毛刺单元": "Robotic Deburring Cell",
+ "自动内窥检测站": "Automated Borescope Inspection Station",
+ "成品立体仓库": "Finished Goods Automated Storage and Retrieval System",
+ "AGV 车队": "AGV Fleet",
+ "生产班组": "Production Team",
+ "CNC 操作工": "CNC Operator",
+ "去毛刺/返修工": "Deburring/Rework Operator",
+ "仓管员": "Warehouse Clerk"
+}

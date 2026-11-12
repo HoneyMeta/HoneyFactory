@@ -1,0 +1,730 @@
+{
+ "id": "s02_fwd_rev",
+ "name": "电机正反转互锁",
+ "level": 2,
+ "order": 2,
+ "desc": "正转、反转两个接触器绝不能同时吸合（会相间短路）：用 PLC 实现接触器互锁。",
+ "cell": {
+  "size": [
+   8,
+   4
+  ],
+  "components": [
+   {
+    "id": "M1",
+    "type": "motor",
+    "pos": [
+     -2.6,
+     -1.0,
+     0
+    ],
+    "rot": 0,
+    "label": "输送电机",
+    "params": {
+     "reversible": true,
+     "ramp": 0.8,
+     "kw": 1.5
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     0.2,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     6.6,
+     0.6
+    ],
+    "label": "输送带（由 M1 拖动）",
+    "params": {
+     "speed": 0.3,
+     "motor": "M1"
+    }
+   },
+   {
+    "id": "FWD",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "正转",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "REV",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "反转",
+    "params": {
+     "color": "blue"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.2,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "LAMP_FWD",
+    "type": "lamp",
+    "pos": [
+     -2.95,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "正转",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "LAMP_REV",
+    "type": "lamp",
+    "pos": [
+     -2.75,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "反转",
+    "params": {
+     "color": "yellow"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "M1_RUNNING",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "M1",
+    "signal": "running",
+    "comment": "输送电机 M1 运行反馈",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "M1_OL_OK",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "M1",
+    "signal": "ol_ok",
+    "comment": "输送电机 M1 热继电器正常（常闭）",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "M1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "M1",
+    "signal": "fwd",
+    "comment": "输送电机 M1 正转接触器",
+    "idle": false
+   },
+   {
+    "name": "M1_REV",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "M1",
+    "signal": "rev",
+    "comment": "输送电机 M1 反转接触器",
+    "idle": false
+   },
+   {
+    "name": "FWD",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "FWD",
+    "signal": "value",
+    "comment": "正转 FWD 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "REV",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "REV",
+    "signal": "value",
+    "comment": "反转 REV 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "LAMP_FWD",
+    "signal": "on",
+    "comment": "正转 LAMP_FWD 点亮",
+    "idle": false
+   },
+   {
+    "name": "LAMP_REV",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "LAMP_REV",
+    "signal": "on",
+    "comment": "反转 LAMP_REV 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "hard_reversals"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "M1_RUNNING",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "M1",
+   "signal": "running",
+   "comment": "输送电机 M1 运行反馈",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "M1_OL_OK",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "M1",
+   "signal": "ol_ok",
+   "comment": "输送电机 M1 热继电器正常（常闭）",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "M1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "M1",
+   "signal": "fwd",
+   "comment": "输送电机 M1 正转接触器",
+   "idle": false
+  },
+  {
+   "name": "M1_REV",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "M1",
+   "signal": "rev",
+   "comment": "输送电机 M1 反转接触器",
+   "idle": false
+  },
+  {
+   "name": "FWD",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "FWD",
+   "signal": "value",
+   "comment": "正转 FWD 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "REV",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "REV",
+   "signal": "value",
+   "comment": "反转 REV 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "LAMP_FWD",
+   "signal": "on",
+   "comment": "正转 LAMP_FWD 点亮",
+   "idle": false
+  },
+  {
+   "name": "LAMP_REV",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "LAMP_REV",
+   "signal": "on",
+   "comment": "反转 LAMP_REV 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：电机正反转控制（接触器互锁）\n\n电机 **M1** 有正转接触器 `M1_FWD` 和反转接触器 `M1_REV`。两个接触器**同时吸合会造成相间短路**，必须互锁。\n\n1. 按 **正转** 电机正转并自锁，正转灯亮；按 **反转** 电机反转并自锁，反转灯亮；\n2. 按 **停止**（常闭）电机停止；\n3. **互锁**：正转运行时按反转按钮无效（反之亦然），必须先按停止再换向；任何时刻两个输出不能同时为 1，包括两个按钮同时按下；\n4. 热继电器动作（`M1_OL_OK` = 0）时立即停止。\n\n> 触点说明：`M1_OL_OK`、`STOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `M1_RUNNING` | 输入 | BOOL | %I0.0 | 常开 | 0 | 输送电机 M1 运行反馈 |\n| `M1_OL_OK` | 输入 | BOOL | %I0.1 | **常闭** | 1 | 输送电机 M1 热继电器正常（常闭） |\n| `M1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 输送电机 M1 正转接触器 |\n| `M1_REV` | 输出 | BOOL | %Q0.1 | — | 0 | 输送电机 M1 反转接触器 |\n| `FWD` | 输入 | BOOL | %I0.2 | 常开 | 0 | 正转 FWD 触点 |\n| `REV` | 输入 | BOOL | %I0.3 | 常开 | 0 | 反转 REV 触点 |\n| `STOP` | 输入 | BOOL | %I0.4 | **常闭** | 1 | 停止 STOP 触点 |\n| `LAMP_FWD` | 输出 | BOOL | %Q0.2 | — | 0 | 正转 LAMP_FWD 点亮 |\n| `LAMP_REV` | 输出 | BOOL | %Q0.3 | — | 0 | 反转 LAMP_REV 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 正转启动并自锁（做到）：**15 分**\n  - 怎么试：停着时按一下正转：M1_FWD 变 1，松手后保持\n- 反转启动并自锁（做到）：**15 分**\n  - 怎么试：停着时按一下反转：M1_REV 变 1，松手后保持\n- 停止（做到）：**15 分**\n  - 怎么试：正转或反转运行时按停止：1 秒内两个接触器都断开\n- 正反转互锁（做到）：**30 分**\n  - 怎么试：正转时按反转应该没反应（正转继续），反转时按正转也一样；任何时候 M1_FWD 和 M1_REV 都不能同时为 1\n- 高速直接反转次数：必须为 0（不能出现）：**5 分**\n  - 怎么试：电机转着时按另一个方向的按钮，程序不能直接换向（先按停止）\n- 过载保护且不自启（做到）：**10 分**\n  - 怎么试：点这一项的\"演示\"：系统模拟过载，两个方向都要立刻停，复位后不能自己转\n- 方向指示灯（做到）：**10 分**\n  - 怎么试：正转时正转灯亮，反转时反转灯亮\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "正转的条件里串上 NOT M1_REV，反转的条件里串上 NOT M1_FWD，这就是\"接触器互锁\"。",
+  "两个按钮同时按下时，ST 里先执行的那一行会先得电，后一行因为互锁不会再得电。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "fwd_ok",
+    "label": "正转启动并自锁",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "停着时按一下正转：M1_FWD 变 1，松手后保持"
+   },
+   {
+    "key": "rev_ok",
+    "label": "反转启动并自锁",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "停着时按一下反转：M1_REV 变 1，松手后保持"
+   },
+   {
+    "key": "stop_ok",
+    "label": "停止",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "正转或反转运行时按停止：1 秒内两个接触器都断开"
+   },
+   {
+    "key": "interlock_ok",
+    "label": "正反转互锁",
+    "op": "==",
+    "value": 1,
+    "weight": 30,
+    "how": "正转时按反转应该没反应（正转继续），反转时按正转也一样；任何时候 M1_FWD 和 M1_REV 都不能同时为 1"
+   },
+   {
+    "key": "hard_reversals",
+    "label": "高速直接反转次数",
+    "op": "==",
+    "value": 0,
+    "weight": 5,
+    "how": "电机转着时按另一个方向的按钮，程序不能直接换向（先按停止）"
+   },
+   {
+    "key": "overload_ok",
+    "label": "过载保护且不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 10,
+    "how": "点这一项的\"演示\"：系统模拟过载，两个方向都要立刻停，复位后不能自己转"
+   },
+   {
+    "key": "lamp_ok",
+    "label": "方向指示灯",
+    "op": "==",
+    "value": 1,
+    "weight": 10,
+    "how": "正转时正转灯亮，反转时反转灯亮"
+   }
+  ]
+ },
+ "test": {
+  "duration": 24,
+  "steps": [
+   {
+    "t": 0.0,
+    "until": 24,
+    "key": "interlock_ok",
+    "watch": {
+     "never_both": [
+      "M1_FWD",
+      "M1_REV"
+     ]
+    },
+    "desc": "正反转接触器同时得电（短路！）"
+   },
+   {
+    "t": 1.0,
+    "press": "FWD"
+   },
+   {
+    "t": 2.0,
+    "key": "fwd_ok",
+    "check": {
+     "out": "M1_FWD",
+     "eq": true
+    },
+    "desc": "按正转后没有正转"
+   },
+   {
+    "t": 2.0,
+    "key": "fwd_ok",
+    "check": {
+     "out": "M1_FWD",
+     "eq": true
+    },
+    "hold": 1.5,
+    "desc": "正转没有自锁"
+   },
+   {
+    "t": 2.0,
+    "key": "lamp_ok",
+    "check": {
+     "out": "LAMP_FWD",
+     "eq": true
+    },
+    "desc": "正转时正转灯没亮"
+   },
+   {
+    "t": 4.0,
+    "press": "REV"
+   },
+   {
+    "t": 4.2,
+    "key": "interlock_ok",
+    "check": {
+     "out": "M1_REV",
+     "eq": false
+    },
+    "desc": "正转运行中按反转，反转接触器得电了"
+   },
+   {
+    "t": 5.0,
+    "key": "interlock_ok",
+    "check": {
+     "out": "M1_FWD",
+     "eq": true
+    },
+    "desc": "正转运行中按反转，正转被打断了（要求先停止再换向）"
+   },
+   {
+    "t": 6.0,
+    "press": "STOP"
+   },
+   {
+    "t": 7.0,
+    "key": "stop_ok",
+    "check": {
+     "all_off": [
+      "M1_FWD",
+      "M1_REV"
+     ]
+    },
+    "desc": "按停止没有停"
+   },
+   {
+    "t": 8.0,
+    "press": "REV"
+   },
+   {
+    "t": 9.0,
+    "key": "rev_ok",
+    "check": {
+     "out": "M1_REV",
+     "eq": true
+    },
+    "desc": "按反转后没有反转"
+   },
+   {
+    "t": 9.0,
+    "key": "rev_ok",
+    "check": {
+     "out": "M1_REV",
+     "eq": true
+    },
+    "hold": 1.5,
+    "desc": "反转没有自锁"
+   },
+   {
+    "t": 9.0,
+    "key": "lamp_ok",
+    "check": {
+     "out": "LAMP_REV",
+     "eq": true
+    },
+    "desc": "反转时反转灯没亮"
+   },
+   {
+    "t": 11.0,
+    "press": "FWD"
+   },
+   {
+    "t": 11.5,
+    "key": "interlock_ok",
+    "check": {
+     "out": "M1_FWD",
+     "eq": false
+    },
+    "desc": "反转运行中按正转，正转接触器得电了（没有互锁）"
+   },
+   {
+    "t": 12.0,
+    "press": "STOP"
+   },
+   {
+    "t": 13.0,
+    "key": "stop_ok",
+    "check": {
+     "all_off": [
+      "M1_FWD",
+      "M1_REV"
+     ]
+    },
+    "desc": "反转时按停止没有停"
+   },
+   {
+    "t": 14.0,
+    "press": "FWD",
+    "hold": 0.5
+   },
+   {
+    "t": 14.0,
+    "press": "REV",
+    "hold": 0.5
+   },
+   {
+    "t": 15.0,
+    "press": "STOP"
+   },
+   {
+    "t": 16.5,
+    "press": "FWD"
+   },
+   {
+    "t": 17.5,
+    "fault": {
+     "comp": "M1",
+     "kind": "motor_overload"
+    }
+   },
+   {
+    "t": 17.8,
+    "key": "overload_ok",
+    "check": {
+     "all_off": [
+      "M1_FWD",
+      "M1_REV"
+     ]
+    },
+    "desc": "过载后没有停止"
+   },
+   {
+    "t": 19.0,
+    "clear_faults": true
+   },
+   {
+    "t": 20.5,
+    "key": "overload_ok",
+    "check": {
+     "all_off": [
+      "M1_FWD",
+      "M1_REV"
+     ]
+    },
+    "desc": "热继电器复位后自己启动了"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM FwdRev\n(* 正转：启动并联自锁，串停止、热继电器和反转互锁 *)\nM1_FWD := (FWD OR M1_FWD) AND STOP AND M1_OL_OK AND NOT M1_REV;\n(* 反转：同样，串正转互锁 *)\nM1_REV := (REV OR M1_REV) AND STOP AND M1_OL_OK AND NOT M1_FWD;\nLAMP_FWD := M1_FWD;\nLAMP_REV := M1_REV;\nEND_PROGRAM\n"
+  },
+  "ld": {
+   "id": "reference_ld",
+   "name": "参考答案（梯形图）",
+   "lang": "LD",
+   "vars": [],
+   "source": {
+    "rungs": [
+     {
+      "comment": "正转：自锁 + 停止 + 热继电器 + 反转互锁",
+      "elements": [
+       {
+        "par": [
+         [
+          {
+           "t": "NO",
+           "var": "FWD"
+          }
+         ],
+         [
+          {
+           "t": "NO",
+           "var": "M1_FWD"
+          }
+         ]
+        ]
+       },
+       {
+        "t": "NO",
+        "var": "STOP"
+       },
+       {
+        "t": "NO",
+        "var": "M1_OL_OK"
+       },
+       {
+        "t": "NC",
+        "var": "M1_REV"
+       },
+       {
+        "t": "COIL",
+        "var": "M1_FWD"
+       }
+      ]
+     },
+     {
+      "comment": "反转：自锁 + 停止 + 热继电器 + 正转互锁",
+      "elements": [
+       {
+        "par": [
+         [
+          {
+           "t": "NO",
+           "var": "REV"
+          }
+         ],
+         [
+          {
+           "t": "NO",
+           "var": "M1_REV"
+          }
+         ]
+        ]
+       },
+       {
+        "t": "NO",
+        "var": "STOP"
+       },
+       {
+        "t": "NO",
+        "var": "M1_OL_OK"
+       },
+       {
+        "t": "NC",
+        "var": "M1_FWD"
+       },
+       {
+        "t": "COIL",
+        "var": "M1_REV"
+       }
+      ]
+     },
+     {
+      "comment": "正转指示",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "M1_FWD"
+       },
+       {
+        "t": "COIL",
+        "var": "LAMP_FWD"
+       }
+      ]
+     },
+     {
+      "comment": "反转指示",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "M1_REV"
+       },
+       {
+        "t": "COIL",
+        "var": "LAMP_REV"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "faults": [
+  {
+   "comp": "M1",
+   "kind": "motor_overload",
+   "label": "M1 电机过载跳闸",
+   "symptom": "电机运行中停止，M1_OL_OK = 0"
+  },
+  {
+   "comp": "REV",
+   "kind": "wire_break",
+   "label": "REV 断线（信号恒为 0）",
+   "symptom": "按反转没有反应"
+  },
+  {
+   "comp": "FWD",
+   "kind": "sensor_stuck_on",
+   "label": "FWD 传感器常通（一直为 1）",
+   "symptom": "正转按钮卡住：一按停止就又正转"
+  },
+  {
+   "comp": "LAMP_REV",
+   "kind": "wire_break",
+   "label": "LAMP_REV 断线（信号恒为 0）",
+   "symptom": "反转时指示灯不亮"
+  }
+ ],
+ "version": 1
+}

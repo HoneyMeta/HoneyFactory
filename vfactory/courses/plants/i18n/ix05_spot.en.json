@@ -1,0 +1,15 @@
+{
+ "某机加车间·产量下降": "Machining Workshop · Output Decline",
+ "法兰盘": "Flange",
+ "收货区": "Receiving Area",
+ "机加区": "Machining Area",
+ "仓储区": "Storage Area",
+ "毛坯来料": "Raw Casting Infeed",
+ "毛坯缓存": "Raw Casting Buffer",
+ "1#数控车床": "#1 CNC Lathe",
+ "缓存 1": "Buffer 1",
+ "2#加工中心": "#2 Machining Center",
+ "缓存 2": "Buffer 2",
+ "3#去毛刺机": "#3 Deburring Machine",
+ "成品仓库": "Finished Goods Warehouse"
+}

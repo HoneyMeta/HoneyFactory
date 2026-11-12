@@ -1,0 +1,63 @@
+/* HoneyFactory global styles. Light theme only since 5.0.1: shared tokens and utilities live in design/tokens.css and design/base.css (shared with HoneyMOM); only HoneyFactory-specific styles belong here. */
+body { font-size: var(--hm-fs-sm); }
+
+/* ---- Simulation status pills (Executing / Idle / Stopped …; same five status colors as MES) ---- */
+.st-Executing { background: var(--hm-run-soft); color: var(--hm-run-ink); }
+.st-Idle, .st-queued { background: var(--hm-idle-soft); color: var(--hm-idle-ink); }
+.st-Stopped, .st-failed, .st-error { background: var(--hm-fault-soft); color: var(--hm-fault-ink); }
+.st-Setup { background: var(--hm-setup-soft); color: var(--hm-setup-ink); }
+.st-Planned { background: #efecfd; color: #4b3d8f; }
+.kpi b { font-size: var(--hm-fs-xl); }
+/* <el-button><el-icon/>Text</el-button>: add spacing between the icon and text inside the shared span */
+.el-button > span > .el-icon:first-child:not(:last-child) { margin-right: 4px; }
+
+/* ---- 3D scene labels (used by scene.ts) ---- */
+.scene-host { position: absolute; inset: 0; overflow: hidden; }
+.scene-host canvas { display: block; }
+.labels { position: absolute; top: 0; left: 0; z-index: 1; }
+.lbl { pointer-events: none; font-size: 11.5px; background: rgba(255,255,255,.92); border: 1px solid var(--hm-border-strong); border-radius: 6px; padding: 1px 7px; white-space: nowrap; transform: translateY(-14px);
+  color: var(--hm-text); box-shadow: 0 1px 3px rgba(15, 32, 60, .08); }
+.lbl b { font-weight: 600; } .lbl small { color: var(--hm-text-2); }
+.lbl.alarm { border-color: var(--hm-fault); background: #fff1f1; } .lbl.alarm small { color: var(--hm-fault-ink); }
+.lbl.sel { border-color: var(--hm-primary); box-shadow: 0 0 0 2px rgba(20, 99, 214, .3); }
+.lbl .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: 0; }
+.lbl .area { font-size: 15px; font-weight: 700; color: var(--hm-text-2); background: none; border: none; }
+.lbl:has(.area), .lbl:has(.node), .lbl:has(.agv), .lbl:has(.wk) { background: none; border: none; box-shadow: none; }
+.lbl .node { font-size: 11px; color: var(--hm-text-2); background: rgba(255,255,255,.85); border-radius: 4px; padding: 0 5px; }
+.lbl .agv { font-size: 10.5px; background: var(--hm-amber-ink); color: #fff; border-radius: 4px; padding: 0 5px; }
+.lbl .agv.Charging { background: var(--hm-primary); } .lbl .agv.Blocked { background: var(--hm-fault); }
+.lbl.flat { background: none; border: none; transform: none; box-shadow: none; }
+.step { font-size: 11.5px; background: rgba(20, 99, 214, .92); color: #fff; border-radius: 999px; padding: 1px 9px 1px 2px; white-space: nowrap; box-shadow: 0 1px 4px rgba(15, 32, 60, .2); }
+.step i { display: inline-block; font-style: normal; background: #fff; color: var(--hm-primary); border-radius: 50%; width: 17px; height: 17px; line-height: 17px; text-align: center; margin-right: 5px; font-weight: 700; font-size: 10.5px; }
+.lbl.cur .step { background: var(--hm-amber); } .lbl.cur .step i { color: var(--hm-amber-ink); }
+.lbl.track { background: var(--hm-primary); color: #fff; border: 0; font-size: 12px; padding: 3px 9px; text-align: center; box-shadow: 0 2px 8px rgba(15, 32, 60, .25); }
+.lbl .wk { font-size: 10px; color: var(--hm-text); background: rgba(255,255,255,.85); border-radius: 4px; padding: 0 4px; }
+.lbl.busy .wk { background: var(--hm-run); color: #fff; }
+.flow-on .node.n-raw, .flow-on .node.n-cnc_in, .flow-on .node.n-fg { display: none; }
+.hide-labels .lbl:not(.track):not(.flat) { display: none; }
+.scene-host.editing { outline: 3px solid var(--hm-amber); outline-offset: -3px; }
+
+/* Wrap long tooltips (previously viewport-wide, overflowing the right edge) */
+.el-popper.tip-wrap { max-width: min(420px, calc(100vw - 24px)); line-height: 1.6; white-space: normal; }
+
+/* 4.7 compact layout (compact.ts: enabled automatically below 1366×800; minimum 1280×720): reduce spacing, font sizes, and cards */
+html.compact body { font-size: 12.5px; }
+html.compact .page { padding: 10px 12px 18px; }
+html.compact .page-head { margin-bottom: 8px; gap: 8px; min-height: 0; } html.compact .page-head h2 { font-size: 16px; } html.compact .page-head .sub { font-size: 12px; }
+html.compact .card { padding: 10px 12px; border-radius: var(--hm-r-md); } html.compact .card h3 { margin-bottom: 8px; font-size: 13.5px; }
+html.compact .grid { gap: 10px; }
+html.compact .kpi { padding: 8px 10px; } html.compact .kpi b { font-size: 18px; }
+html.compact .el-dialog { --el-dialog-padding-primary: 14px; }
+/* Dialogs in short windows: reduce top offset, scroll the body, and fit within the viewport (4.7: wizard bottoms, e.g. course publishing, were clipped) */
+html.compact .el-overlay-dialog .el-dialog:not(.is-fullscreen) { margin-top: 3vh !important; margin-bottom: 3vh; }
+.el-dialog.fit-dialog { display: flex; flex-direction: column; max-height: calc(100vh - 6vh); margin-top: 3vh !important; margin-bottom: 0; }
+.el-dialog.fit-dialog > .el-dialog__body { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.el-dialog.fit-dialog > .el-dialog__header, .el-dialog.fit-dialog > .el-dialog__footer { flex: none; }
+
+/* English UI (i18n): English words are longer than Chinese ones - keep one-line chrome on one line, let narrow labels wrap */
+html[lang="en"] .shell .side .bt small { letter-spacing: .02em; }
+html[lang="en"] .ed-clock b { white-space: nowrap; }
+html[lang="en"] .ed-clock span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+html[lang="en"] .dt .grid2 .f > label { white-space: normal; line-height: 1.15; width: 64px; overflow-wrap: anywhere; }
+html[lang="en"] .dt .f > label { line-height: 1.2; overflow-wrap: anywhere; }
+html[lang="en"] .ed-speed { flex: none; }

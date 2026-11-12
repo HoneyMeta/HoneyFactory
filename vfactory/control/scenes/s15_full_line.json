@@ -1,0 +1,1217 @@
+{
+ "id": "s15_full_line",
+ "name": "整线联动（接入整厂）",
+ "level": 15,
+ "order": 15,
+ "desc": "整厂上游来料进入单元：工位加工、颜色检测剔除次品、转台按材质分流，合格件和次品分别交回整厂。",
+ "cell": {
+  "size": [
+   9,
+   4.6
+  ],
+  "components": [
+   {
+    "id": "IN1",
+    "type": "cell_entry",
+    "pos": [
+     -4.1,
+     0,
+     0.27
+    ],
+    "rot": 0,
+    "label": "单元入口",
+    "params": {
+     "min_gap": 6.0,
+     "assign": {
+      "random": [
+       {
+        "color": "blue",
+        "material": "plastic",
+        "weight": 4
+       },
+       {
+        "color": "green",
+        "material": "plastic",
+        "weight": 2
+       },
+       {
+        "color": "grey",
+        "material": "metal",
+        "weight": 3
+       }
+      ],
+      "default": {
+       "kind": "box",
+       "h": 0.2,
+       "w": 0.25
+      }
+     }
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     -1.65,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     5.7,
+     0.6
+    ],
+    "label": "主输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "ST1",
+    "type": "stopper",
+    "pos": [
+     -2.8,
+     0,
+     0
+    ],
+    "rot": 0,
+    "label": "加工工位挡停"
+   },
+   {
+    "id": "S1",
+    "type": "diffuse_sensor",
+    "pos": [
+     -2.84,
+     0.35,
+     0.35
+    ],
+    "rot": 0,
+    "label": "加工工位光电"
+   },
+   {
+    "id": "V1",
+    "type": "vision_sensor",
+    "pos": [
+     -1.9,
+     0,
+     0.9
+    ],
+    "rot": 0,
+    "label": "颜色检测"
+   },
+   {
+    "id": "S2",
+    "type": "diffuse_sensor",
+    "pos": [
+     -1.0,
+     0.35,
+     0.35
+    ],
+    "rot": 0,
+    "label": "剔除推杆光电"
+   },
+   {
+    "id": "P1",
+    "type": "pusher",
+    "pos": [
+     -1.0,
+     0.42,
+     0.35
+    ],
+    "rot": 0,
+    "label": "剔除推杆",
+    "params": {
+     "stroke": 0.8
+    }
+   },
+   {
+    "id": "OUT_NG",
+    "type": "cell_exit",
+    "pos": [
+     -1.0,
+     -0.76,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.9,
+     0.9
+    ],
+    "label": "次品出口",
+    "params": {
+     "port": "ng",
+     "accept": {
+      "color": "green"
+     }
+    }
+   },
+   {
+    "id": "ST2",
+    "type": "stopper",
+    "pos": [
+     0.85,
+     0,
+     0
+    ],
+    "rot": 0,
+    "label": "分离挡停"
+   },
+   {
+    "id": "IND1",
+    "type": "inductive",
+    "pos": [
+     1.0,
+     -0.3,
+     0.32
+    ],
+    "rot": 180,
+    "label": "电感（金属）",
+    "params": {
+     "range": 0.2
+    }
+   },
+   {
+    "id": "S_ST",
+    "type": "diffuse_sensor",
+    "pos": [
+     1.12,
+     0.35,
+     0.35
+    ],
+    "rot": 0,
+    "label": "过挡停光电"
+   },
+   {
+    "id": "T1",
+    "type": "turntable",
+    "pos": [
+     1.65,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.9,
+     0.9
+    ],
+    "label": "转台",
+    "params": {
+     "angle": -90
+    }
+   },
+   {
+    "id": "C2",
+    "type": "belt_conveyor",
+    "pos": [
+     3.2,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     2.2,
+     0.6
+    ],
+    "label": "塑料件输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "C3",
+    "type": "belt_conveyor",
+    "pos": [
+     1.65,
+     -1.3,
+     0
+    ],
+    "rot": -90,
+    "size": [
+     1.7,
+     0.6
+    ],
+    "label": "金属件输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "OUT_PL",
+    "type": "cell_exit",
+    "pos": [
+     4.35,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.3,
+     0.9
+    ],
+    "label": "塑料件出口",
+    "params": {
+     "accept": {
+      "material": "plastic",
+      "color": "blue"
+     }
+    }
+   },
+   {
+    "id": "OUT_ME",
+    "type": "cell_exit",
+    "pos": [
+     1.65,
+     -2.2,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.9,
+     0.2
+    ],
+    "label": "金属件出口",
+    "params": {
+     "accept": {
+      "material": "metal"
+     }
+    }
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -4.1,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.8999999999999995,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.6499999999999995,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -3.3999999999999995,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "LAMP_WORK",
+    "type": "lamp",
+    "pos": [
+     -3.1999999999999997,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "加工中",
+    "params": {
+     "color": "yellow"
+    }
+   },
+   {
+    "id": "D1",
+    "type": "display",
+    "pos": [
+     -2.9999999999999996,
+     1.9,
+     0.95
+    ],
+    "rot": 0,
+    "label": "合格数"
+   }
+  ],
+  "io": [
+   {
+    "name": "IN1_READY",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "IN1",
+    "signal": "ready",
+    "comment": "单元入口 IN1 上游有料",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "主输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "ST1_RAISE",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "ST1",
+    "signal": "raise",
+    "comment": "加工工位挡停 ST1 升起挡料",
+    "idle": false
+   },
+   {
+    "name": "S1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "S1",
+    "signal": "detect",
+    "comment": "加工工位光电 S1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "V1_DETECT",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "V1",
+    "signal": "detect",
+    "comment": "颜色检测 V1 视野内有零件",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "V1_CODE",
+    "dir": "in",
+    "type": "INT",
+    "addr": "%IW100",
+    "comp": "V1",
+    "signal": "code",
+    "comment": "颜色检测 V1 识别码",
+    "idle": 0
+   },
+   {
+    "name": "S2",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "S2",
+    "signal": "detect",
+    "comment": "剔除推杆光电 S2 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "P1_FRONT",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "P1",
+    "signal": "front",
+    "comment": "剔除推杆 P1 伸出到位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "P1_BACK",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.5",
+    "comp": "P1",
+    "signal": "back",
+    "comment": "剔除推杆 P1 缩回到位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "P1_EXTEND",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "P1",
+    "signal": "extend",
+    "comment": "剔除推杆 P1 伸出",
+    "idle": false
+   },
+   {
+    "name": "OUT_NG_BUSY",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.6",
+    "comp": "OUT_NG",
+    "signal": "busy",
+    "comment": "次品出口 OUT_NG 出口占用（下游满）",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "ST2_RAISE",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "ST2",
+    "signal": "raise",
+    "comment": "分离挡停 ST2 升起挡料",
+    "idle": false
+   },
+   {
+    "name": "IND1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.7",
+    "comp": "IND1",
+    "signal": "detect",
+    "comment": "电感（金属） IND1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "S_ST",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.0",
+    "comp": "S_ST",
+    "signal": "detect",
+    "comment": "过挡停光电 S_ST 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "T1_HOME",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.1",
+    "comp": "T1",
+    "signal": "home",
+    "comment": "转台 T1 在 0° 位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "T1_TURNED",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.2",
+    "comp": "T1",
+    "signal": "turned",
+    "comment": "转台 T1 在转角位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "T1_PART",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.3",
+    "comp": "T1",
+    "signal": "part",
+    "comment": "转台 T1 台面中央有零件",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "T1_TURN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.4",
+    "comp": "T1",
+    "signal": "turn",
+    "comment": "转台 T1 转到转角位",
+    "idle": false
+   },
+   {
+    "name": "T1_ROLL_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.5",
+    "comp": "T1",
+    "signal": "roll_fwd",
+    "comment": "转台 T1 滚筒正转",
+    "idle": false
+   },
+   {
+    "name": "T1_ROLL_REV",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.6",
+    "comp": "T1",
+    "signal": "roll_rev",
+    "comment": "转台 T1 滚筒反转",
+    "idle": false
+   },
+   {
+    "name": "C2_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.7",
+    "comp": "C2",
+    "signal": "fwd",
+    "comment": "塑料件输送带 C2 正转",
+    "idle": false
+   },
+   {
+    "name": "C3_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q1.0",
+    "comp": "C3",
+    "signal": "fwd",
+    "comment": "金属件输送带 C3 正转",
+    "idle": false
+   },
+   {
+    "name": "OUT_PL_BUSY",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.4",
+    "comp": "OUT_PL",
+    "signal": "busy",
+    "comment": "塑料件出口 OUT_PL 出口占用（下游满）",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "OUT_ME_BUSY",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.5",
+    "comp": "OUT_ME",
+    "signal": "busy",
+    "comment": "金属件出口 OUT_ME 出口占用（下游满）",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.6",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.7",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I2.0",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q1.1",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   },
+   {
+    "name": "LAMP_WORK",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q1.2",
+    "comp": "LAMP_WORK",
+    "signal": "on",
+    "comment": "加工中 LAMP_WORK 点亮",
+    "idle": false
+   },
+   {
+    "name": "D1",
+    "dir": "out",
+    "type": "INT",
+    "addr": "%QW100",
+    "comp": "D1",
+    "signal": "value",
+    "comment": "合格数 D1 显示值",
+    "idle": 0
+   }
+  ],
+  "metrics": [
+   "sort_accuracy",
+   "dwell_min.ST1",
+   "collisions",
+   "jams",
+   "throughput_per_min"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "IN1_READY",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "IN1",
+   "signal": "ready",
+   "comment": "单元入口 IN1 上游有料",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "主输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "ST1_RAISE",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "ST1",
+   "signal": "raise",
+   "comment": "加工工位挡停 ST1 升起挡料",
+   "idle": false
+  },
+  {
+   "name": "S1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "S1",
+   "signal": "detect",
+   "comment": "加工工位光电 S1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "V1_DETECT",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "V1",
+   "signal": "detect",
+   "comment": "颜色检测 V1 视野内有零件",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "V1_CODE",
+   "dir": "in",
+   "type": "INT",
+   "addr": "%IW100",
+   "comp": "V1",
+   "signal": "code",
+   "comment": "颜色检测 V1 识别码",
+   "idle": 0
+  },
+  {
+   "name": "S2",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "S2",
+   "signal": "detect",
+   "comment": "剔除推杆光电 S2 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "P1_FRONT",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "P1",
+   "signal": "front",
+   "comment": "剔除推杆 P1 伸出到位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "P1_BACK",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.5",
+   "comp": "P1",
+   "signal": "back",
+   "comment": "剔除推杆 P1 缩回到位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "P1_EXTEND",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "P1",
+   "signal": "extend",
+   "comment": "剔除推杆 P1 伸出",
+   "idle": false
+  },
+  {
+   "name": "OUT_NG_BUSY",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.6",
+   "comp": "OUT_NG",
+   "signal": "busy",
+   "comment": "次品出口 OUT_NG 出口占用（下游满）",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "ST2_RAISE",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "ST2",
+   "signal": "raise",
+   "comment": "分离挡停 ST2 升起挡料",
+   "idle": false
+  },
+  {
+   "name": "IND1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.7",
+   "comp": "IND1",
+   "signal": "detect",
+   "comment": "电感（金属） IND1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "S_ST",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.0",
+   "comp": "S_ST",
+   "signal": "detect",
+   "comment": "过挡停光电 S_ST 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "T1_HOME",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.1",
+   "comp": "T1",
+   "signal": "home",
+   "comment": "转台 T1 在 0° 位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "T1_TURNED",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.2",
+   "comp": "T1",
+   "signal": "turned",
+   "comment": "转台 T1 在转角位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "T1_PART",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.3",
+   "comp": "T1",
+   "signal": "part",
+   "comment": "转台 T1 台面中央有零件",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "T1_TURN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.4",
+   "comp": "T1",
+   "signal": "turn",
+   "comment": "转台 T1 转到转角位",
+   "idle": false
+  },
+  {
+   "name": "T1_ROLL_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.5",
+   "comp": "T1",
+   "signal": "roll_fwd",
+   "comment": "转台 T1 滚筒正转",
+   "idle": false
+  },
+  {
+   "name": "T1_ROLL_REV",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.6",
+   "comp": "T1",
+   "signal": "roll_rev",
+   "comment": "转台 T1 滚筒反转",
+   "idle": false
+  },
+  {
+   "name": "C2_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.7",
+   "comp": "C2",
+   "signal": "fwd",
+   "comment": "塑料件输送带 C2 正转",
+   "idle": false
+  },
+  {
+   "name": "C3_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q1.0",
+   "comp": "C3",
+   "signal": "fwd",
+   "comment": "金属件输送带 C3 正转",
+   "idle": false
+  },
+  {
+   "name": "OUT_PL_BUSY",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.4",
+   "comp": "OUT_PL",
+   "signal": "busy",
+   "comment": "塑料件出口 OUT_PL 出口占用（下游满）",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "OUT_ME_BUSY",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.5",
+   "comp": "OUT_ME",
+   "signal": "busy",
+   "comment": "金属件出口 OUT_ME 出口占用（下游满）",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.6",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.7",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I2.0",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q1.1",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  },
+  {
+   "name": "LAMP_WORK",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q1.2",
+   "comp": "LAMP_WORK",
+   "signal": "on",
+   "comment": "加工中 LAMP_WORK 点亮",
+   "idle": false
+  },
+  {
+   "name": "D1",
+   "dir": "out",
+   "type": "INT",
+   "addr": "%QW100",
+   "comp": "D1",
+   "signal": "value",
+   "comment": "合格数 D1 显示值",
+   "idle": 0
+  }
+ ],
+ "task_md": "## 任务：整线联动（接入整厂）\n\n本单元放在整厂流程里：上游零件从单元入口进入，合格件从\"塑料件出口\"\"金属件出口\"交回整厂下游（out），次品从\"次品出口\"交给整厂的不合格品通道（ng）。\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；\n2. **加工**：零件到加工工位（`S1`）后挡停 `ST1` 挡住停留 **2 s**（加工中灯亮），然后放行；\n3. **检测剔除**：视觉 `V1` 识别到**绿色**（`V1_CODE` = 2，次品）时，零件到推杆前（`S2`）由推杆 `P1` 推进次品出口；\n4. **分流**：分离挡停 `ST2` 每次只放一个零件进转台，电感开关 `IND1`（装在挡停和转台之间）识别金属件：金属件转到 -90° 送到金属件输送带 C3，塑料件直行到 C2；\n5. 数码管 `D1` 显示合格件（两个合格出口）累计数；\n6. 正确率 ≥ 98%，不碰撞、不卡件，每分钟至少 5 件。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。例外：`P1_BACK`、`T1_HOME` 是\"在原位/到位\"信号，设备停在初始位置时就是 1。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `IN1_READY` | 输入 | BOOL | %I0.0 | 常开 | 0 | 单元入口 IN1 上游有料 |\n| `C1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 主输送带 C1 正转 |\n| `ST1_RAISE` | 输出 | BOOL | %Q0.1 | — | 0 | 加工工位挡停 ST1 升起挡料 |\n| `S1` | 输入 | BOOL | %I0.1 | 常开 | 0 | 加工工位光电 S1 检测到 |\n| `V1_DETECT` | 输入 | BOOL | %I0.2 | 常开 | 0 | 颜色检测 V1 视野内有零件 |\n| `V1_CODE` | 输入 | INT | %IW100 | — | 0 | 颜色检测 V1 识别码 |\n| `S2` | 输入 | BOOL | %I0.3 | 常开 | 0 | 剔除推杆光电 S2 检测到 |\n| `P1_FRONT` | 输入 | BOOL | %I0.4 | 常开 | 0 | 剔除推杆 P1 伸出到位 |\n| `P1_BACK` | 输入 | BOOL | %I0.5 | 常开 | 1 | 剔除推杆 P1 缩回到位 |\n| `P1_EXTEND` | 输出 | BOOL | %Q0.2 | — | 0 | 剔除推杆 P1 伸出 |\n| `OUT_NG_BUSY` | 输入 | BOOL | %I0.6 | 常开 | 0 | 次品出口 OUT_NG 出口占用（下游满） |\n| `ST2_RAISE` | 输出 | BOOL | %Q0.3 | — | 0 | 分离挡停 ST2 升起挡料 |\n| `IND1` | 输入 | BOOL | %I0.7 | 常开 | 0 | 电感（金属） IND1 检测到 |\n| `S_ST` | 输入 | BOOL | %I1.0 | 常开 | 0 | 过挡停光电 S_ST 检测到 |\n| `T1_HOME` | 输入 | BOOL | %I1.1 | 常开 | 1 | 转台 T1 在 0° 位 |\n| `T1_TURNED` | 输入 | BOOL | %I1.2 | 常开 | 0 | 转台 T1 在转角位 |\n| `T1_PART` | 输入 | BOOL | %I1.3 | 常开 | 0 | 转台 T1 台面中央有零件 |\n| `T1_TURN` | 输出 | BOOL | %Q0.4 | — | 0 | 转台 T1 转到转角位 |\n| `T1_ROLL_FWD` | 输出 | BOOL | %Q0.5 | — | 0 | 转台 T1 滚筒正转 |\n| `T1_ROLL_REV` | 输出 | BOOL | %Q0.6 | — | 0 | 转台 T1 滚筒反转 |\n| `C2_FWD` | 输出 | BOOL | %Q0.7 | — | 0 | 塑料件输送带 C2 正转 |\n| `C3_FWD` | 输出 | BOOL | %Q1.0 | — | 0 | 金属件输送带 C3 正转 |\n| `OUT_PL_BUSY` | 输入 | BOOL | %I1.4 | 常开 | 0 | 塑料件出口 OUT_PL 出口占用（下游满） |\n| `OUT_ME_BUSY` | 输入 | BOOL | %I1.5 | 常开 | 0 | 金属件出口 OUT_ME 出口占用（下游满） |\n| `START` | 输入 | BOOL | %I1.6 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I1.7 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I2.0 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q1.1 | — | 0 | 运行 LAMP_RUN 点亮 |\n| `LAMP_WORK` | 输出 | BOOL | %Q1.2 | — | 0 | 加工中 LAMP_WORK 点亮 |\n| `D1` | 输出 | INT | %QW100 | — | 0 | 合格数 D1 显示值 |\n\n### 评分标准（满分 100 分）\n\n- 分拣/剔除正确率 ≥ 98%：**25 分**\n  - 怎么试：按启动让它连续跑几分钟，看分拣对不对（这里显示当前正确率）\n- 加工工位最短停留 s ≥ 2.0：**10 分**\n  - 怎么试：每个零件在加工工位停够 2 秒（这里显示目前最短的一次）\n- 碰撞次数：必须为 0（不能出现）：**15 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 卡件次数：必须为 0（不能出现）：**10 分**\n  - 怎么试：连续运行时零件不能被挡住走不动（这里显示当前次数）\n- 每分钟产出 ≥ 5：**10 分**\n  - 怎么试：连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）\n- 合格数显示（做到）：**5 分**\n  - 怎么试：运行一段时间后数码管 D1 显示合格件累计数\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "可以把前面几课的程序拼起来：「定时放料与工位停留」（工位停留）、「按颜色分拣」（剔除）、「转台分流」（分流）。",
+  "放行的零件经过 IND1 时记下\"是金属\"，回到等料步骤时清掉。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "sort_accuracy",
+    "label": "分拣/剔除正确率",
+    "op": ">=",
+    "value": 0.98,
+    "weight": 25,
+    "how": "按启动让它连续跑几分钟，看分拣对不对（这里显示当前正确率）"
+   },
+   {
+    "key": "dwell_min.ST1",
+    "label": "加工工位最短停留 s",
+    "op": ">=",
+    "value": 2.0,
+    "weight": 10,
+    "how": "每个零件在加工工位停够 2 秒（这里显示目前最短的一次）"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 15,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "jams",
+    "label": "卡件次数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "连续运行时零件不能被挡住走不动（这里显示当前次数）"
+   },
+   {
+    "key": "throughput_per_min",
+    "label": "每分钟产出",
+    "op": ">=",
+    "value": 5,
+    "weight": 10,
+    "how": "连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）"
+   },
+   {
+    "key": "display_ok",
+    "label": "合格数显示",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "运行一段时间后数码管 D1 显示合格件累计数"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 252,
+  "feed": {
+   "interval": "uniform(8,9)",
+   "start": 1.0
+  },
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C1_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 240.0,
+    "snapshot": true
+   },
+   {
+    "t": 240.0,
+    "key": "display_ok",
+    "check": {
+     "out": "D1",
+     "op": ">=",
+     "value": 1
+    },
+    "desc": "数码管 D1 没有显示合格件数"
+   },
+   {
+    "t": 241.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 241.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD",
+      "C3_FWD",
+      "P1_EXTEND",
+      "T1_ROLL_FWD"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 242.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 244.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD",
+      "C3_FWD",
+      "P1_EXTEND",
+      "T1_ROLL_FWD"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 245.0,
+    "press": "START"
+   },
+   {
+    "t": 246.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM FullLine\nVAR\n    RUN : BOOL;\n    (* 加工工位 *)\n    WT : TON;  PT1 : TON;  H1 : BOOL := TRUE;\n    (* 剔除 *)\n    IS_GREEN : BOOL;  PUSH : BOOL;  TRIG2 : R_TRIG;\n    (* 转台 *)\n    STEP : INT := 0;  METAL : BOOL;  TC : TON;  TL : TON;\n    GOOD : INT := 0;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;  C2_FWD := RUN;  C3_FWD := RUN;\n    (* ---- 加工工位：停留 2 s ---- *)\n    WT(IN := S1 AND H1, PT := T#2200MS);\n    LAMP_WORK := S1 AND H1;\n    IF WT.Q THEN H1 := FALSE; END_IF;\n    PT1(IN := NOT H1, PT := T#1S);\n    IF PT1.Q THEN H1 := TRUE; END_IF;\n    ST1_RAISE := H1;\n    (* ---- 颜色剔除 ---- *)\n    IF V1_DETECT THEN IS_GREEN := (V1_CODE = 2); END_IF;\n    TRIG2(CLK := S2);\n    IF TRIG2.Q AND IS_GREEN AND RUN THEN PUSH := TRUE; IS_GREEN := FALSE; END_IF;\n    IF P1_FRONT OR NOT RUN THEN PUSH := FALSE; END_IF;\n    P1_EXTEND := PUSH;\n    (* ---- 转台分流 ---- *)\n    TC(IN := STEP = 3, PT := T#400MS);\n    TL(IN := STEP = 5 AND NOT T1_PART, PT := T#1500MS);\n    CASE STEP OF\n        0:  METAL := FALSE;\n            IF RUN AND T1_HOME AND NOT T1_PART THEN STEP := 1; END_IF;\n        1:  IF IND1 THEN METAL := TRUE; END_IF;\n            IF S_ST THEN STEP := 2; END_IF;\n        2:  IF IND1 THEN METAL := TRUE; END_IF;\n            IF T1_PART THEN STEP := 3; END_IF;\n        3:  IF TC.Q THEN\n                IF METAL THEN STEP := 4; ELSE STEP := 5; END_IF;\n            END_IF;\n        4:  IF T1_TURNED THEN STEP := 5; END_IF;\n        5:  IF TL.Q THEN STEP := 6; GOOD := GOOD + 1; END_IF;\n        6:  IF T1_HOME THEN STEP := 0; END_IF;\n    END_CASE;\n    ST2_RAISE := NOT (STEP = 1);\n    T1_TURN := RUN AND (STEP = 4 OR STEP = 5) AND METAL;\n    T1_ROLL_FWD := RUN AND (STEP = 1 OR STEP = 2 OR (STEP = 3 AND NOT TC.Q) OR STEP = 5);\n    D1 := GOOD;\nEND_PROGRAM\n"
+  }
+ },
+ "faults": [
+  {
+   "comp": "V1",
+   "kind": "wire_break",
+   "label": "V1 断线（信号恒为 0）",
+   "symptom": "次品不被剔除"
+  },
+  {
+   "comp": "IND1",
+   "kind": "sensor_stuck_on",
+   "label": "IND1 传感器常通（一直为 1）",
+   "symptom": "所有零件都转向金属线"
+  },
+  {
+   "comp": "T1",
+   "kind": "actuator_slow",
+   "label": "T1 执行器动作变慢",
+   "symptom": "转台慢，来料堆积"
+  },
+  {
+   "comp": "S_ST",
+   "kind": "sensor_stuck_off",
+   "label": "S_ST 传感器常断（一直为 0）",
+   "symptom": "分离挡停一直落下"
+  },
+  {
+   "comp": "P1",
+   "kind": "actuator_jam",
+   "label": "P1 执行器卡滞",
+   "symptom": "推杆不动，次品混进合格品"
+  }
+ ],
+ "version": 1
+}

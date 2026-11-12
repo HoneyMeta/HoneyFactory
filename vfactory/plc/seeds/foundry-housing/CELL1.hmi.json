@@ -1,0 +1,238 @@
+{
+ "id": "sort_panel",
+ "name": "分拣段操作画面",
+ "cell": "CELL1",
+ "size": [
+  940,
+  520
+ ],
+ "widgets": [
+  {
+   "id": "g1",
+   "type": "rect",
+   "x": 20,
+   "y": 20,
+   "w": 430,
+   "h": 220,
+   "label": "操作台",
+   "color": "#7d8893"
+  },
+  {
+   "id": "b1",
+   "type": "button",
+   "x": 40,
+   "y": 50,
+   "w": 120,
+   "h": 50,
+   "label": "启动",
+   "var": "START",
+   "panel": true,
+   "mode": "momentary",
+   "color": "#1f9d55"
+  },
+  {
+   "id": "b2",
+   "type": "button",
+   "x": 175,
+   "y": 50,
+   "w": 120,
+   "h": 50,
+   "label": "停止",
+   "var": "STOP",
+   "panel": true,
+   "mode": "momentary",
+   "color": "#c83a3a"
+  },
+  {
+   "id": "b3",
+   "type": "button",
+   "x": 310,
+   "y": 50,
+   "w": 120,
+   "h": 50,
+   "label": "急停（按下/复位）",
+   "var": "ESTOP",
+   "panel": true,
+   "mode": "toggle",
+   "color": "#b91c1c"
+  },
+  {
+   "id": "l1",
+   "type": "lamp",
+   "x": 40,
+   "y": 120,
+   "w": 120,
+   "h": 44,
+   "label": "运行",
+   "var": "LAMP_RUN",
+   "color": "#22c55e"
+  },
+  {
+   "id": "l2",
+   "type": "lamp",
+   "x": 175,
+   "y": 120,
+   "w": 120,
+   "h": 44,
+   "label": "剔除",
+   "var": "LAMP_NG",
+   "color": "#ef4444"
+  },
+  {
+   "id": "l3",
+   "type": "lamp",
+   "x": 310,
+   "y": 120,
+   "w": 130,
+   "h": 44,
+   "label": "输送带",
+   "var": "C1_FWD",
+   "color": "#3b82f6"
+  },
+  {
+   "id": "n1",
+   "type": "number",
+   "x": 40,
+   "y": 176,
+   "w": 190,
+   "h": 56,
+   "label": "合格数（数码管 D1）",
+   "var": "D1",
+   "unit": "件"
+  },
+  {
+   "id": "n2",
+   "type": "number",
+   "x": 245,
+   "y": 176,
+   "w": 190,
+   "h": 56,
+   "label": "视觉识别码（4=缺陷）",
+   "var": "V1_CODE"
+  },
+  {
+   "id": "g2",
+   "type": "rect",
+   "x": 470,
+   "y": 20,
+   "w": 450,
+   "h": 220,
+   "label": "现场信号",
+   "color": "#7d8893"
+  },
+  {
+   "id": "s1",
+   "type": "lamp",
+   "x": 490,
+   "y": 50,
+   "w": 135,
+   "h": 40,
+   "label": "视觉有件",
+   "var": "V1_DETECT",
+   "color": "#f2b632"
+  },
+  {
+   "id": "s2",
+   "type": "lamp",
+   "x": 635,
+   "y": 50,
+   "w": 135,
+   "h": 40,
+   "label": "推杆前光电",
+   "var": "S1",
+   "color": "#f2b632"
+  },
+  {
+   "id": "s3",
+   "type": "lamp",
+   "x": 780,
+   "y": 50,
+   "w": 135,
+   "h": 40,
+   "label": "线尾光电",
+   "var": "S_END",
+   "color": "#f2b632"
+  },
+  {
+   "id": "s4",
+   "type": "lamp",
+   "x": 490,
+   "y": 100,
+   "w": 135,
+   "h": 40,
+   "label": "推杆伸出",
+   "var": "P1_EXTEND",
+   "color": "#3b82f6"
+  },
+  {
+   "id": "s5",
+   "type": "lamp",
+   "x": 635,
+   "y": 100,
+   "w": 135,
+   "h": 40,
+   "label": "伸出到位",
+   "var": "P1_FRONT",
+   "color": "#3b82f6"
+  },
+  {
+   "id": "s6",
+   "type": "lamp",
+   "x": 780,
+   "y": 100,
+   "w": 135,
+   "h": 40,
+   "label": "缺陷件在途",
+   "var": "IS_NG",
+   "color": "#ef4444"
+  },
+  {
+   "id": "s7",
+   "type": "lamp",
+   "x": 490,
+   "y": 150,
+   "w": 135,
+   "h": 40,
+   "label": "NG 箱满",
+   "var": "OUT_NG_BUSY",
+   "color": "#ef4444"
+  },
+  {
+   "id": "s8",
+   "type": "lamp",
+   "x": 635,
+   "y": 150,
+   "w": 135,
+   "h": 40,
+   "label": "合格口满",
+   "var": "OUT_OK_BUSY",
+   "color": "#ef4444"
+  },
+  {
+   "id": "t1",
+   "type": "trend",
+   "x": 20,
+   "y": 260,
+   "w": 900,
+   "h": 180,
+   "label": "输送带 / 推杆前光电 / 推杆",
+   "vars": [
+    "C1_FWD",
+    "S1",
+    "P1_EXTEND"
+   ],
+   "min": 0,
+   "max": 1.2
+  },
+  {
+   "id": "x1",
+   "type": "text",
+   "x": 20,
+   "y": 452,
+   "w": 900,
+   "h": 50,
+   "size": 13,
+   "label": "按钮等于按单元操作台上的实体按钮（停止、急停是常闭接法，单元自动处理）。视觉看到红色（缺陷）件时，推杆在光电 S1 处把它推进 NG 料箱。"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·看机人员
+  product: HSG-200 壳体
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [48, 22]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 机加区, x: [10, 40], color: '#E3ECF2'}
+- {name: 仓储区, x: [40, 48], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯来料
+  pos: [2, 8]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(48)
+- id: B0
+  type: buffer
+  name: 毛坯库
+  pos: [7, 8]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 200
+- id: OP1
+  type: operators
+  name: 操作工
+  pos: [24, 18]
+  size: [2, 2]
+  node: [480, 160]
+  params:
+    count: 1
+- id: M1
+  type: processor
+  name: 1#加工中心
+  pos: [18, 2]
+  size: [4, 3.4]
+  node: [300, 160]
+  params: {time: 'normal(170,6)', operator: OP1, operator_mode: load, load_s: 70, mtbf_h: 3, mttr_min: 25, run_kw: 14, idle_kw: 2}
+- id: M2
+  type: processor
+  name: 2#加工中心
+  pos: [18, 7]
+  size: [4, 3.4]
+  node: [300, 280]
+  params: {time: 'normal(170,6)', operator: OP1, operator_mode: load, load_s: 70, mtbf_h: 3, mttr_min: 25, run_kw: 14, idle_kw: 2}
+- id: M3
+  type: processor
+  name: 3#加工中心
+  pos: [28, 2]
+  size: [4, 3.4]
+  node: [300, 400]
+  params: {time: 'normal(170,6)', operator: OP1, operator_mode: load, load_s: 70, mtbf_h: 3, mttr_min: 25, run_kw: 14, idle_kw: 2}
+- id: M4
+  type: processor
+  name: 4#加工中心
+  pos: [28, 7]
+  size: [4, 3.4]
+  node: [300, 520]
+  params: {time: 'normal(170,6)', operator: OP1, operator_mode: load, load_s: 70, mtbf_h: 3, mttr_min: 25, run_kw: 14, idle_kw: 2}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [42, 8]
+  size: [4, 4]
+  node: [560, 300]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: OUT, to_port: in}
+- {id: L4, from: B0, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M2, from_port: out, to: OUT, to_port: in}
+- {id: L6, from: B0, from_port: out, to: M3, to_port: in}
+- {id: L7, from: M3, from_port: out, to: OUT, to_port: in}
+- {id: L8, from: B0, from_port: out, to: M4, to_port: in}
+- {id: L9, from: M4, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

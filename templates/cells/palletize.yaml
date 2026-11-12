@@ -1,0 +1,155 @@
+# 控制单元演示：伺服取放机械手码垛
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s09_palletize + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：伺服取放机械手码垛
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12.4]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 码垛（伺服取放）
+  pos: [11.0, 6.2]
+  size: [8, 4.4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4.4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        params:
+          interval: '8'
+          max: 6
+          parts:
+          - {kind: box, color: orange, h: 0.2, w: 0.25}
+      - id: C1
+        type: belt_conveyor
+        pos: [-1.3, 0, 0]
+        rot: 0
+        size: [5.0, 0.6]
+        label: 来料输送带
+        params:
+          speed: 0.3
+      - id: ST1
+        type: stopper
+        pos: [1.13, 0, 0]
+        rot: 0
+        label: 端头挡块
+        params:
+          normally_up: true
+      - {id: S1, type: diffuse_sensor, pos: [1.0, 0.35, 0.35], rot: 0, label: 取料位光电}
+      - id: PP1
+        type: pick_place
+        pos: [1.0, 0, 0]
+        rot: -90
+        label: 取放机械手
+        params: {mode: servo, x_stroke: 1.6, z_stroke: 0.9, z_top: 1.1, x_speed: 0.8, z_speed: 0.5}
+      - id: PL1
+        type: pallet
+        pos: [1.0, -1.15, 0]
+        rot: 0
+        size: [0.5, 1.0]
+        label: 托盘
+        params:
+          height: 0.3
+      - id: START
+        type: button
+        pos: [-3.6, 1.8, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.8, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.8, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.8, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 来料输送带 C1 正转, idle: false}
+      - {name: ST1_LOWER, dir: out, type: BOOL, addr: '%Q0.1', comp: ST1, signal: lower, comment: 端头挡块 ST1 落下放行, idle: false}
+      - {name: S1, dir: in, type: BOOL, addr: '%I0.0', comp: S1, signal: detect, comment: 取料位光电 S1 检测到, contact: 'NO', idle: 0}
+      - {name: PP1_X_POS, dir: in, type: INT, addr: '%IW100', comp: PP1, signal: x_pos, comment: 取放机械手 PP1 水平位置 mm, idle: 0}
+      - {name: PP1_Z_POS, dir: in, type: INT, addr: '%IW102', comp: PP1, signal: z_pos, comment: 取放机械手 PP1 下降位置 mm, idle: 0}
+      - {name: PP1_X_AT, dir: in, type: BOOL, addr: '%I0.1', comp: PP1, signal: x_at, comment: 取放机械手 PP1 水平到位, contact: 'NO', idle: 1}
+      - {name: PP1_Z_AT, dir: in, type: BOOL, addr: '%I0.2', comp: PP1, signal: z_at, comment: 取放机械手 PP1 垂直到位（或已接触）, contact: 'NO', idle: 1}
+      - {name: PP1_GRIPPED, dir: in, type: BOOL, addr: '%I0.3', comp: PP1, signal: gripped, comment: 取放机械手 PP1 已吸住, contact: 'NO', idle: 0}
+      - {name: PP1_X_SET, dir: out, type: INT, addr: '%QW100', comp: PP1, signal: x_set, comment: 取放机械手 PP1 水平目标 mm, idle: 0}
+      - {name: PP1_Z_SET, dir: out, type: INT, addr: '%QW102', comp: PP1, signal: z_set, comment: 取放机械手 PP1 下降目标 mm, idle: 0}
+      - {name: PP1_GRIP, dir: out, type: BOOL, addr: '%Q0.2', comp: PP1, signal: grip, comment: 取放机械手 PP1 吸取, idle: false}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.4', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.5', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.6', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      metrics: [pallets.PL1.count, pallets.PL1.layers, pallets.PL1.inside, collisions, hard_drops, dropped]
+- id: PLC1
+  type: plc
+  name: 码垛（伺服取放） PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM Palletize\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    STEP : INT := 0;\n    N : INT := 0;           (* 已码箱数 *)\n    XP : INT := 0;          (* 本次放料 X *)\n    TM : TON;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n\
+        \    TM(IN := STEP = 3 OR STEP = 8, PT := T#300MS);\n    CASE STEP OF\n        0:  PP1_X_SET := 0; PP1_Z_SET := 0;\n            IF RUN AND S1 AND PP1_X_AT AND PP1_Z_AT AND N < 6 THEN STEP := 1; END_IF;\n        1:  PP1_Z_SET := 900; STEP := 2;                               (* 下降到箱顶 *)\n        2:  IF PP1_Z_AT THEN PP1_GRIP := TRUE; STEP := 3; END_IF;\n        3:  IF PP1_GRIPPED AND TM.Q THEN\
+        \ PP1_Z_SET := 0; STEP := 4; END_IF;\n        4:  IF PP1_Z_AT AND PP1_Z_POS < 5 THEN\n                XP := 850 + (N MOD 3) * 300;\n                PP1_X_SET := XP; STEP := 5;\n            END_IF;\n        5:  IF PP1_X_AT AND PP1_X_POS = XP THEN PP1_Z_SET := 900; STEP := 6; END_IF;\n        6:  STEP := 7;\n        7:  IF PP1_Z_AT THEN PP1_GRIP := FALSE; STEP := 8; END_IF;    (* 放下 *)\n     \
+        \   8:  IF TM.Q THEN PP1_Z_SET := 0; STEP := 9; END_IF;\n        9:  IF PP1_Z_AT AND PP1_Z_POS < 5 THEN PP1_X_SET := 0; STEP := 10; END_IF;\n        10: IF PP1_X_AT AND PP1_X_POS = 0 THEN N := N + 1; STEP := 0; END_IF;\n    END_CASE;\nEND_PROGRAM\n"}
+    di: 7
+    do: 4
+    ai: 2
+    ao: 2
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: ST1_LOWER, ch: Q0.1, dir: out}
+  - {point: S1, ch: I0.0, dir: in}
+  - {point: PP1_X_POS, ch: IW100, dir: in}
+  - {point: PP1_Z_POS, ch: IW102, dir: in}
+  - {point: PP1_X_AT, ch: I0.1, dir: in}
+  - {point: PP1_Z_AT, ch: I0.2, dir: in}
+  - {point: PP1_GRIPPED, ch: I0.3, dir: in}
+  - {point: PP1_X_SET, ch: QW100, dir: out}
+  - {point: PP1_Z_SET, ch: QW102, dir: out}
+  - {point: PP1_GRIP, ch: Q0.2, dir: out}
+  - {point: START, ch: I0.4, dir: in}
+  - {point: STOP, ch: I0.5, dir: in}
+  - {point: ESTOP, ch: I0.6, dir: in}
+  - {point: LAMP_RUN, ch: Q0.3, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s09_palletize

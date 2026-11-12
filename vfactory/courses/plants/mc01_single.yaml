@@ -1,0 +1,57 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·单机工位
+  product: HSG-200 壳体
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [30, 14]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 机加区, x: [10, 22], color: '#E3ECF2'}
+- {name: 仓储区, x: [22, 30], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯来料
+  pos: [2, 5]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(45)
+- id: B0
+  type: buffer
+  name: 待加工
+  pos: [7, 5]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 200
+- id: M1
+  type: processor
+  name: 1#加工中心
+  pos: [13, 5]
+  size: [4, 3.4]
+  node: [480, 160]
+  params: {time: 'normal(75,3)', run_kw: 12, idle_kw: 2}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [24, 5]
+  size: [4, 4]
+  node: [680, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

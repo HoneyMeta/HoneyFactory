@@ -1,0 +1,155 @@
+# 控制单元演示：视觉按颜色分拣（推杆）
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s04_sort_color + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：视觉按颜色分拣（推杆）
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 按颜色分拣
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        params:
+          interval: uniform(5,7)
+          parts:
+          - {kind: box, color: blue, h: 0.2, w: 0.25, weight: 1}
+          - {kind: box, color: green, h: 0.2, w: 0.25, weight: 1}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.0, 0, 0]
+        rot: 0
+        size: [7.6, 0.6]
+        label: 输送带
+        params:
+          speed: 0.3
+      - id: V1
+        type: vision_sensor
+        pos: [0.3, 0, 0.9]
+        rot: 0
+        label: 颜色识别
+        params:
+          mode: color
+      - {id: S1, type: diffuse_sensor, pos: [1.5, 0.35, 0.35], rot: 0, label: 推杆前光电}
+      - id: P1
+        type: pusher
+        pos: [1.5, 0.42, 0.35]
+        rot: 0
+        label: 推杆
+        params: {stroke: 0.8, speed: 1.0}
+      - id: R_GREEN
+        type: remover
+        pos: [1.5, -0.76, 0]
+        rot: 0
+        size: [0.9, 0.9]
+        label: 绿色料箱
+        params:
+          accept:
+            color: green
+      - id: R_BLUE
+        type: remover
+        pos: [3.85, 0, 0]
+        rot: 0
+        size: [0.4, 0.9]
+        label: 蓝色出口
+        params:
+          accept:
+            color: blue
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.6, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      io:
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: C1, signal: fwd, comment: 输送带 C1 正转, idle: false}
+      - {name: V1_DETECT, dir: in, type: BOOL, addr: '%I0.0', comp: V1, signal: detect, comment: 颜色识别 V1 视野内有零件, contact: 'NO', idle: 0}
+      - {name: V1_CODE, dir: in, type: INT, addr: '%IW100', comp: V1, signal: code, comment: 颜色识别 V1 识别码, idle: 0}
+      - {name: S1, dir: in, type: BOOL, addr: '%I0.1', comp: S1, signal: detect, comment: 推杆前光电 S1 检测到, contact: 'NO', idle: 0}
+      - {name: P1_FRONT, dir: in, type: BOOL, addr: '%I0.2', comp: P1, signal: front, comment: 推杆 P1 伸出到位, contact: 'NO', idle: 0}
+      - {name: P1_BACK, dir: in, type: BOOL, addr: '%I0.3', comp: P1, signal: back, comment: 推杆 P1 缩回到位, contact: 'NO', idle: 1}
+      - {name: P1_EXTEND, dir: out, type: BOOL, addr: '%Q0.1', comp: P1, signal: extend, comment: 推杆 P1 伸出, idle: false}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.4', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.5', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.6', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.2', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      metrics: [sort_accuracy, collisions, jams, throughput_per_min]
+- id: PLC1
+  type: plc
+  name: 按颜色分拣 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM SortColor\nVAR\n    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)\n    IS_GREEN : BOOL;      (* 最近一次视觉识别是绿色 *)\n    PUSH : BOOL;          (* 推杆动作中 *)\n    TRIG : R_TRIG;        (* S1 上升沿 *)\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD :=\
+        \ RUN;\n    (* 零件经过视觉时锁存颜色 *)\n    IF V1_DETECT THEN\n        IS_GREEN := (V1_CODE = 2);\n    END_IF;\n    (* 零件到推杆前：绿色就推 *)\n    TRIG(CLK := S1);\n    IF TRIG.Q AND IS_GREEN AND RUN THEN\n        PUSH := TRUE;\n        IS_GREEN := FALSE;\n    END_IF;\n    IF P1_FRONT OR NOT RUN THEN\n        PUSH := FALSE;\n    END_IF;\n    P1_EXTEND := PUSH;\nEND_PROGRAM\n"}
+    di: 7
+    do: 3
+    ai: 1
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: C1_FWD, ch: Q0.0, dir: out}
+  - {point: V1_DETECT, ch: I0.0, dir: in}
+  - {point: V1_CODE, ch: IW100, dir: in}
+  - {point: S1, ch: I0.1, dir: in}
+  - {point: P1_FRONT, ch: I0.2, dir: in}
+  - {point: P1_BACK, ch: I0.3, dir: in}
+  - {point: P1_EXTEND, ch: Q0.1, dir: out}
+  - {point: START, ch: I0.4, dir: in}
+  - {point: STOP, ch: I0.5, dir: in}
+  - {point: ESTOP, ch: I0.6, dir: in}
+  - {point: LAMP_RUN, ch: Q0.2, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s04_sort_color

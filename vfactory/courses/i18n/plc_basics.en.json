@@ -1,0 +1,23 @@
+{
+ "PLC 控制基础": "PLC Control Basics",
+ "15 个设备级控制任务：从电机启停自锁到整线联动。每课在自己的沙箱里写梯形图或结构化文本，提交后用自动测试序列评分。": "15 equipment-level control tasks, from motor start/stop latching to full-line coordination. Write ladder logic or structured text in each lesson's sandbox, then submit your work for grading with an automated test sequence.",
+ "基本逻辑": "Basic Logic",
+ "电机启停自锁": "Motor Start/Stop with Seal-In",
+ "电机正反转互锁": "Motor Forward/Reverse Interlock",
+ "传送带启停与急停": "Conveyor Start/Stop and E-Stop",
+ "定时放料与工位停留": "Timed Release and Workstation Dwell",
+ "分拣与计数": "Sorting and Counting",
+ "按颜色分拣": "Sort by Color",
+ "按材质分拣（电感/电容）": "Sort by material (inductive/capacitive)",
+ "按高度分拣（摆臂）": "Sorting by height (swing arm)",
+ "计数装箱": "Count and Pack",
+ "搬运与仓储": "Material Handling and Storage",
+ "码垛（伺服取放）": "Palletizing (Servo Pick-and-Place)",
+ "转台分流": "Turntable diverter",
+ "升降机两层输送": "Two-level lift conveyor",
+ "气动取放机械手": "Pneumatic Pick-and-Place Manipulator",
+ "立体仓库出入库": "Automated Warehouse Storage and Retrieval",
+ "联锁与整线": "Interlocks and Full-Line Coordination",
+ "双工位联锁": "Two-workstation interlock",
+ "整线联动（接入整厂）": "Integrated Line (Connected to the Full Plant)"
+}

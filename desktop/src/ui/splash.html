@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>蜂元虚拟工厂</title>
+<style>
+  /* 启动画面图片（desktop/build/splash.png，640×400，浅色底）：y≈310 以下留给版本号和进度条，310 处有一条淡分隔线 */
+  html, body { margin: 0; height: 100%; overflow: hidden; user-select: none; font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif; }
+  body { background: #f9f7f4; color: #1f2329; -webkit-app-region: drag; }
+  .art { position: absolute; inset: 0; background-size: 640px 400px; background-position: 0 0; background-repeat: no-repeat; }
+  /* 没有图片时的占位：产品名 + 标志 */
+  .ph { position: absolute; inset: 0; }
+  .ph .name { position: absolute; left: 124px; top: 44px; font-size: 26px; font-weight: 700; letter-spacing: 1px; }
+  .ph .sub { position: absolute; left: 125px; top: 84px; font-size: 13px; color: #646a73; }
+  .ph .hex { position: absolute; left: 44px; top: 38px; width: 64px; height: 64px; }
+  .ph .rule { position: absolute; left: 40px; right: 40px; top: 310px; height: 1px; background: #e6e2dc; }
+  .status { position: absolute; left: 40px; top: 334px; font-size: 13px; color: #3d434b; }
+  .ver { position: absolute; right: 40px; top: 335px; font-size: 12px; color: #8a9099; }
+  .bar { position: absolute; left: 40px; right: 40px; top: 366px; height: 3px; border-radius: 2px; overflow: hidden; background: #ebe6df; }
+  .bar i { position: absolute; top: 0; bottom: 0; width: 30%; border-radius: 2px; background: #d99528; animation: run 1.4s ease-in-out infinite; }
+  @keyframes run { 0% { left: -30%; } 100% { left: 100%; } }
+  .err { display: none; position: absolute; left: 32px; right: 32px; top: 150px; bottom: 20px; padding: 14px 16px; border-radius: 8px; box-sizing: border-box;
+         background: #ffffff; border: 1px solid #e3ded7; box-shadow: 0 6px 24px rgba(31, 35, 41, .12); -webkit-app-region: no-drag; display: none; flex-direction: column; }
+  .err h4 { margin: 0 0 6px; font-size: 15px; color: #b3261e; }
+  .err p { flex: 1; margin: 0 0 12px; font-size: 12.5px; line-height: 1.55; color: #3d434b; overflow: auto; white-space: pre-wrap; word-break: break-all; user-select: text; }
+  .err .btns { display: flex; gap: 8px; justify-content: flex-end; }
+  button { font: inherit; font-size: 13px; padding: 6px 16px; border-radius: 6px; border: 1px solid #d5d0c8; background: #fff; color: #1f2329; cursor: pointer; }
+  button:hover { background: #f4f1ec; }
+  button.primary { background: #d99528; border-color: #d99528; color: #fff; font-weight: 600; }
+  button.primary:hover { background: #ce841e; }
+  body.failed .status, body.failed .bar, body.failed .ver { display: none; }
+  body.failed .err { display: flex; }
+</style>
+</head>
+<body>
+  <div class="ph" id="ph">
+    <svg class="hex" viewBox="0 0 100 100" aria-hidden="true">
+      <polygon points="50,4 90,27 90,73 50,96 10,73 10,27" fill="#d99528" />
+      <polygon points="50,30 68,40 68,60 50,70 32,60 32,40" fill="#fff" />
+    </svg>
+    <div class="name">蜂元虚拟工厂</div>
+    <div class="sub">工业数字孪生仿真平台</div>
+    <div class="rule"></div>
+  </div>
+  <div class="art" id="art"></div>
+  <div class="status" id="status">启动本地服务…</div>
+  <div class="ver" id="ver"></div>
+  <div class="bar"><i></i></div>
+  <div class="err" id="err">
+    <h4 id="errTitle">启动失败</h4>
+    <p id="errMsg"></p>
+    <div class="btns">
+      <button id="bQuit">退出</button>
+      <button id="bLogs">查看日志</button>
+      <button id="bRetry" class="primary">重试</button>
+    </div>
+  </div>
+<script>
+  const q = new URLSearchParams(location.search);
+  document.getElementById('ver').textContent = q.get('version') ? '版本 ' + q.get('version') : '';
+  const img = q.get('img');
+  if (img) {
+    const probe = new Image();
+    probe.onload = () => { document.getElementById('art').style.backgroundImage = `url("${img}")`; document.getElementById('ph').style.display = 'none'; };
+    probe.src = img;
+  }
+  window.vfUi.on((s) => {
+    if (s.status) document.getElementById('status').textContent = s.status;
+    document.body.classList.toggle('failed', !!s.error);
+    if (s.error) { document.getElementById('errTitle').textContent = s.title || '启动失败'; document.getElementById('errMsg').textContent = s.error; }
+  });
+  document.getElementById('bRetry').onclick = () => window.vfUi.send('retry');
+  document.getElementById('bLogs').onclick = () => window.vfUi.send('logs');
+  document.getElementById('bQuit').onclick = () => window.vfUi.send('quit');
+</script>
+</body>
+</html>

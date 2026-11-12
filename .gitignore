@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+web/dist/
+web/dist-plc/
+web/.vite/
+
+# local data, logs and test output (VF_HOME layout: data/, plants/ edits, config/, logs/)
+data/
+logs/
+*.log
+test-results/
+plants/.trash/
+plants/*.bak
+assets_src/
+
+# local configuration and secrets (only the examples are tracked)
+config/*
+!config/llm.example.json
+.env
+.env.*
+*.key
+*.pem
+
+# Windows client build output
+dist-client/
+dist-electron/
+desktop/node_modules/
+desktop/.stage/
+desktop/.res/
+desktop/npmi.log
+
+# editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

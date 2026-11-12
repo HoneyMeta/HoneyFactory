@@ -1,0 +1,620 @@
+{
+ "id": "s03_conveyor",
+ "name": "传送带启停与急停",
+ "level": 3,
+ "order": 3,
+ "desc": "一条输送线：启动、停止、急停（急停复位后必须重新启动）、运行/停止指示灯。",
+ "cell": {
+  "size": [
+   8,
+   4
+  ],
+  "components": [
+   {
+    "id": "E1",
+    "type": "emitter",
+    "pos": [
+     -3.5,
+     0,
+     0.27
+    ],
+    "rot": 0,
+    "params": {
+     "interval": "uniform(4,6)",
+     "parts": [
+      {
+       "kind": "box",
+       "color": "blue",
+       "h": 0.2,
+       "w": 0.25,
+       "weight": 2
+      },
+      {
+       "kind": "box",
+       "color": "green",
+       "h": 0.2,
+       "w": 0.25,
+       "weight": 1
+      }
+     ]
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     0.0,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     7.6,
+     0.6
+    ],
+    "label": "输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "S_END",
+    "type": "diffuse_sensor",
+    "pos": [
+     3.4,
+     0.35,
+     0.35
+    ],
+    "rot": 0,
+    "label": "末端光电"
+   },
+   {
+    "id": "R1",
+    "type": "remover",
+    "pos": [
+     3.85,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.4,
+     0.9
+    ]
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.15,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -2.9000000000000004,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "LAMP_STOP",
+    "type": "lamp",
+    "pos": [
+     -2.7,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "S_END",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "S_END",
+    "signal": "detect",
+    "comment": "末端光电 S_END 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   },
+   {
+    "name": "LAMP_STOP",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "LAMP_STOP",
+    "signal": "on",
+    "comment": "停止 LAMP_STOP 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "removed"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "S_END",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "S_END",
+   "signal": "detect",
+   "comment": "末端光电 S_END 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  },
+  {
+   "name": "LAMP_STOP",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "LAMP_STOP",
+   "signal": "on",
+   "comment": "停止 LAMP_STOP 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：输送线启停与急停\n\n1. 按 **启动**，输送带 C1 运行，运行灯（绿）亮；按 **停止**，输送带停止，停止灯（红）亮；\n2. **急停**按钮是常闭触点（正常为 1，按下为 0），按下后自锁：按下急停，输送带**立即**停止；\n3. 急停拍下后会一直保持（操作台上的按钮变成\"复位\"），**再点一下**才复位；复位后，输送带**不能自己重新运行**，必须重新按启动；\n4. 运行期间零件要连续送到线尾：评分时输送带大约运行 1 分钟（中间停一次），线尾出口要收到至少 6 件。末端光电 `S_END` 只用来观察（程序里可以不用）。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `C1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 输送带 C1 正转 |\n| `S_END` | 输入 | BOOL | %I0.0 | 常开 | 0 | 末端光电 S_END 检测到 |\n| `START` | 输入 | BOOL | %I0.1 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I0.2 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I0.3 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.1 | — | 0 | 运行 LAMP_RUN 点亮 |\n| `LAMP_STOP` | 输出 | BOOL | %Q0.2 | — | 0 | 停止 LAMP_STOP 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 按启动输送带运行（做到）：**20 分**\n  - 怎么试：按一下启动：C1 运行（松手保持）；停止以后再按启动也要能运行\n- 按停止输送带停止（做到）：**20 分**\n  - 怎么试：运行时按一下停止：1 秒内 C1 停，并且一直停着\n- 急停：立即停止且复位后不自启（做到）：**25 分**\n  - 怎么试：运行时点一下急停：马上停；再点一下复位，C1 不能自己转\n- 急停复位后可以重新启动（做到）：**10 分**\n  - 怎么试：急停复位后按启动，C1 重新运行\n- 运行/停止指示灯（做到）：**10 分**\n  - 怎么试：运行时运行灯亮、停止灯灭；按停止后停止灯亮\n- 输送到末端的零件 ≥ 6：**15 分**\n  - 怎么试：让输送带运行约 1 分钟，线尾出口收到至少 6 件（这里显示当前件数）\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "把急停和停止一样串在自锁回路里，急停一按自锁就断了，复位后自然不会自己启动。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "start_ok",
+    "label": "按启动输送带运行",
+    "op": "==",
+    "value": 1,
+    "weight": 20,
+    "how": "按一下启动：C1 运行（松手保持）；停止以后再按启动也要能运行"
+   },
+   {
+    "key": "stop_ok",
+    "label": "按停止输送带停止",
+    "op": "==",
+    "value": 1,
+    "weight": 20,
+    "how": "运行时按一下停止：1 秒内 C1 停，并且一直停着"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 25,
+    "how": "运行时点一下急停：马上停；再点一下复位，C1 不能自己转"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 10,
+    "how": "急停复位后按启动，C1 重新运行"
+   },
+   {
+    "key": "lamp_ok",
+    "label": "运行/停止指示灯",
+    "op": "==",
+    "value": 1,
+    "weight": 10,
+    "how": "运行时运行灯亮、停止灯灭；按停止后停止灯亮"
+   },
+   {
+    "key": "removed",
+    "label": "输送到末端的零件",
+    "op": ">=",
+    "value": 6,
+    "weight": 15,
+    "how": "让输送带运行约 1 分钟，线尾出口收到至少 6 件（这里显示当前件数）"
+   }
+  ]
+ },
+ "test": {
+  "duration": 75,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C1_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 2.0,
+    "key": "lamp_ok",
+    "check": {
+     "out": "LAMP_RUN",
+     "eq": true
+    },
+    "desc": "运行时运行灯没亮 / 停止灯还亮着"
+   },
+   {
+    "t": 2.0,
+    "key": "lamp_ok",
+    "check": {
+     "out": "LAMP_STOP",
+     "eq": false
+    },
+    "desc": "运行时运行灯没亮 / 停止灯还亮着"
+   },
+   {
+    "t": 30.0,
+    "press": "STOP"
+   },
+   {
+    "t": 31.0,
+    "key": "stop_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": false
+    },
+    "desc": "按停止后输送带没停"
+   },
+   {
+    "t": 31.0,
+    "key": "lamp_ok",
+    "check": {
+     "out": "LAMP_STOP",
+     "eq": true
+    },
+    "desc": "停止后停止灯没亮"
+   },
+   {
+    "t": 31.0,
+    "key": "stop_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": false
+    },
+    "hold": 2.0,
+    "desc": "按停止后输送带没停，或者松开停止后自己又转了"
+   },
+   {
+    "t": 34.0,
+    "press": "START"
+   },
+   {
+    "t": 35.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "停止以后再按启动，输送带没有重新运行"
+   },
+   {
+    "t": 64.0,
+    "snapshot": true
+   },
+   {
+    "t": 65.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 65.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 66.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 68.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 69.0,
+    "press": "START"
+   },
+   {
+    "t": 70.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM Conveyor\nVAR\n    RUN : BOOL;     (* 运行标志 *)\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    LAMP_STOP := NOT RUN;\nEND_PROGRAM\n"
+  },
+  "ld": {
+   "id": "reference_ld",
+   "name": "参考答案（梯形图）",
+   "lang": "LD",
+   "vars": [
+    {
+     "name": "RUN",
+     "type": "BOOL",
+     "comment": ""
+    }
+   ],
+   "source": {
+    "rungs": [
+     {
+      "comment": "启停自锁：启动并联自锁触点，串常闭停止和急停",
+      "elements": [
+       {
+        "par": [
+         [
+          {
+           "t": "NO",
+           "var": "START"
+          }
+         ],
+         [
+          {
+           "t": "NO",
+           "var": "RUN"
+          }
+         ]
+        ]
+       },
+       {
+        "t": "NO",
+        "var": "STOP"
+       },
+       {
+        "t": "NO",
+        "var": "ESTOP"
+       },
+       {
+        "t": "COIL",
+        "var": "RUN"
+       }
+      ]
+     },
+     {
+      "comment": "运行指示灯",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "RUN"
+       },
+       {
+        "t": "COIL",
+        "var": "LAMP_RUN"
+       }
+      ]
+     },
+     {
+      "comment": "输送带",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "RUN"
+       },
+       {
+        "t": "COIL",
+        "var": "C1_FWD"
+       }
+      ]
+     },
+     {
+      "comment": "停止灯",
+      "elements": [
+       {
+        "t": "NC",
+        "var": "RUN"
+       },
+       {
+        "t": "COIL",
+        "var": "LAMP_STOP"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "faults": [
+  {
+   "comp": "C1",
+   "kind": "motor_overload",
+   "label": "C1 电机过载跳闸",
+   "symptom": "输送带不动，但输出 C1_FWD 为 1"
+  },
+  {
+   "comp": "C1",
+   "kind": "actuator_slow",
+   "label": "C1 执行器动作变慢",
+   "symptom": "输送带明显变慢"
+  },
+  {
+   "comp": "ESTOP",
+   "kind": "wire_break",
+   "label": "ESTOP 断线（信号恒为 0）",
+   "symptom": "急停回路断线：设备无法启动（常闭接法的好处）"
+  },
+  {
+   "comp": "START",
+   "kind": "sensor_flicker",
+   "label": "START 传感器信号抖动",
+   "symptom": "启动按钮接触不良"
+  }
+ ],
+ "version": 1
+}

@@ -1,0 +1,134 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·机加车间
+  product: HSG-200 壳体
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [70, 30]
+
+areas:
+- {name: 收货区, x: [0, 12], color: '#F2EEE3'}
+- {name: 机加区, x: [12, 48], color: '#E3ECF2'}
+- {name: 检测区, x: [48, 58], color: '#E8E3F2'}
+- {name: 仓储区, x: [58, 70], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯到货
+  pos: [2, 8]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(62)
+    defects:
+    - {name: 气孔, prob: '0.02'}
+- id: B0
+  type: buffer
+  name: 收货暂存
+  pos: [7, 8]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 200
+- id: TR1
+  type: transporter
+  name: 叉车
+  pos: [12, 2]
+  size: [2, 2]
+  node: [480, 160]
+  params: {count: 1, speed_mps: 1.2, capacity: 6, load_s: 40}
+- id: B1
+  type: buffer
+  name: 线边库
+  pos: [15, 8]
+  size: [3, 3]
+  node: [680, 160]
+  params:
+    capacity: 30
+- id: OP1
+  type: operators
+  name: 车削操作工
+  pos: [20, 24]
+  size: [2, 2]
+  node: [880, 160]
+  params:
+    count: 1
+- id: M1
+  type: processor
+  name: 1#数控车床
+  pos: [20, 8]
+  size: [4, 3.4]
+  node: [1080, 160]
+  params: {time: 'normal(95,4)', operator: OP1, operator_mode: load, load_s: 40, mtbf_h: 8, mttr_min: 20, run_kw: 12, idle_kw: 2}
+- id: B2
+  type: buffer
+  name: 车铣之间
+  pos: [27, 8.5]
+  size: [2.5, 2.5]
+  node: [1280, 160]
+  params:
+    capacity: 4
+- id: M2
+  type: processor
+  name: 1#加工中心
+  pos: [31, 8]
+  size: [4, 3.4]
+  node: [1480, 160]
+  params:
+    time: normal(115,5)
+    mtbf_h: 8
+    mttr_min: 25
+    run_kw: 16
+    idle_kw: 2
+    defects:
+    - {name: 毛刺, prob: '0.05'}
+- id: B3
+  type: buffer
+  name: 待检
+  pos: [40, 8.5]
+  size: [2.5, 2.5]
+  node: [1680, 160]
+  params:
+    capacity: 20
+- id: QC
+  type: inspect
+  name: 在线检测
+  pos: [49, 8]
+  size: [4, 4]
+  node: [1880, 160]
+  params: {time: '30', pod_pct: 95, false_pct: 1}
+- id: RW
+  type: rework
+  name: 返修台
+  pos: [49, 16]
+  size: [4, 4]
+  node: [2080, 160]
+  params: {time: 'normal(240,20)', fixes: [毛刺], max_rework: 1}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [61, 8]
+  size: [5, 5]
+  node: [2280, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B1, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: B2, to_port: in}
+- {id: L4, from: B2, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M2, from_port: out, to: B3, to_port: in}
+- {id: L6, from: B3, from_port: out, to: QC, to_port: in}
+- {id: L7, from: QC, from_port: out, to: OUT, to_port: in}
+- {id: L8, from: RW, from_port: out, to: B3, to_port: in}
+- {id: L9, from: B0, from_port: out, to: B1, to_port: in, via: TR1}
+- {id: L10, from: QC, from_port: ng, to: RW, to_port: in}
+
+groups: []
+
+notes: []

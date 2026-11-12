@@ -1,0 +1,194 @@
+# CI: Python checks that need no browser (offline, and against a demo server), a production first-run check, and the
+# web build. Browser walk-throughs (node tests/*_ui.js, Playwright) and the Windows client build are not run here.
+#
+# Language: the Python suites assert Chinese messages and Chinese plant data. They pin their requests to zh-CN
+# (tests/i18n_pin.py sends X-Lang: zh-CN) and the demo servers run with VF_LANG=zh-CN, because the running plants
+# (station names, events) follow the server language. tests/setup_check.py runs against an English production server.
+# Not in CI: plc_api_check.py (needs the extra `plctest` plant), testing_check.py (its "delete script" step depends
+# on sample re-seeding), client_check.py / mes_edu_check.py (desktop mode, Windows), tenant_check.py (long SaaS run),
+# ai_cmds.py (needs a real model).
+name: CI
+
+on:
+  push:
+    branches: [main, master, dev]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: '3.12'
+  NODE_VERSION: '22'
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  offline:
+    name: Python checks (no server)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r tools/client/mes-requirements.txt
+
+      - name: i18n (backend catalogue and content maps)
+        run: python tests/i18n_check.py
+
+      - name: Model kernel, floor plan and AGV road network
+        run: |
+          python tests/flow_check.py
+          python tests/layout_check.py
+
+      - name: Soft PLC, PLC as a device, PLC diagnosis
+        run: |
+          python tests/plc_check.py
+          python tests/plc_station_check.py
+          python tests/plc_diag_internal_check.py
+
+      - name: Control layer (components, scenes, reference solutions)
+        run: python tests/control_check.py
+
+      - name: Analysis (statistics, experiments, optimisation, energy, data tables, sub-models, DXF, fork)
+        run: python tests/analysis_check.py --quick
+
+      - name: Courses (starting models, reference solutions, rules, sealed answers, signed packages, tutor pointers)
+        run: |
+          python tests/course_check.py --offline
+          python tests/courses_check.py --offline
+          python tests/tutor_point_check.py
+
+      - name: Headless test script (JUnit)
+        run: python -m vfactory test tests/scripts/smoke_foundry.json --junit test-results/junit.xml
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: junit-smoke
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  server:
+    name: API checks (${{ matrix.group }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [protocols, workbench, teaching]
+    env:
+      VF_URL: http://127.0.0.1:8800
+      VF_HOST: 127.0.0.1
+      VF_HTTP: '8800'
+      VF_OPCUA: '4840'
+      VF_MQTT: '1883'
+      VF_PLANT: foundry-housing
+      LOGS: ${{ github.workspace }}/ci-logs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r tools/client/mes-requirements.txt
+
+      - name: Start a demo server (zh-CN, fake model answers)
+        run: |
+          mkdir -p "$LOGS"
+          VF_HOME="$RUNNER_TEMP/vf-demo" VF_DEMO=1 VF_LANG=zh-CN VF_LLM_FAKE=1 \
+          VF_SANDBOX_IDLE_S=20 VF_SANDBOX_MAX_ACTIVE=25 \
+            nohup python -m vfactory serve --http 8800 --opcua 4840 --mqtt 1883 --modbus 5020 > "$LOGS/server.log" 2>&1 &
+          for i in $(seq 1 180); do
+            curl -fsS http://127.0.0.1:8800/api/health > /dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8800/api/health; echo
+
+      - name: API, protocols (OPC UA, Modbus, MQTT), gateways and network faults
+        if: matrix.group == 'protocols'
+        env:
+          VF_LOG: ${{ github.workspace }}/ci-logs/server.log
+        run: |
+          python tests/api_check.py
+          python tests/check_protocols.py
+          python tests/protocol_check2.py
+          python tests/protocol_check3.py
+
+      - name: Simulation API, workbench (run control, breakpoints, replay, assistant), editor
+        if: matrix.group == 'workbench'
+        run: |
+          python tests/sim_api_check.py
+          python tests/workbench_check.py
+          python tests/editor_check.py
+
+      - name: Teaching, courses, homework packages, reports
+        if: matrix.group == 'teaching'
+        run: |
+          python tests/teach_check.py
+          python tests/teach_audit_check.py
+          python tests/course_check.py
+          python tests/courses_check.py
+          python tests/coach_overlay_check.py
+          python tests/package_check.py
+          python tests/report_check2.py
+
+      - name: First run on a production server (no demo accounts, create the administrator)
+        if: matrix.group == 'teaching'
+        run: |
+          VF_HOME="$RUNNER_TEMP/vf-prod" nohup python -m vfactory serve --http 8810 --opcua 4850 --mqtt 1893 --modbus 6020 \
+            > "$LOGS/server-prod.log" 2>&1 &
+          for i in $(seq 1 180); do
+            curl -fsS http://127.0.0.1:8810/api/health > /dev/null 2>&1 && break
+            sleep 1
+          done
+          VF_URL=http://127.0.0.1:8810 python tests/setup_check.py
+
+      - name: Server logs
+        if: always()
+        run: |
+          tail -n 150 "$LOGS/server.log" || true
+          tail -n 50 "$LOGS/server-prod.log" 2>/dev/null || true
+
+  web:
+    name: Web build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Frontend i18n (no CJK outside zh-CN.json, en/zh-CN key parity)
+        run: python tests/i18n_web_check.py
+      - name: Build
+        working-directory: web
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+      - name: Light theme only (sources and build output)
+        run: python tests/light_only_check.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: web/dist
+          retention-days: 7

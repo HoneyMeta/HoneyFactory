@@ -1,0 +1,917 @@
+{
+ "id": "s13_asrs",
+ "name": "立体仓库出入库",
+ "level": 13,
+ "order": 13,
+ "desc": "堆垛机把入库口的托盘存进货架，按出库按钮把最早入库的托盘送到出库口。",
+ "cell": {
+  "size": [
+   8,
+   4.4
+  ],
+  "components": [
+   {
+    "id": "RK1",
+    "type": "rack",
+    "pos": [
+     0.0,
+     -0.85,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     3.2,
+     0.6
+    ],
+    "label": "货架",
+    "params": {
+     "cols": 4,
+     "rows": 3,
+     "cell_h": 0.5,
+     "base": 0.3
+    }
+   },
+   {
+    "id": "SC1",
+    "type": "stacker_crane",
+    "pos": [
+     -2.4,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     4.8,
+     0.5
+    ],
+    "label": "堆垛机",
+    "params": {
+     "travel": 4.8,
+     "rack": "RK1",
+     "fork_stroke": 0.85,
+     "fork_speed": 0.5,
+     "x_speed": 1.0,
+     "z_speed": 0.6,
+     "station_in": [
+      0.3,
+      0.21
+     ],
+     "station_out": [
+      4.5,
+      0.21
+     ]
+    }
+   },
+   {
+    "id": "E_IN",
+    "type": "emitter",
+    "pos": [
+     -2.1,
+     1.75,
+     0.27
+    ],
+    "rot": 0,
+    "label": "入库来料",
+    "params": {
+     "interval": "uniform(24,28)",
+     "max": 6,
+     "start_delay": 2,
+     "parts": [
+      {
+       "kind": "pallet",
+       "color": "blue",
+       "h": 0.25,
+       "w": 0.45,
+       "weight": 1
+      },
+      {
+       "kind": "pallet",
+       "color": "orange",
+       "h": 0.25,
+       "w": 0.45,
+       "weight": 1
+      }
+     ]
+    }
+   },
+   {
+    "id": "C_IN",
+    "type": "belt_conveyor",
+    "pos": [
+     -2.1,
+     1.25,
+     0
+    ],
+    "rot": -90,
+    "size": [
+     1.3,
+     0.6
+    ],
+    "label": "入库输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "ST_IN",
+    "type": "stopper",
+    "pos": [
+     -2.1,
+     0.6,
+     0
+    ],
+    "rot": -90,
+    "label": "入库口挡块",
+    "params": {
+     "normally_up": true
+    }
+   },
+   {
+    "id": "S_IN",
+    "type": "diffuse_sensor",
+    "pos": [
+     -2.45,
+     0.85,
+     0.35
+    ],
+    "rot": 90,
+    "label": "入库口光电",
+    "params": {
+     "range": 0.8
+    }
+   },
+   {
+    "id": "C_OUT",
+    "type": "belt_conveyor",
+    "pos": [
+     2.1,
+     1.25,
+     0
+    ],
+    "rot": 90,
+    "size": [
+     1.3,
+     0.6
+    ],
+    "label": "出库输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "R_OUT",
+    "type": "remover",
+    "pos": [
+     2.1,
+     2.05,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.9,
+     0.3
+    ],
+    "label": "出库口"
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -1.2,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -1.0,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -0.75,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -0.5,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "OUT_REQ",
+    "type": "button",
+    "pos": [
+     -0.29999999999999993,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "出库",
+    "params": {
+     "color": "yellow"
+    }
+   },
+   {
+    "id": "D1",
+    "type": "display",
+    "pos": [
+     -0.09999999999999992,
+     1.85,
+     0.95
+    ],
+    "rot": 0,
+    "label": "库存"
+   }
+  ],
+  "io": [
+   {
+    "name": "SC1_AT_TARGET",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "SC1",
+    "signal": "at_target",
+    "comment": "堆垛机 SC1 到达目标",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "SC1_MOVING",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "SC1",
+    "signal": "moving",
+    "comment": "堆垛机 SC1 行走/升降中",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "SC1_FORK_HOME",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "SC1",
+    "signal": "fork_home",
+    "comment": "堆垛机 SC1 货叉在中位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "SC1_FORK_LEFT_END",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "SC1",
+    "signal": "fork_left_end",
+    "comment": "堆垛机 SC1 左伸到位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "SC1_FORK_RIGHT_END",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "SC1",
+    "signal": "fork_right_end",
+    "comment": "堆垛机 SC1 右伸到位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "SC1_LOADED",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.5",
+    "comp": "SC1",
+    "signal": "loaded",
+    "comment": "堆垛机 SC1 货叉上有货",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "SC1_POS",
+    "dir": "in",
+    "type": "INT",
+    "addr": "%IW100",
+    "comp": "SC1",
+    "signal": "pos",
+    "comment": "堆垛机 SC1 当前所在目标号（不在目标点为 -1）",
+    "idle": 0
+   },
+   {
+    "name": "SC1_TARGET",
+    "dir": "out",
+    "type": "INT",
+    "addr": "%QW100",
+    "comp": "SC1",
+    "signal": "target",
+    "comment": "堆垛机 SC1 目标号",
+    "idle": 0
+   },
+   {
+    "name": "SC1_FORK_LEFT",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "SC1",
+    "signal": "fork_left",
+    "comment": "堆垛机 SC1 货叉左伸（+y）",
+    "idle": false
+   },
+   {
+    "name": "SC1_FORK_RIGHT",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "SC1",
+    "signal": "fork_right",
+    "comment": "堆垛机 SC1 货叉右伸（-y）",
+    "idle": false
+   },
+   {
+    "name": "SC1_LIFT",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "SC1",
+    "signal": "lift",
+    "comment": "堆垛机 SC1 货叉顶升",
+    "idle": false
+   },
+   {
+    "name": "C_IN_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "C_IN",
+    "signal": "fwd",
+    "comment": "入库输送带 C_IN 正转",
+    "idle": false
+   },
+   {
+    "name": "ST_IN_LOWER",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.4",
+    "comp": "ST_IN",
+    "signal": "lower",
+    "comment": "入库口挡块 ST_IN 落下放行",
+    "idle": false
+   },
+   {
+    "name": "S_IN",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.6",
+    "comp": "S_IN",
+    "signal": "detect",
+    "comment": "入库口光电 S_IN 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "C_OUT_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.5",
+    "comp": "C_OUT",
+    "signal": "fwd",
+    "comment": "出库输送带 C_OUT 正转",
+    "idle": false
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.7",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.0",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.1",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.6",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   },
+   {
+    "name": "OUT_REQ",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I1.2",
+    "comp": "OUT_REQ",
+    "signal": "value",
+    "comment": "出库 OUT_REQ 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "D1",
+    "dir": "out",
+    "type": "INT",
+    "addr": "%QW102",
+    "comp": "D1",
+    "signal": "value",
+    "comment": "库存 D1 显示值",
+    "idle": 0
+   }
+  ],
+  "metrics": [
+   "racks.RK1.stored",
+   "bins.R_OUT.n",
+   "racks.RK1.double",
+   "collisions",
+   "dropped"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "SC1_AT_TARGET",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "SC1",
+   "signal": "at_target",
+   "comment": "堆垛机 SC1 到达目标",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "SC1_MOVING",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "SC1",
+   "signal": "moving",
+   "comment": "堆垛机 SC1 行走/升降中",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "SC1_FORK_HOME",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "SC1",
+   "signal": "fork_home",
+   "comment": "堆垛机 SC1 货叉在中位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "SC1_FORK_LEFT_END",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "SC1",
+   "signal": "fork_left_end",
+   "comment": "堆垛机 SC1 左伸到位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "SC1_FORK_RIGHT_END",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "SC1",
+   "signal": "fork_right_end",
+   "comment": "堆垛机 SC1 右伸到位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "SC1_LOADED",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.5",
+   "comp": "SC1",
+   "signal": "loaded",
+   "comment": "堆垛机 SC1 货叉上有货",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "SC1_POS",
+   "dir": "in",
+   "type": "INT",
+   "addr": "%IW100",
+   "comp": "SC1",
+   "signal": "pos",
+   "comment": "堆垛机 SC1 当前所在目标号（不在目标点为 -1）",
+   "idle": 0
+  },
+  {
+   "name": "SC1_TARGET",
+   "dir": "out",
+   "type": "INT",
+   "addr": "%QW100",
+   "comp": "SC1",
+   "signal": "target",
+   "comment": "堆垛机 SC1 目标号",
+   "idle": 0
+  },
+  {
+   "name": "SC1_FORK_LEFT",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "SC1",
+   "signal": "fork_left",
+   "comment": "堆垛机 SC1 货叉左伸（+y）",
+   "idle": false
+  },
+  {
+   "name": "SC1_FORK_RIGHT",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "SC1",
+   "signal": "fork_right",
+   "comment": "堆垛机 SC1 货叉右伸（-y）",
+   "idle": false
+  },
+  {
+   "name": "SC1_LIFT",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "SC1",
+   "signal": "lift",
+   "comment": "堆垛机 SC1 货叉顶升",
+   "idle": false
+  },
+  {
+   "name": "C_IN_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "C_IN",
+   "signal": "fwd",
+   "comment": "入库输送带 C_IN 正转",
+   "idle": false
+  },
+  {
+   "name": "ST_IN_LOWER",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.4",
+   "comp": "ST_IN",
+   "signal": "lower",
+   "comment": "入库口挡块 ST_IN 落下放行",
+   "idle": false
+  },
+  {
+   "name": "S_IN",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.6",
+   "comp": "S_IN",
+   "signal": "detect",
+   "comment": "入库口光电 S_IN 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "C_OUT_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.5",
+   "comp": "C_OUT",
+   "signal": "fwd",
+   "comment": "出库输送带 C_OUT 正转",
+   "idle": false
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.7",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.0",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.1",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.6",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  },
+  {
+   "name": "OUT_REQ",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I1.2",
+   "comp": "OUT_REQ",
+   "signal": "value",
+   "comment": "出库 OUT_REQ 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "D1",
+   "dir": "out",
+   "type": "INT",
+   "addr": "%QW102",
+   "comp": "D1",
+   "signal": "value",
+   "comment": "库存 D1 显示值",
+   "idle": 0
+  }
+ ],
+ "task_md": "## 任务：立体仓库出入库\n\n堆垛机 `SC1`：输出目标号 `SC1_TARGET`（0 = 入库口，1–12 = 货架库位，从下往上逐层、每层从左往右，13 = 出库口），到达后 `SC1_AT_TARGET` = 1；\n货叉 `SC1_FORK_LEFT` 伸向输送带一侧、`SC1_FORK_RIGHT` 伸向货架一侧，`SC1_LIFT` 顶升托起货物。\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；\n2. **入库**：托盘到入库口（`S_IN`）后，堆垛机到入库口 → 货叉左伸 → 顶升 → 货叉收回 → 到第一个空库位 → 货叉右伸 → 落下 → 收回；\n3. **出库**：按 **出库** 按钮登记一次出库请求；堆垛机空闲时把**最早入库**的托盘取出送到出库口（目标 13，货叉左伸放到出库输送带上）；\n4. 数码管 `D1` 显示当前库存数（评分时会来 6 个托盘，测试在第 95 s、100 s 各按一次出库，所以最后货架上 4 个、出库口 2 个）；\n5. 货叉没收回时堆垛机不能移动（否则碰撞）；同一库位不能放两个托盘；不能掉件。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。例外：`SC1_AT_TARGET`、`SC1_FORK_HOME` 是\"在原位/到位\"信号，设备停在初始位置时就是 1。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `SC1_AT_TARGET` | 输入 | BOOL | %I0.0 | 常开 | 1 | 堆垛机 SC1 到达目标 |\n| `SC1_MOVING` | 输入 | BOOL | %I0.1 | 常开 | 0 | 堆垛机 SC1 行走/升降中 |\n| `SC1_FORK_HOME` | 输入 | BOOL | %I0.2 | 常开 | 1 | 堆垛机 SC1 货叉在中位 |\n| `SC1_FORK_LEFT_END` | 输入 | BOOL | %I0.3 | 常开 | 0 | 堆垛机 SC1 左伸到位 |\n| `SC1_FORK_RIGHT_END` | 输入 | BOOL | %I0.4 | 常开 | 0 | 堆垛机 SC1 右伸到位 |\n| `SC1_LOADED` | 输入 | BOOL | %I0.5 | 常开 | 0 | 堆垛机 SC1 货叉上有货 |\n| `SC1_POS` | 输入 | INT | %IW100 | — | 0 | 堆垛机 SC1 当前所在目标号（不在目标点为 -1） |\n| `SC1_TARGET` | 输出 | INT | %QW100 | — | 0 | 堆垛机 SC1 目标号 |\n| `SC1_FORK_LEFT` | 输出 | BOOL | %Q0.0 | — | 0 | 堆垛机 SC1 货叉左伸（+y） |\n| `SC1_FORK_RIGHT` | 输出 | BOOL | %Q0.1 | — | 0 | 堆垛机 SC1 货叉右伸（-y） |\n| `SC1_LIFT` | 输出 | BOOL | %Q0.2 | — | 0 | 堆垛机 SC1 货叉顶升 |\n| `C_IN_FWD` | 输出 | BOOL | %Q0.3 | — | 0 | 入库输送带 C_IN 正转 |\n| `ST_IN_LOWER` | 输出 | BOOL | %Q0.4 | — | 0 | 入库口挡块 ST_IN 落下放行 |\n| `S_IN` | 输入 | BOOL | %I0.6 | 常开 | 0 | 入库口光电 S_IN 检测到 |\n| `C_OUT_FWD` | 输出 | BOOL | %Q0.5 | — | 0 | 出库输送带 C_OUT 正转 |\n| `START` | 输入 | BOOL | %I0.7 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I1.0 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I1.1 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.6 | — | 0 | 运行 LAMP_RUN 点亮 |\n| `OUT_REQ` | 输入 | BOOL | %I1.2 | 常开 | 0 | 出库 OUT_REQ 触点 |\n| `D1` | 输出 | INT | %QW102 | — | 0 | 库存 D1 显示值 |\n\n### 评分标准（满分 100 分）\n\n- 库存托盘数 = 4：**20 分**\n  - 怎么试：来 6 个托盘，按两次\"出库\"以后货架上剩 4 个\n- 出库托盘数 = 2：**20 分**\n  - 怎么试：两次出库都执行，出库口收到 2 个（先进先出）\n- 重复放入的库位：必须为 0（不能出现）：**5 分**\n  - 怎么试：同一个库位不能放两个托盘\n- 碰撞次数：必须为 0（不能出现）：**15 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 掉件数：必须为 0（不能出现）：**5 分**\n  - 怎么试：零件不能掉到地上（这里显示当前掉件数）\n- 库存显示正确（做到）：**10 分**\n  - 怎么试：数码管 D1 一直等于货架上实际的托盘数\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "用两个计数：入库序号 NIN（下一个空库位 = NIN + 1）、出库序号 NOUT（最早的托盘在 NOUT + 1），先进先出。",
+  "入库和出库都写成同一个状态机里的两段步骤。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "racks.RK1.stored",
+    "label": "库存托盘数",
+    "op": "==",
+    "value": 4,
+    "weight": 20,
+    "how": "来 6 个托盘，按两次\"出库\"以后货架上剩 4 个"
+   },
+   {
+    "key": "bins.R_OUT.n",
+    "label": "出库托盘数",
+    "op": "==",
+    "value": 2,
+    "weight": 20,
+    "how": "两次出库都执行，出库口收到 2 个（先进先出）"
+   },
+   {
+    "key": "racks.RK1.double",
+    "label": "重复放入的库位",
+    "op": "==",
+    "value": 0,
+    "weight": 5,
+    "how": "同一个库位不能放两个托盘"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 15,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "dropped",
+    "label": "掉件数",
+    "op": "==",
+    "value": 0,
+    "weight": 5,
+    "how": "零件不能掉到地上（这里显示当前掉件数）"
+   },
+   {
+    "key": "display_ok",
+    "label": "库存显示正确",
+    "op": "==",
+    "value": 1,
+    "weight": 10,
+    "how": "数码管 D1 一直等于货架上实际的托盘数"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 300,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C_IN_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C_IN_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 95.0,
+    "press": "OUT_REQ"
+   },
+   {
+    "t": 100.0,
+    "press": "OUT_REQ"
+   },
+   {
+    "t": 287.0,
+    "snapshot": true
+   },
+   {
+    "t": 287.0,
+    "key": "display_ok",
+    "check": {
+     "out": "D1",
+     "eq_stat": "racks.RK1.stored"
+    },
+    "desc": "数码管显示的库存不对"
+   },
+   {
+    "t": 288.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 288.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C_IN_FWD",
+      "C_OUT_FWD",
+      "SC1_FORK_LEFT",
+      "SC1_FORK_RIGHT"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 289.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 291.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C_IN_FWD",
+      "C_OUT_FWD",
+      "SC1_FORK_LEFT",
+      "SC1_FORK_RIGHT"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 292.0,
+    "press": "START"
+   },
+   {
+    "t": 293.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C_IN_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM Asrs\nVAR\n    RUN : BOOL;\n    STEP : INT := 0;\n    NIN : INT := 0;         (* 已入库个数 *)\n    NOUT : INT := 0;        (* 已出库个数 *)\n    REQ : INT := 0;         (* 待处理出库请求 *)\n    OUTTRIG : R_TRIG;\n    TM : TON;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C_IN_FWD := RUN;\n    C_OUT_FWD := RUN;\n    OUTTRIG(CLK := OUT_REQ);\n    IF OUTTRIG.Q THEN REQ := REQ + 1; END_IF;\n    TM(IN := STEP = 12 OR STEP = 16 OR STEP = 32 OR STEP = 36, PT := T#400MS);\n    CASE STEP OF\n        0:  SC1_FORK_LEFT := FALSE; SC1_FORK_RIGHT := FALSE; SC1_LIFT := FALSE;\n            IF RUN AND SC1_FORK_HOME THEN\n                IF S_IN AND NIN < 12 THEN STEP := 10;\n                ELSIF REQ > 0 AND NIN > NOUT THEN STEP := 30;\n                END_IF;\n            END_IF;\n        (* ---- 入库 ---- *)\n        10: SC1_TARGET := 0; STEP := 11;\n        11: IF SC1_AT_TARGET THEN SC1_FORK_LEFT := TRUE; STEP := 12; END_IF;\n        12: IF SC1_FORK_LEFT_END AND TM.Q THEN SC1_LIFT := TRUE; STEP := 13; END_IF;\n        13: IF SC1_LOADED THEN SC1_FORK_LEFT := FALSE; STEP := 14; END_IF;\n        14: IF SC1_FORK_HOME THEN SC1_TARGET := NIN + 1; STEP := 15; END_IF;\n        15: IF SC1_AT_TARGET THEN SC1_FORK_RIGHT := TRUE; STEP := 16; END_IF;\n        16: IF SC1_FORK_RIGHT_END AND TM.Q THEN SC1_LIFT := FALSE; STEP := 17; END_IF;\n        17: IF NOT SC1_LOADED THEN SC1_FORK_RIGHT := FALSE; STEP := 18; END_IF;\n        18: IF SC1_FORK_HOME THEN NIN := NIN + 1; STEP := 0; END_IF;\n        (* ---- 出库：先进先出 ---- *)\n        30: SC1_TARGET := NOUT + 1; STEP := 31;\n        31: IF SC1_AT_TARGET THEN SC1_FORK_RIGHT := TRUE; STEP := 32; END_IF;\n        32: IF SC1_FORK_RIGHT_END AND TM.Q THEN SC1_LIFT := TRUE; STEP := 33; END_IF;\n        33: IF SC1_LOADED THEN SC1_FORK_RIGHT := FALSE; STEP := 34; END_IF;\n        34: IF SC1_FORK_HOME THEN SC1_TARGET := 13; STEP := 35; END_IF;\n        35: IF SC1_AT_TARGET THEN SC1_FORK_LEFT := TRUE; STEP := 36; END_IF;\n        36: IF SC1_FORK_LEFT_END AND TM.Q THEN SC1_LIFT := FALSE; STEP := 37; END_IF;\n        37: IF NOT SC1_LOADED THEN SC1_FORK_LEFT := FALSE; STEP := 38; END_IF;\n        38: IF SC1_FORK_HOME THEN NOUT := NOUT + 1; REQ := REQ - 1; STEP := 0; END_IF;\n    END_CASE;\n    D1 := NIN - NOUT;\nEND_PROGRAM\n"
+  }
+ },
+ "faults": [
+  {
+   "comp": "S_IN",
+   "kind": "sensor_stuck_off",
+   "label": "S_IN 传感器常断（一直为 0）",
+   "symptom": "托盘到了入库口也不入库"
+  },
+  {
+   "comp": "SC1",
+   "kind": "actuator_slow",
+   "label": "SC1 执行器动作变慢",
+   "symptom": "堆垛机很慢"
+  },
+  {
+   "comp": "OUT_REQ",
+   "kind": "wire_break",
+   "label": "OUT_REQ 断线（信号恒为 0）",
+   "symptom": "按出库没有反应"
+  },
+  {
+   "comp": "SC1",
+   "kind": "actuator_jam",
+   "label": "SC1 执行器卡滞",
+   "symptom": "堆垛机不动，到达信号不来"
+  }
+ ],
+ "version": 1
+}

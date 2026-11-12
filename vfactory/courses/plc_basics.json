@@ -1,0 +1,123 @@
+{
+ "id": "plc_basics",
+ "name": "PLC 控制基础",
+ "level": 1,
+ "order": 1,
+ "desc": "15 个设备级控制任务：从电机启停自锁到整线联动。每课在自己的沙箱里写梯形图或结构化文本，提交后用自动测试序列评分。",
+ "chapters": [
+  {
+   "id": "c1",
+   "title": "基本逻辑",
+   "lessons": [
+    {
+     "id": "s01",
+     "title": "电机启停自锁",
+     "kind": "cell",
+     "scene": "s01_motor_latch"
+    },
+    {
+     "id": "s02",
+     "title": "电机正反转互锁",
+     "kind": "cell",
+     "scene": "s02_fwd_rev"
+    },
+    {
+     "id": "s03",
+     "title": "传送带启停与急停",
+     "kind": "cell",
+     "scene": "s03_conveyor"
+    },
+    {
+     "id": "s08",
+     "title": "定时放料与工位停留",
+     "kind": "cell",
+     "scene": "s08_timed_feed"
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "title": "分拣与计数",
+   "lessons": [
+    {
+     "id": "s04",
+     "title": "按颜色分拣",
+     "kind": "cell",
+     "scene": "s04_sort_color"
+    },
+    {
+     "id": "s05",
+     "title": "按材质分拣（电感/电容）",
+     "kind": "cell",
+     "scene": "s05_sort_material"
+    },
+    {
+     "id": "s06",
+     "title": "按高度分拣（摆臂）",
+     "kind": "cell",
+     "scene": "s06_sort_height"
+    },
+    {
+     "id": "s07",
+     "title": "计数装箱",
+     "kind": "cell",
+     "scene": "s07_count_box"
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "title": "搬运与仓储",
+   "lessons": [
+    {
+     "id": "s09",
+     "title": "码垛（伺服取放）",
+     "kind": "cell",
+     "scene": "s09_palletize"
+    },
+    {
+     "id": "s10",
+     "title": "转台分流",
+     "kind": "cell",
+     "scene": "s10_turntable"
+    },
+    {
+     "id": "s11",
+     "title": "升降机两层输送",
+     "kind": "cell",
+     "scene": "s11_lift"
+    },
+    {
+     "id": "s12",
+     "title": "气动取放机械手",
+     "kind": "cell",
+     "scene": "s12_pick_place"
+    },
+    {
+     "id": "s13",
+     "title": "立体仓库出入库",
+     "kind": "cell",
+     "scene": "s13_asrs"
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "title": "联锁与整线",
+   "lessons": [
+    {
+     "id": "s14",
+     "title": "双工位联锁",
+     "kind": "cell",
+     "scene": "s14_dual_station"
+    },
+    {
+     "id": "s15",
+     "title": "整线联动（接入整厂）",
+     "kind": "cell",
+     "scene": "s15_full_line"
+    }
+   ]
+  }
+ ]
+}

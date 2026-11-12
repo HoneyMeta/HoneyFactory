@@ -1,0 +1,812 @@
+{
+ "id": "s05_sort_material",
+ "name": "按材质分拣（电感/电容）",
+ "level": 5,
+ "order": 5,
+ "desc": "电感接近开关只认金属，电容接近开关什么都认：把金属件推出，塑料件放行。",
+ "cell": {
+  "size": [
+   8,
+   4
+  ],
+  "components": [
+   {
+    "id": "E1",
+    "type": "emitter",
+    "pos": [
+     -3.6,
+     0,
+     0.27
+    ],
+    "rot": 0,
+    "params": {
+     "interval": "uniform(5,7)",
+     "parts": [
+      {
+       "kind": "part",
+       "color": "grey",
+       "material": "metal",
+       "h": 0.15,
+       "w": 0.25,
+       "weight": 1
+      },
+      {
+       "kind": "part",
+       "color": "blue",
+       "material": "plastic",
+       "h": 0.15,
+       "w": 0.25,
+       "weight": 1
+      },
+      {
+       "kind": "part",
+       "color": "white",
+       "material": "plastic",
+       "h": 0.15,
+       "w": 0.25,
+       "weight": 1
+      }
+     ]
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     0.0,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     7.6,
+     0.6
+    ],
+    "label": "输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "IND1",
+    "type": "inductive",
+    "pos": [
+     0.6,
+     0.3,
+     0.32
+    ],
+    "rot": 0,
+    "label": "电感接近开关",
+    "params": {
+     "range": 0.2
+    }
+   },
+   {
+    "id": "CAP1",
+    "type": "capacitive",
+    "pos": [
+     0.6,
+     -0.3,
+     0.32
+    ],
+    "rot": 180,
+    "label": "电容接近开关",
+    "params": {
+     "range": 0.2
+    }
+   },
+   {
+    "id": "S1",
+    "type": "diffuse_sensor",
+    "pos": [
+     1.5,
+     0.35,
+     0.32
+    ],
+    "rot": 0,
+    "label": "推杆前光电"
+   },
+   {
+    "id": "P1",
+    "type": "pusher",
+    "pos": [
+     1.5,
+     0.42,
+     0.32
+    ],
+    "rot": 0,
+    "label": "推杆",
+    "params": {
+     "stroke": 0.8,
+     "speed": 1.0
+    }
+   },
+   {
+    "id": "R_METAL",
+    "type": "remover",
+    "pos": [
+     1.5,
+     -0.76,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.9,
+     0.9
+    ],
+    "label": "金属料箱",
+    "params": {
+     "accept": {
+      "material": "metal"
+     }
+    }
+   },
+   {
+    "id": "R_PLASTIC",
+    "type": "remover",
+    "pos": [
+     3.85,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.4,
+     0.9
+    ],
+    "label": "塑料出口",
+    "params": {
+     "accept": {
+      "material": "plastic"
+     }
+    }
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.15,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -2.9000000000000004,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "IND1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "IND1",
+    "signal": "detect",
+    "comment": "电感接近开关 IND1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "CAP1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "CAP1",
+    "signal": "detect",
+    "comment": "电容接近开关 CAP1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "S1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "S1",
+    "signal": "detect",
+    "comment": "推杆前光电 S1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "P1_FRONT",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "P1",
+    "signal": "front",
+    "comment": "推杆 P1 伸出到位",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "P1_BACK",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "P1",
+    "signal": "back",
+    "comment": "推杆 P1 缩回到位",
+    "contact": "NO",
+    "idle": 1
+   },
+   {
+    "name": "P1_EXTEND",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "P1",
+    "signal": "extend",
+    "comment": "推杆 P1 伸出",
+    "idle": false
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.5",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.6",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.7",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "sort_accuracy",
+   "collisions",
+   "jams",
+   "throughput_per_min"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "IND1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "IND1",
+   "signal": "detect",
+   "comment": "电感接近开关 IND1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "CAP1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "CAP1",
+   "signal": "detect",
+   "comment": "电容接近开关 CAP1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "S1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "S1",
+   "signal": "detect",
+   "comment": "推杆前光电 S1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "P1_FRONT",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "P1",
+   "signal": "front",
+   "comment": "推杆 P1 伸出到位",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "P1_BACK",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "P1",
+   "signal": "back",
+   "comment": "推杆 P1 缩回到位",
+   "contact": "NO",
+   "idle": 1
+  },
+  {
+   "name": "P1_EXTEND",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "P1",
+   "signal": "extend",
+   "comment": "推杆 P1 伸出",
+   "idle": false
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.5",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.6",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.7",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：按材质分拣\n\n来料有金属件（灰）和塑料件（蓝、白）。电感接近开关 `IND1` 只在**金属件**经过时为 1；电容接近开关 `CAP1` 任何零件经过都为 1（可以用来判断\"有零件经过\"，选用）。\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；\n2. 金属件到达推杆前（`S1`）时，推杆 `P1` 把它推进金属料箱；塑料件放行到线尾；\n3. 正确率 ≥ 98%，不碰撞、不卡件，每分钟至少 8 件。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。例外：`P1_BACK` 是\"在原位/到位\"信号，设备停在初始位置时就是 1。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `C1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 输送带 C1 正转 |\n| `IND1` | 输入 | BOOL | %I0.0 | 常开 | 0 | 电感接近开关 IND1 检测到 |\n| `CAP1` | 输入 | BOOL | %I0.1 | 常开 | 0 | 电容接近开关 CAP1 检测到 |\n| `S1` | 输入 | BOOL | %I0.2 | 常开 | 0 | 推杆前光电 S1 检测到 |\n| `P1_FRONT` | 输入 | BOOL | %I0.3 | 常开 | 0 | 推杆 P1 伸出到位 |\n| `P1_BACK` | 输入 | BOOL | %I0.4 | 常开 | 1 | 推杆 P1 缩回到位 |\n| `P1_EXTEND` | 输出 | BOOL | %Q0.1 | — | 0 | 推杆 P1 伸出 |\n| `START` | 输入 | BOOL | %I0.5 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I0.6 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I0.7 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.2 | — | 0 | 运行 LAMP_RUN 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 分拣正确率 ≥ 98%：**35 分**\n  - 怎么试：按启动让它连续跑几分钟，看分拣对不对（这里显示当前正确率）\n- 碰撞次数：必须为 0（不能出现）：**15 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 卡件次数：必须为 0（不能出现）：**10 分**\n  - 怎么试：连续运行时零件不能被挡住走不动（这里显示当前次数）\n- 每分钟产出 ≥ 8：**15 分**\n  - 怎么试：连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "电感开关在推杆上游约 0.9 m，零件间距大于 1.5 m：经过电感时记下\"是金属\"，推完后清掉。",
+  "也可以用电容开关的上升沿作为\"一个零件经过\"的时刻，在这一刻读电感开关的值。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "sort_accuracy",
+    "label": "分拣正确率",
+    "op": ">=",
+    "value": 0.98,
+    "weight": 35,
+    "how": "按启动让它连续跑几分钟，看分拣对不对（这里显示当前正确率）"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 15,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "jams",
+    "label": "卡件次数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "连续运行时零件不能被挡住走不动（这里显示当前次数）"
+   },
+   {
+    "key": "throughput_per_min",
+    "label": "每分钟产出",
+    "op": ">=",
+    "value": 8,
+    "weight": 15,
+    "how": "连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 192,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C1_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 180.0,
+    "snapshot": true
+   },
+   {
+    "t": 181.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 181.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "P1_EXTEND"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 182.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 184.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "P1_EXTEND"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 185.0,
+    "press": "START"
+   },
+   {
+    "t": 186.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM SortMaterial\nVAR\n    RUN : BOOL;\n    IS_METAL : BOOL;\n    PUSH : BOOL;\n    TRIG : R_TRIG;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    IF IND1 THEN\n        IS_METAL := TRUE;          (* 金属件经过电感开关 *)\n    END_IF;\n    TRIG(CLK := S1);\n    IF TRIG.Q THEN\n        IF IS_METAL AND RUN THEN\n            PUSH := TRUE;\n        END_IF;\n        IS_METAL := FALSE;          (* 每个零件到推杆前都清一次 *)\n    END_IF;\n    IF P1_FRONT OR NOT RUN THEN\n        PUSH := FALSE;\n    END_IF;\n    P1_EXTEND := PUSH;\nEND_PROGRAM\n"
+  },
+  "ld": {
+   "id": "reference_ld",
+   "name": "参考答案（梯形图）",
+   "lang": "LD",
+   "vars": [
+    {
+     "name": "RUN",
+     "type": "BOOL",
+     "comment": ""
+    },
+    {
+     "name": "IS_METAL",
+     "type": "BOOL",
+     "comment": ""
+    },
+    {
+     "name": "PUSH",
+     "type": "BOOL",
+     "comment": ""
+    }
+   ],
+   "source": {
+    "rungs": [
+     {
+      "comment": "启停自锁：启动并联自锁触点，串常闭停止和急停",
+      "elements": [
+       {
+        "par": [
+         [
+          {
+           "t": "NO",
+           "var": "START"
+          }
+         ],
+         [
+          {
+           "t": "NO",
+           "var": "RUN"
+          }
+         ]
+        ]
+       },
+       {
+        "t": "NO",
+        "var": "STOP"
+       },
+       {
+        "t": "NO",
+        "var": "ESTOP"
+       },
+       {
+        "t": "COIL",
+        "var": "RUN"
+       }
+      ]
+     },
+     {
+      "comment": "运行指示灯",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "RUN"
+       },
+       {
+        "t": "COIL",
+        "var": "LAMP_RUN"
+       }
+      ]
+     },
+     {
+      "comment": "输送带",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "RUN"
+       },
+       {
+        "t": "COIL",
+        "var": "C1_FWD"
+       }
+      ]
+     },
+     {
+      "comment": "S1 上升沿 + 金属标志：推杆动作",
+      "elements": [
+       {
+        "t": "P",
+        "var": "S1"
+       },
+       {
+        "t": "NO",
+        "var": "IS_METAL"
+       },
+       {
+        "t": "NO",
+        "var": "RUN"
+       },
+       {
+        "t": "SET",
+        "var": "PUSH"
+       }
+      ]
+     },
+     {
+      "comment": "推杆动作后清掉金属标志",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "PUSH"
+       },
+       {
+        "t": "RESET",
+        "var": "IS_METAL"
+       }
+      ]
+     },
+     {
+      "comment": "零件经过电感开关：置位金属标志",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "IND1"
+       },
+       {
+        "t": "SET",
+        "var": "IS_METAL"
+       }
+      ]
+     },
+     {
+      "comment": "伸出到位或停机：缩回",
+      "elements": [
+       {
+        "par": [
+         [
+          {
+           "t": "NO",
+           "var": "P1_FRONT"
+          }
+         ],
+         [
+          {
+           "t": "NC",
+           "var": "RUN"
+          }
+         ]
+        ]
+       },
+       {
+        "t": "RESET",
+        "var": "PUSH"
+       }
+      ]
+     },
+     {
+      "comment": "推杆电磁阀",
+      "elements": [
+       {
+        "t": "NO",
+        "var": "PUSH"
+       },
+       {
+        "t": "COIL",
+        "var": "P1_EXTEND"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "faults": [
+  {
+   "comp": "IND1",
+   "kind": "sensor_stuck_off",
+   "label": "IND1 传感器常断（一直为 0）",
+   "symptom": "金属件不被推出"
+  },
+  {
+   "comp": "IND1",
+   "kind": "sensor_stuck_on",
+   "label": "IND1 传感器常通（一直为 1）",
+   "symptom": "所有零件都被推出"
+  },
+  {
+   "comp": "CAP1",
+   "kind": "wire_break",
+   "label": "CAP1 断线（信号恒为 0）",
+   "symptom": "电容开关没有信号（如果程序用了它）"
+  },
+  {
+   "comp": "P1",
+   "kind": "actuator_jam",
+   "label": "P1 执行器卡滞",
+   "symptom": "推杆不动"
+  },
+  {
+   "comp": "S1",
+   "kind": "sensor_flicker",
+   "label": "S1 传感器信号抖动",
+   "symptom": "偶尔多推"
+  }
+ ],
+ "version": 1
+}

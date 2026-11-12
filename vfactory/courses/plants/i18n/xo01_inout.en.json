@@ -1,0 +1,19 @@
+{
+ "实训单元·电机启停（观察）": "Lab Unit · Motor Start/Stop (Observation)",
+ "实训零件": "Lab Part",
+ "实训区": "Lab Area",
+ "电机启停自锁": "Motor Start/Stop with Seal-In",
+ "输送电机": "Conveyor Motor",
+ "输送带（由 M1 拖动）": "Belt Conveyor (driven by M1)",
+ "启动": "Start",
+ "停止": "Stop",
+ "运行": "Run",
+ "输送电机 M1 运行反馈": "Conveyor motor M1 running feedback",
+ "输送电机 M1 热继电器正常（常闭）": "Conveyor motor M1 overload relay healthy (NC)",
+ "输送电机 M1 接触器": "Conveyor Motor M1 Contactor",
+ "启动 START 触点": "Start START Contact",
+ "停止 STOP 触点": "Stop STOP Contact",
+ "运行 LAMP_RUN 点亮": "Run LAMP_RUN Lit",
+ "电机启停自锁 PLC": "Motor Start/Stop Seal-In PLC",
+ "参考答案": "Answer Key"
+}

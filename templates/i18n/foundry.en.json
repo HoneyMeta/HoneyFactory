@@ -1,0 +1,21 @@
+{
+ "新建铸造厂": "New Foundry",
+ "球墨铸铁件": "Ductile Iron Casting",
+ "熔炼区": "Melting Area",
+ "造型区": "Molding Area",
+ "清理区": "Fettling Area",
+ "仓储区": "Storage Area",
+ "1#中频炉 3t": "#1 Induction Furnace 3t",
+ "2#中频炉 3t": "#2 Induction Furnace 3t",
+ "球化孕育站": "Nodularization and Inoculation Station",
+ "砂处理系统": "Sand Processing System",
+ "水平分型造型线": "Horizontal Parting Molding Line",
+ "冷却输送线": "Cooling Conveyor",
+ "吊钩抛丸机": "Hook-Type Shot Blaster",
+ "AGV 车队": "AGV Fleet",
+ "生产班组": "Production Team",
+ "炉前工": "Furnace Operator",
+ "球化浇包工": "Nodularization Ladle Operator",
+ "浇注工": "Pouring Operator",
+ "抛丸挂件工": "Shot Blasting Hanger Operator"
+}

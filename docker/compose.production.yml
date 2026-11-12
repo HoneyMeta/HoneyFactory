@@ -1,0 +1,27 @@
+# Production overrides for docker-compose.yml:
+#
+#   docker compose -f docker-compose.yml -f docker/compose.production.yml up -d
+#
+# Requires Docker Compose 2.24.4 or later (the `!override` tag below replaces the port list of docker-compose.yml).
+#
+# - VF_DEMO=0: no demo accounts and no demo class. The first start asks for the administrator account in the browser
+#   (or: docker compose exec factory python -m vfactory create-admin --username admin).
+#   The demo plant "foundry-housing" is still created on first start as a starting point; delete or replace it in the UI.
+# - The OPC UA, MQTT and Modbus ports are published on 127.0.0.1 only. The simulated plant's protocol servers have no
+#   authentication; publish them on other interfaces only inside a trusted lab network.
+# - Put a reverse proxy with TLS in front of port 8800 when the UI is reachable beyond a trusted network, and set
+#   VF_HTTPS=1 so session cookies are marked Secure (docs/deployment.md).
+#
+# Start production on a new volume. A data volume that was created in demo mode keeps its demo accounts; remove it
+# first with `docker compose down -v` (this deletes all data) or use another project name (-p).
+
+services:
+  factory:
+    environment:
+      VF_DEMO: "0"
+      VF_HTTPS: ${VF_HTTPS:-0}
+    ports: !override
+      - "${VF_PORT:-8800}:8800"
+      - "127.0.0.1:${VF_OPCUA_PORT:-4840}:4840"
+      - "127.0.0.1:${VF_MQTT_PORT:-1883}:1883"
+      - "127.0.0.1:${VF_MODBUS_PORTS:-5020-5029}:5020-5029"

@@ -1,0 +1,41 @@
+/* PLC programming colors (light theme only since 5.0.1, sharing HoneyMOM tokens). Backgrounds, text, and lines follow Workbench variables (.ed, mapped to --hm-*);
+   define semantic colors for ladder power flow, syntax highlighting, and HMI panels here. Components use only these variables. */
+.plc-root {
+  --ld-bg: var(--hm-surface-2, #f7f9fc); --ld-card: var(--bg2, var(--hm-surface, #fff)); --ld-bar: var(--hm-surface-2, #f7f9fc); --ld-ln: var(--ln, var(--hm-border, #e2e8f0)); --ld-ln2: var(--ln2, var(--hm-border-strong, #cbd5e1));
+  --ld-tx: var(--tx, var(--hm-text, #0f1b2d)); --ld-mu: var(--mu, var(--hm-text-3, #7b8aa0)); --ld-sel: var(--sel, var(--hm-primary, #1463d6)); --ld-bad: var(--hm-fault, #dc2b2b); --ld-warn: var(--hm-idle-ink, #8a5a07);
+  --ld-acc: var(--hm-primary, #1463d6);
+  /* Ladder diagram / ST semantic colors */
+  --ld-hov: rgba(20, 99, 214, .06); --ld-selbg: var(--hm-primary-soft, #e8f0fd); --ld-pow: #12a150; --ld-pow-bg: rgba(18, 161, 80, .14); --ld-wire: #5b6b80;
+  --ld-wire-off: #a3b0c0; --ld-rail: #34445a; --ld-sym: var(--hm-text, #0f1b2d); --ld-op: #124b9e; --ld-box: var(--hm-surface, #fff); --ld-boxh: var(--hm-surface-3, #eef2f7); --ld-live: var(--hm-run-ink, #11713a);
+  --ld-cmt: #3e7a3a; --ld-force: #c2410c; --ld-halt: #d99a16; --ld-halt-bg: var(--hm-idle-soft, #fcf3dc); --ld-bad-bg: var(--hm-fault-soft, #fde7e7);
+  --ld-info-bg: var(--hm-primary-soft, #e8f0fd); --ld-in: var(--hm-primary, #1463d6); --ld-in-bg: rgba(20, 99, 214, .12); --ld-on-led: #22c55e; --ld-shadow: rgba(15, 32, 60, .14);
+  --st-kw: #7c2bb9; --st-cmt: #5a7f52; --st-str: #9a5b00; --st-num: #b9401a; --st-addr: #0b7f72; --st-type: #1f56c9; --st-fb: #8a5f00; --st-fn: #0a6f87;
+  --st-var: var(--hm-text, #0f1b2d); --st-op: #0a6f87; --st-active: rgba(20, 99, 214, .05); --st-selection: rgba(20, 99, 214, .18);
+  /* HMI screen (styled as a physical operator panel on a light surface) */
+  --hmi-panel: #e8edf3; --hmi-grid: #c9d3df; --hmi-tx: var(--hm-text, #0f1b2d); --hmi-mu: var(--hm-text-2, #44536a); --hmi-card: #ffffff; --hmi-ln: #c3cdd9; --hmi-off: #a3b0c0;
+  --hmi-lcd: #18222f; --hmi-lcd-tx: #8ff08f; --hmi-lcd-mu: #9aa8b8; --hmi-sel: var(--hm-primary, #1463d6);
+  font-size: 12.5px; color: var(--ld-tx); font-family: var(--hm-font, inherit);
+}
+.plc-root .muted { color: var(--ld-mu); }
+.plc-root .mono { font-family: var(--hm-font-mono, Consolas, monospace); }
+.plc-chip { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: var(--hm-r-pill, 11px); font-size: 11.5px; white-space: nowrap;
+  background: var(--hm-surface-2, #f7f9fc); border: 1px solid var(--ld-ln); color: var(--ld-tx); }
+.plc-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--ld-mu); }
+.plc-chip.RUN i { background: var(--hm-run, #15a34a); } .plc-chip.RUN { background: var(--hm-run-soft, #e4f6ea); border-color: color-mix(in srgb, var(--hm-run, #15a34a) 40%, transparent); color: var(--hm-run-ink, #11713a); }
+.plc-chip.HALT i { background: var(--ld-halt); } .plc-chip.HALT { background: var(--hm-idle-soft, #fcf3dc); border-color: color-mix(in srgb, var(--hm-idle, #d99a16) 45%, transparent); color: var(--hm-idle-ink, #8a5a07); }
+.plc-chip.ERROR i { background: var(--ld-bad); } .plc-chip.ERROR { background: var(--hm-fault-soft, #fde7e7); border-color: color-mix(in srgb, var(--hm-fault, #dc2b2b) 40%, transparent); color: var(--hm-fault-ink, #a11f1f); }
+.plc-chip.EXTERNAL i { background: var(--ld-in); }
+.plc-chip.warn { border-color: var(--ld-warn); color: var(--ld-warn); }
+.plc-btn { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 9px; border: 1px solid var(--el-border-color, #dbe2ea); border-radius: var(--el-border-radius-base, 6px); background: var(--hm-surface, #fff);
+  color: var(--ld-tx); cursor: pointer; font: inherit; font-size: 12.5px; white-space: nowrap; transition: border-color var(--hm-dur-1, .12s), color var(--hm-dur-1, .12s), background var(--hm-dur-1, .12s); }
+.plc-btn:hover:not(:disabled) { border-color: var(--el-color-primary-light-7, #b9d0f3); color: var(--ld-sel); background: var(--hm-primary-soft, #e8f0fd); }
+.plc-btn:disabled { opacity: .4; cursor: default; }
+.plc-btn.pri { background: var(--ld-sel); border-color: var(--ld-sel); color: #fff; }
+.plc-btn.pri:hover:not(:disabled) { color: #fff; background: var(--hm-primary-hover, #0f55bd); border-color: var(--hm-primary-hover, #0f55bd); }
+.plc-btn.go { color: var(--hm-run-ink, #11713a); } .plc-btn.go.on { background: var(--hm-run-soft, #e4f6ea); border-color: color-mix(in srgb, var(--hm-run, #15a34a) 45%, transparent); }
+.plc-btn.st { color: var(--ld-bad); }
+.plc-btn .el-icon { font-size: 14px; }
+.plc-sep { width: 1px; height: 22px; background: var(--ld-ln); margin: 0 2px; }
+.plc-banner { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 6px 10px; font-size: 12px; border-bottom: 1px solid var(--ld-ln); background: var(--ld-info-bg); color: var(--ld-tx); }
+.plc-banner.bad { background: var(--ld-bad-bg); color: var(--hm-fault-ink, #a11f1f); cursor: pointer; }
+.plc-banner .x { margin-left: auto; border: 0; background: none; color: var(--ld-mu); cursor: pointer; font-size: 14px; }

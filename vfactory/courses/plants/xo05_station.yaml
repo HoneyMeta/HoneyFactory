@@ -1,0 +1,132 @@
+version: 2
+
+plant:
+  name: 实训单元·定时放料工位（观察）
+  product: 实训零件
+  seed: 7
+  start: '2026-11-02T08:00:00'
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 定时放料与工位停留
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: E1
+        type: emitter
+        pos: [-3.6, 0, 0.27]
+        rot: 0
+        label: 料仓
+        params:
+          trigger: signal
+          parts:
+          - {kind: part, color: grey, material: metal, h: 0.15, w: 0.25}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.0, 0, 0]
+        rot: 0
+        size: [7.6, 0.6]
+        label: 输送带
+        params:
+          speed: 0.3
+      - id: ST1
+        type: stopper
+        pos: [0.5, 0, 0]
+        rot: 0
+        label: 工位挡停
+        params:
+          width: 0.6
+      - {id: S1, type: diffuse_sensor, pos: [0.46, 0.35, 0.32], rot: 0, label: 工位到位光电}
+      - {id: R1, type: remover, pos: [3.85, 0, 0], rot: 0, size: [0.4, 0.9], label: 出口}
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - {id: ESTOP, type: estop, pos: [-3.15, 1.6, 0.95], rot: 0, label: 急停}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-2.9000000000000004, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      - id: LAMP_WORK
+        type: lamp
+        pos: [-2.7, 1.6, 0.95]
+        rot: 0
+        label: 加工中
+        params:
+          color: yellow
+      io:
+      - {name: E1_RELEASE, dir: out, type: BOOL, addr: '%Q0.0', comp: E1, signal: release, comment: 料仓 E1 放料（上升沿放一件）, idle: false}
+      - {name: C1_FWD, dir: out, type: BOOL, addr: '%Q0.1', comp: C1, signal: fwd, comment: 输送带 C1 正转, idle: false}
+      - {name: ST1_RAISE, dir: out, type: BOOL, addr: '%Q0.2', comp: ST1, signal: raise, comment: 工位挡停 ST1 升起挡料, idle: false}
+      - {name: S1, dir: in, type: BOOL, addr: '%I0.0', comp: S1, signal: detect, comment: 工位到位光电 S1 检测到, contact: 'NO', idle: 0}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.1', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.2', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: ESTOP, dir: in, type: BOOL, addr: '%I0.3', comp: ESTOP, signal: value, comment: 急停 ESTOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      - {name: LAMP_WORK, dir: out, type: BOOL, addr: '%Q0.4', comp: LAMP_WORK, signal: 'on', comment: 加工中 LAMP_WORK 点亮, idle: false}
+      metrics: [emit_min_gap.E1, dwell_min.ST1, throughput_per_min, collisions, part_contacts]
+- id: PLC1
+  type: plc
+  name: 定时放料与工位停留 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: "PROGRAM TimedFeed\nVAR\n    RUN : BOOL;\n    FEED : TON;                 (* 6 s 放料脉冲 *)\n    WORK : TON;                 (* 加工计时 *)\n    PASS : TON;                 (* 放行计时 *)\n    HOLD : BOOL := TRUE;        (* 挡停升起 *)\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN\
+        \ := RUN;\n    C1_FWD := RUN;\n    FEED(IN := RUN AND NOT FEED.Q, PT := T#6S);\n    E1_RELEASE := FEED.Q;\n    (* 零件到工位：加工 3.2 s *)\n    WORK(IN := S1 AND HOLD, PT := T#3200MS);\n    LAMP_WORK := S1 AND HOLD;\n    IF WORK.Q THEN\n        HOLD := FALSE;          (* 加工完：落下放行 *)\n    END_IF;\n    PASS(IN := NOT HOLD, PT := T#1S);\n    IF PASS.Q THEN\n        HOLD := TRUE;           (* 1 s 后零件已经走过挡板，重新升起\
+        \ *)\n    END_IF;\n    ST1_RAISE := HOLD;\nEND_PROGRAM\n"}
+    di: 4
+    do: 5
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: E1_RELEASE, ch: Q0.0, dir: out}
+  - {point: C1_FWD, ch: Q0.1, dir: out}
+  - {point: ST1_RAISE, ch: Q0.2, dir: out}
+  - {point: S1, ch: I0.0, dir: in}
+  - {point: START, ch: I0.1, dir: in}
+  - {point: STOP, ch: I0.2, dir: in}
+  - {point: ESTOP, ch: I0.3, dir: in}
+  - {point: LAMP_RUN, ch: Q0.3, dir: out}
+  - {point: LAMP_WORK, ch: Q0.4, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []

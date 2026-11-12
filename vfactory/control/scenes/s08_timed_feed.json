@@ -1,0 +1,542 @@
+{
+ "id": "s08_timed_feed",
+ "name": "定时放料与工位停留",
+ "level": 8,
+ "order": 8,
+ "desc": "料仓每 6 s 放一件；零件在加工工位被挡停挡住加工 3 s 后放行。",
+ "cell": {
+  "size": [
+   8,
+   4
+  ],
+  "components": [
+   {
+    "id": "E1",
+    "type": "emitter",
+    "pos": [
+     -3.6,
+     0,
+     0.27
+    ],
+    "rot": 0,
+    "label": "料仓",
+    "params": {
+     "trigger": "signal",
+     "parts": [
+      {
+       "kind": "part",
+       "color": "grey",
+       "material": "metal",
+       "h": 0.15,
+       "w": 0.25
+      }
+     ]
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     0.0,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     7.6,
+     0.6
+    ],
+    "label": "输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "ST1",
+    "type": "stopper",
+    "pos": [
+     0.5,
+     0,
+     0
+    ],
+    "rot": 0,
+    "label": "工位挡停",
+    "params": {
+     "width": 0.6
+    }
+   },
+   {
+    "id": "S1",
+    "type": "diffuse_sensor",
+    "pos": [
+     0.46,
+     0.35,
+     0.32
+    ],
+    "rot": 0,
+    "label": "工位到位光电"
+   },
+   {
+    "id": "R1",
+    "type": "remover",
+    "pos": [
+     3.85,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.4,
+     0.9
+    ],
+    "label": "出口"
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.15,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -2.9000000000000004,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "LAMP_WORK",
+    "type": "lamp",
+    "pos": [
+     -2.7,
+     1.6,
+     0.95
+    ],
+    "rot": 0,
+    "label": "加工中",
+    "params": {
+     "color": "yellow"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "E1_RELEASE",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "E1",
+    "signal": "release",
+    "comment": "料仓 E1 放料（上升沿放一件）",
+    "idle": false
+   },
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "ST1_RAISE",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "ST1",
+    "signal": "raise",
+    "comment": "工位挡停 ST1 升起挡料",
+    "idle": false
+   },
+   {
+    "name": "S1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "S1",
+    "signal": "detect",
+    "comment": "工位到位光电 S1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   },
+   {
+    "name": "LAMP_WORK",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.4",
+    "comp": "LAMP_WORK",
+    "signal": "on",
+    "comment": "加工中 LAMP_WORK 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "emit_min_gap.E1",
+   "dwell_min.ST1",
+   "throughput_per_min",
+   "collisions",
+   "part_contacts"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "E1_RELEASE",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "E1",
+   "signal": "release",
+   "comment": "料仓 E1 放料（上升沿放一件）",
+   "idle": false
+  },
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "ST1_RAISE",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "ST1",
+   "signal": "raise",
+   "comment": "工位挡停 ST1 升起挡料",
+   "idle": false
+  },
+  {
+   "name": "S1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "S1",
+   "signal": "detect",
+   "comment": "工位到位光电 S1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  },
+  {
+   "name": "LAMP_WORK",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.4",
+   "comp": "LAMP_WORK",
+   "signal": "on",
+   "comment": "加工中 LAMP_WORK 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：定时放料与工位停留\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；运行时每 **6 s** 让料仓放一件（`E1_RELEASE` 的上升沿放一件）；\n2. 挡停 `ST1` 平时升起（`ST1_RAISE` = 1），零件到工位（`S1` = 1）后**停留至少 3 s**（模拟加工），加工中灯亮；\n3. 加工完挡停落下放行，零件离开后再升起，等下一件；挡停升起时上面不能有零件（否则顶到零件记碰撞）；\n4. 每分钟至少 8 件，放料间隔不小于 5.5 s；零件之间不能追尾、不能碰撞。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `E1_RELEASE` | 输出 | BOOL | %Q0.0 | — | 0 | 料仓 E1 放料（上升沿放一件） |\n| `C1_FWD` | 输出 | BOOL | %Q0.1 | — | 0 | 输送带 C1 正转 |\n| `ST1_RAISE` | 输出 | BOOL | %Q0.2 | — | 0 | 工位挡停 ST1 升起挡料 |\n| `S1` | 输入 | BOOL | %I0.0 | 常开 | 0 | 工位到位光电 S1 检测到 |\n| `START` | 输入 | BOOL | %I0.1 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I0.2 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I0.3 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.3 | — | 0 | 运行 LAMP_RUN 点亮 |\n| `LAMP_WORK` | 输出 | BOOL | %Q0.4 | — | 0 | 加工中 LAMP_WORK 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 最小放料间隔 s ≥ 5.5：**15 分**\n  - 怎么试：运行时两次放料（E1_RELEASE 每次 0→1）之间至少隔 5.5 秒（这里显示目前最小间隔）\n- 工位最短停留 s ≥ 3.0：**25 分**\n  - 怎么试：每个零件都在工位挡停前停够 3 秒再放行（这里显示目前最短的一次）\n- 每分钟产出 ≥ 8：**15 分**\n  - 怎么试：连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）\n- 碰撞次数：必须为 0（不能出现）：**10 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 零件追尾次数：必须为 0（不能出现）：**10 分**\n  - 怎么试：零件之间不能追尾（这里显示当前次数）\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "用一个 TON 自己复位做 6 s 脉冲：T1(IN := RUN AND NOT T1.Q, PT := T#6S)，T1.Q 就是每 6 s 一个扫描周期的脉冲。",
+  "挡停落下 1 s 后再升起，零件已经走过挡板。",
+  "停留计时比 3 s 多留一点（例如 T#3200MS）：仿真里检测有一个扫描周期的延迟，正好 3 s 可能测出 2.98 s。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "emit_min_gap.E1",
+    "label": "最小放料间隔 s",
+    "op": ">=",
+    "value": 5.5,
+    "weight": 15,
+    "how": "运行时两次放料（E1_RELEASE 每次 0→1）之间至少隔 5.5 秒（这里显示目前最小间隔）"
+   },
+   {
+    "key": "dwell_min.ST1",
+    "label": "工位最短停留 s",
+    "op": ">=",
+    "value": 3.0,
+    "weight": 25,
+    "how": "每个零件都在工位挡停前停够 3 秒再放行（这里显示目前最短的一次）"
+   },
+   {
+    "key": "throughput_per_min",
+    "label": "每分钟产出",
+    "op": ">=",
+    "value": 8,
+    "weight": 15,
+    "how": "连续运行不停线，这里显示当前每分钟产出（刚启动时偏低）"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "part_contacts",
+    "label": "零件追尾次数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "零件之间不能追尾（这里显示当前次数）"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 192,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 C1_FWD 还是 0（没有运行）"
+   },
+   {
+    "t": 180.0,
+    "snapshot": true
+   },
+   {
+    "t": 181.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 181.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "E1_RELEASE"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 182.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 184.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "E1_RELEASE"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 185.0,
+    "press": "START"
+   },
+   {
+    "t": 186.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "C1_FWD",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM TimedFeed\nVAR\n    RUN : BOOL;\n    FEED : TON;                 (* 6 s 放料脉冲 *)\n    WORK : TON;                 (* 加工计时 *)\n    PASS : TON;                 (* 放行计时 *)\n    HOLD : BOOL := TRUE;        (* 挡停升起 *)\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    C1_FWD := RUN;\n    FEED(IN := RUN AND NOT FEED.Q, PT := T#6S);\n    E1_RELEASE := FEED.Q;\n    (* 零件到工位：加工 3.2 s *)\n    WORK(IN := S1 AND HOLD, PT := T#3200MS);\n    LAMP_WORK := S1 AND HOLD;\n    IF WORK.Q THEN\n        HOLD := FALSE;          (* 加工完：落下放行 *)\n    END_IF;\n    PASS(IN := NOT HOLD, PT := T#1S);\n    IF PASS.Q THEN\n        HOLD := TRUE;           (* 1 s 后零件已经走过挡板，重新升起 *)\n    END_IF;\n    ST1_RAISE := HOLD;\nEND_PROGRAM\n"
+  }
+ },
+ "faults": [
+  {
+   "comp": "S1",
+   "kind": "sensor_stuck_off",
+   "label": "S1 传感器常断（一直为 0）",
+   "symptom": "零件一直被挡在工位不放行"
+  },
+  {
+   "comp": "S1",
+   "kind": "sensor_flicker",
+   "label": "S1 传感器信号抖动",
+   "symptom": "加工时间被打断，停留不足 3 s"
+  },
+  {
+   "comp": "ST1",
+   "kind": "actuator_jam",
+   "label": "ST1 执行器卡滞",
+   "symptom": "挡停不动作"
+  },
+  {
+   "comp": "E1",
+   "kind": "wire_break",
+   "label": "E1 断线（信号恒为 0）",
+   "symptom": "料仓不放料"
+  }
+ ],
+ "version": 1
+}

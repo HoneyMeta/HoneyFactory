@@ -1,0 +1,11 @@
+{
+  "name": "故意失败（检查 JUnit 失败计数）",
+  "plant": "foundry-housing",
+  "speed": 30,
+  "steps": [
+    {"kind": "fault", "station": "CNC2", "fault": "failure"},
+    {"kind": "wait", "seconds": 10},
+    {"kind": "assert", "via": "rest", "station": "CNC2", "tag": "Common/State", "op": "==", "value": "Executing", "name": "断言故障中的设备在运行（应失败）"},
+    {"kind": "assert_kpi", "key": "good", "op": ">=", "value": 0}
+  ]
+}

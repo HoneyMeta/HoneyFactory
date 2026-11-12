@@ -1,0 +1,74 @@
+# 蜂元虚拟工厂 Windows 客户端打包（electron-builder）。不要直接跑：用 tools\build_electron.ps1，它先准备好
+#   .stage\python（精简 Python 3.12 运行时）、.stage\vf（vfactory 包 + templates + web\dist，以及蜂元教学 MES 的 vfmes；它的页面在 web\dist 里）、.res（图标/启动画面/安装包图片，缺的用占位图补上）。
+# 代码签名：现在不签。有证书时设环境变量 CSC_LINK（.pfx 路径或 base64）+ CSC_KEY_PASSWORD 再构建即可自动签名；
+#   签名后把 win.signtoolOptions.publisherName 改成证书上的名称（electron-updater 会校验新版安装包的签名者是同一个）。
+appId: com.honeymeta.vfactory
+productName: 蜂元虚拟工厂
+executableName: HoneyVF
+copyright: © 2026 蜂元科技（郑州）有限责任公司 HoneyMeta
+directories:
+  output: ../dist-electron
+  buildResources: .res
+files:
+  - src/**/*
+  - package.json
+  - "!**/*.map"
+asar: true
+extraResources:
+  - from: .stage/python
+    to: python
+  - from: .stage/vf
+    to: vf
+  - from: .res
+    to: assets
+    filter: ["*.png", "*.ico"]
+  - from: .stage/extra
+    to: .
+electronLanguages: [zh-CN, en-US]
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: icon.ico
+  requestedExecutionLevel: asInvoker
+  signAndEditExecutable: true
+  # signtoolOptions:
+  #   publisherName: ["蜂元科技（郑州）有限责任公司"]
+fileAssociations:
+  - ext: vfhw
+    name: HoneyVF.Homework
+    description: 蜂元虚拟工厂作业包
+    role: Editor
+    icon: icon.ico
+  - ext: vfplant
+    name: HoneyVF.Plant
+    description: 蜂元虚拟工厂工厂文件
+    role: Editor
+    icon: icon.ico
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: 蜂元虚拟工厂
+  uninstallDisplayName: 蜂元虚拟工厂 ${version}
+  menuCategory: false
+  installerIcon: icon.ico
+  uninstallerIcon: icon.ico
+  installerSidebar: installerSidebar.bmp
+  uninstallerSidebar: installerSidebar.bmp
+  installerHeader: installerHeader.bmp
+  include: installer.nsh
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true
+  unicode: true
+  language: "2052"
+  installerLanguages: [zh_CN]
+  artifactName: HoneyVF-Setup-${version}.${ext}
+  differentialPackage: true
+# 生成 latest.yml（自动更新的版本说明）。真正的更新地址在运行时按连着的服务器设置（desktop/src/updater.js），这里的地址只是占位。
+publish:
+  - provider: generic
+    url: http://127.0.0.1/api/client/update/

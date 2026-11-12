@@ -1,0 +1,946 @@
+{
+ "id": "machining",
+ "name": "生产线仿真与优化（机加工）",
+ "desc": "从一台机床到完整的机加车间：节拍与产能、缓存、瓶颈、线平衡、物流、排产换型、人员与故障，最后在预算内做一个扩产方案。每课一个工厂，改模型、跑仿真、按指标自动评分。",
+ "level": 2,
+ "order": 2,
+ "chapters": [
+  {
+   "id": "c1",
+   "title": "节拍与流动",
+   "lessons": [
+    {
+     "id": "m01",
+     "title": "单机节拍与产能",
+     "kind": "plant",
+     "plant": "mc01_single",
+     "time_h": 8,
+     "seed": 7,
+     "brief_md": "### 任务：让一台加工中心\"刚好吃饱\"\n\n车间只有一台 **1#加工中心（M1）**，加工一件壳体平均 **75 秒**（正态分布，标准差 3 秒）。\n毛坯由 **来料（SRC）** 送进 **待加工（B0）** 缓存，现在来料间隔是 `expo(45)`：平均 45 秒来一件。\n\n1. 先运行 10 分钟（仿真时间），看看 B0 里的件数和 M1 的状态，想一想为什么在制品越堆越多。\n2. 回答：M1 每小时最多能加工多少件？\n3. 改 **SRC 的到达间隔**（选中 SRC → 右边属性面板 → 节拍），让 M1 尽量满负荷、又不让毛坯在 B0 里排长队（间隔要比 75 秒稍大一点：太小会排队、周期超标，太大产量不够）：\n   - 小时产出 ≥ 43 件；\n   - 平均生产周期（从到货到入库）≤ 6 分钟。\n\n> 只能改来料的到达间隔，加工中心的节拍是设备能力，评分时按原值计算。",
+     "hints": [
+      "产能 = 3600 秒 ÷ 单件用时。",
+      "来得比做得快，多出来的件只能排队，排队时间全算在生产周期里。",
+      "到达间隔可以写固定值，例如 `80` 表示每 80 秒来一件；写 `expo(80)` 是平均 80 秒、随机波动。"
+     ],
+     "rules": [
+      {
+       "key": "q_cap",
+       "kind": "answer",
+       "label": "M1 每小时最多能加工多少件",
+       "choices": [
+        "约 36 件",
+        "约 48 件",
+        "约 60 件",
+        "约 75 件"
+       ],
+       "answer": 1,
+       "weight": 30,
+       "explain": "M1 加工一件平均 75 秒，每小时最多 3600 ÷ 75 = 48 件。来料平均 45 秒一件，比它快，多出来的只能在 B0 里排队。"
+      },
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 43,
+       "weight": 30
+      },
+      {
+       "key": "lead",
+       "kind": "kpi",
+       "metric": "lead_mean_min",
+       "op": "<=",
+       "value": 6,
+       "weight": 40
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "M1",
+       "B0",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "SRC",
+        "set": {
+         "params.interval": "80"
+        }
+       }
+      ],
+      "answers": {
+       "q_cap": 1
+      }
+     }
+    },
+    {
+     "id": "m02",
+     "title": "串行线与缓存",
+     "kind": "plant",
+     "plant": "mc02_serial",
+     "time_h": 8,
+     "seed": 11,
+     "brief_md": "### 任务：用缓存\"吸收\"波动\n\n三台机床 **M1 → M2 → M3** 串成一条线，平均节拍都是 55 秒（每小时约 65 件），但每件的用时波动很大（指数分布）。\n两台机床之间的缓存 **B1、B2** 现在只能放 **1 件**。\n\n1. 运行一段时间，观察 M1、M2 的状态构成：它们经常\"堵料\"（做好了放不出去）或\"缺料\"（等上游）。\n2. 回答：缓存只有 1 件时，M1 损失时间最多的状态是什么？\n3. 调整 **B1、B2 的容量**，让小时产出 ≥ 53 件，同时投资不超过预算（缓存每个库位 0.1 万元）。\n\n> 不能加机床、不能改机床节拍。",
+     "hints": [
+      "节拍一样的机床串起来，产量反而低于单台——因为波动会互相传递。",
+      "缓存越大越能吸收波动，但边际效果递减：从 1 到 5 提升明显，从 10 到 50 几乎没变化。",
+      "在\"分析\"里看每台设备的时间构成，堵料比例下降说明缓存起作用了。"
+     ],
+     "rules": [
+      {
+       "key": "q_state",
+       "kind": "answer",
+       "label": "缓存只有 1 件时，M1 损失时间最多的状态",
+       "choices": [
+        "缺料（等上游）",
+        "堵料（做好放不出去）",
+        "故障",
+        "换型"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "M1 是第一台，前面的毛坯库一直有料，不会缺料；可它后面的缓存只能放 1 件，M2 一慢下来，M1 做好的件就放不出去，大部分损失在\"堵料\"。"
+      },
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 53,
+       "weight": 50
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 104,
+       "weight": 30,
+       "label": "投资合计 ≤ 104 万元"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "M1",
+       "M2",
+       "M3",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "B1",
+        "set": {
+         "params.capacity": 10
+        }
+       },
+       {
+        "op": "update_block",
+        "id": "B2",
+        "set": {
+         "params.capacity": 10
+        }
+       }
+      ],
+      "answers": {
+       "q_state": 1
+      }
+     }
+    },
+    {
+     "id": "m03",
+     "title": "找瓶颈",
+     "kind": "plant",
+     "plant": "mc03_bottleneck",
+     "time_h": 8,
+     "seed": 13,
+     "brief_md": "### 任务：找出限制整线产量的那台设备\n\n四道工序：**车削 M1 → 钻孔 M2 → 铣削 M3 → 去毛刺 M4**，中间各有 10 件缓存。来料比整线做得快，毛坯库一直有料。\n\n1. 运行至少 1 小时（仿真时间）。看三维/流程图上各设备的颜色、各缓存的件数，再打开\"分析\"看时间构成。\n2. 在图上 **点选瓶颈设备**（左侧任务面板里点\"在图上点选\"，再点设备）。\n3. 回答整线的最大产能和最有效的改进办法。\n\n> 判断瓶颈的两个线索：瓶颈前面的缓存总是满的、后面的总是空的；瓶颈自己的\"运行\"比例最高、几乎不缺料也不堵料。",
+     "hints": [
+      "看 B1、B2、B3 三个缓存：哪个总是满的？满缓存的下游就是嫌疑设备。",
+      "整线产能由最慢的工序决定：3600 ÷ 瓶颈的单件用时。",
+      "提高非瓶颈设备的速度不会让整线变快。"
+     ],
+     "rules": [
+      {
+       "key": "q_bn",
+       "kind": "answer",
+       "label": "瓶颈是哪台设备",
+       "pick": true,
+       "kinds": [
+        "processor"
+       ],
+       "answer": [
+        "M3"
+       ],
+       "weight": 40,
+       "explain": "3#铣削 M3 单件 74 秒，是四道工序里最慢的：它前面的缓存总是满的，后面的总是空的，自己几乎一直在运行。"
+      },
+      {
+       "key": "q_cap",
+       "kind": "answer",
+       "label": "整线每小时最多约能产出",
+       "choices": [
+        "约 48 件",
+        "约 62 件",
+        "约 69 件",
+        "约 75 件"
+       ],
+       "answer": 0,
+       "weight": 30,
+       "explain": "整线产能由瓶颈 M3 决定：3600 ÷ 74 ≈ 48 件/小时。"
+      },
+      {
+       "key": "q_fix",
+       "kind": "answer",
+       "label": "提高整线产量最有效的办法",
+       "choices": [
+        "给 M1 提速",
+        "加大 B1 的容量",
+        "给 M3 并联一台同样的铣床",
+        "给 M4 并联一台"
+       ],
+       "answer": 2,
+       "weight": 30,
+       "explain": "只有提高瓶颈的能力整线才会变快。给 M3 并联一台同样的铣床，铣削工序每小时能做约 97 件；给别的设备提速、加大缓存都绕不开 M3。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "M1",
+       "M2",
+       "M3",
+       "M4",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [],
+      "answers": {
+       "q_bn": "M3",
+       "q_cap": 0,
+       "q_fix": 2
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "title": "产能提升",
+   "lessons": [
+    {
+     "id": "m04",
+     "title": "并行机与线平衡",
+     "kind": "plant",
+     "plant": "mc04_balance",
+     "time_h": 8,
+     "seed": 17,
+     "brief_md": "### 任务：花最少的钱把产量提上去\n\n上一课找到了瓶颈——**3#铣削（M3）**，单件 74 秒。现在订单要求 **小时产出 ≥ 56 件**。\n一台同型号机床投资 **30 万元**，预算只够再买一台。\n\n1. 想清楚该给哪道工序加机床，以及加完以后新的瓶颈会变成谁。\n2. 在模型里加一台和瓶颈设备一样的机床（选中设备 → 复制 / 粘贴，参数会一起复制），把它接到前后缓存上（与原设备并联）：在流程图里从前面缓存卡片右侧的\"出\"拖一条线到新机床的\"入\"，再从新机床的\"出\"拖到后面的缓存。\n3. 运行验证：小时产出 ≥ 56 件，投资不超过预算。\n\n> 新加的机床必须是已有型号（参数和原设备一致），评分时会按原设备的节拍计算。",
+     "hints": [
+      "并联：新机床从同一个上游缓存取料，做完放到同一个下游缓存。",
+      "两台 M3 并联后，铣削工序每小时能做约 97 件，这时最慢的是谁？",
+      "如果产量没上去，检查新机床的连线是否接对了（流程图里应该是 B2 → 新机床 → B3）。"
+     ],
+     "rules": [
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 56,
+       "weight": 50
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 181,
+       "weight": 30,
+       "label": "投资合计 ≤ 181 万元"
+      },
+      {
+       "key": "q_next",
+       "kind": "answer",
+       "label": "给瓶颈并联一台后，新的瓶颈是",
+       "choices": [
+        "1#车削 M1",
+        "2#钻孔 M2",
+        "3#铣削 M3",
+        "4#去毛刺 M4"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "M3 并联以后铣削每小时约 97 件，剩下最慢的是 2#钻孔 M2（58 秒，约 62 件/小时），它成了新的瓶颈。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "M1",
+       "M2",
+       "M3",
+       "M4",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "add_block",
+        "block": {
+         "id": "M3B",
+         "type": "processor",
+         "name": "3#铣削（二）",
+         "pos": [
+          32,
+          13
+         ],
+         "size": [
+          4,
+          3.4
+         ],
+         "node": [
+          1280,
+          300
+         ],
+         "params": {
+          "time": "normal(74,4)",
+          "run_kw": 15,
+          "idle_kw": 2
+         }
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM3B0",
+         "from": "B2",
+         "from_port": "out",
+         "to": "M3B",
+         "to_port": "in"
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM3B1",
+         "from": "M3B",
+         "from_port": "out",
+         "to": "B3",
+         "to_port": "in"
+        }
+       }
+      ],
+      "answers": {
+       "q_next": 1
+      }
+     }
+    },
+    {
+     "id": "m05",
+     "title": "AGV 物流与路网",
+     "kind": "plant",
+     "plant": "mc05_agv",
+     "time_h": 8,
+     "seed": 19,
+     "brief_md": "### 任务：别让机床等车\n\n收货区、机加区、成品库离得很远，毛坯和成品都靠 **AGV 车队（TR1）** 运送：现在只有 **1 台车**，每车装 2 件，沿平面图里画好的路网行驶（绕了远路）。\n两台加工中心每小时一共能做约 72 件，但实际产量远远不到。\n\n1. 运行一段时间，看看 AGV 的利用率和两台加工中心\"缺料\"的比例。\n2. 回答：判断\"运输是瓶颈\"的依据。\n3. 让 **小时产出 ≥ 52 件**，投资不超过预算。可以：增加 AGV 台数（每台 8 万元），或在平面图的路网里画一条近路（把 P1 和 P4 直接连起来，不花钱）。\n\n> AGV 的速度、载重、装卸时间是车型参数，不能改。",
+     "hints": [
+      "一辆车既要送毛坯又要运成品，一趟来回要多久？用距离 ÷ 速度 + 装卸时间估一下。",
+      "车不够时，加工中心大部分时间在\"缺料\"。",
+      "路网里 P1→P2→P3→P4 绕了一个大弯；直接连 P1 和 P4 能省不少路。"
+     ],
+     "rules": [
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 52,
+       "weight": 50
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 85,
+       "weight": 30,
+       "label": "投资合计 ≤ 85 万元"
+      },
+      {
+       "key": "q_why",
+       "kind": "answer",
+       "label": "哪个现象最能说明\"运输是瓶颈\"",
+       "choices": [
+        "加工中心运行比例很高",
+        "加工中心大部分时间缺料，而收货暂存里堆满毛坯",
+        "成品库发运很慢",
+        "加工中心经常故障"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "加工中心大部分时间在缺料，而收货暂存里堆满了毛坯，说明料有，只是没被及时运过来，卡在运输上。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "M1",
+       "M2",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ],
+       "transporter": [
+        "speed_mps",
+        "capacity",
+        "load_s"
+       ]
+      },
+      "plan": true
+     },
+     "costs": {
+      "buffer": {
+       "base": 0,
+       "per": {
+        "capacity": 0
+       }
+      }
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "TR1",
+        "set": {
+         "params.count": 3
+        }
+       }
+      ],
+      "answers": {
+       "q_why": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "title": "计划与资源",
+   "lessons": [
+    {
+     "id": "m06",
+     "title": "班次、换型与订单",
+     "kind": "plant",
+     "plant": "mc06_orders",
+     "time_h": 16,
+     "seed": 23,
+     "brief_md": "### 任务：排好订单顺序，按时交货\n\n一台柔性加工中心做三种壳体 A、B、C，单件约 50 秒；**每换一次产品要换型 45 分钟**。两个班（07:00–23:00）。\n今天有 6 张订单，每张 130 件，**全部要在 21:00 前完成**。现在按接单顺序排产：A、B、A、C、B、C。\n\n1. 在\"生产计划\"里看订单进度和预计完成时间，运行一个班看看能不能按时交。\n2. 回答：按现在的顺序一天要换型几次？\n3. 只调整 **订单顺序**（不能改数量、产品和交期），让所有订单按时完成。\n\n> 设备节拍和换型时间不能改，也不能加班或加设备。",
+     "hints": [
+      "每次产品不同就要换型：A→B、B→A……数一数。",
+      "同一种产品的订单排在一起，换型次数最少。",
+      "换型 45 分钟 ≈ 少做 54 件。6 张单共 780 件，光加工就要约 11 小时。"
+     ],
+     "rules": [
+      {
+       "key": "late",
+       "kind": "kpi",
+       "metric": "orders_late",
+       "op": "==",
+       "value": 0,
+       "weight": 50,
+       "label": "延期订单数 = 0"
+      },
+      {
+       "key": "done",
+       "kind": "kpi",
+       "metric": "orders_done",
+       "op": ">=",
+       "value": 6,
+       "weight": 30,
+       "label": "完成订单数 ≥ 6"
+      },
+      {
+       "key": "q_co",
+       "kind": "answer",
+       "label": "按原顺序（A、B、A、C、B、C）要换型几次（开班第一次准备不算）",
+       "choices": [
+        "2 次",
+        "3 次",
+        "5 次",
+        "6 次"
+       ],
+       "answer": 2,
+       "weight": 20,
+       "explain": "A→B、B→A、A→C、C→B、B→C，每次换产品都要换型，一共 5 次。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "M1",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode"
+       ]
+      },
+      "plan": [
+       "orders"
+      ]
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_plant",
+        "set": {
+         "plan.orders": [
+          {
+           "code": "SO-01",
+           "product": "HSG-A",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          },
+          {
+           "code": "SO-03",
+           "product": "HSG-A",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          },
+          {
+           "code": "SO-02",
+           "product": "HSG-B",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          },
+          {
+           "code": "SO-05",
+           "product": "HSG-B",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          },
+          {
+           "code": "SO-04",
+           "product": "HSG-C",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          },
+          {
+           "code": "SO-06",
+           "product": "HSG-C",
+           "qty": 130,
+           "due": "2026-11-02 21:00"
+          }
+         ]
+        }
+       }
+      ],
+      "answers": {
+       "q_co": 2
+      }
+     }
+    },
+    {
+     "id": "m07",
+     "title": "设备故障与人员配置",
+     "kind": "plant",
+     "plant": "mc07_crew",
+     "time_h": 8,
+     "seed": 29,
+     "brief_md": "### 任务：配多少个操作工合适\n\n四台加工中心并联，每台单件约 170 秒，其中**前 70 秒**是上下料，需要操作工在场。设备平均每 3 小时坏一次，平均修 25 分钟。\n现在只有 **1 名操作工（OP1）** 看四台机床。\n\n1. 运行一段时间，看加工中心报警里\"等待操作工\"出现得多不多，看操作工的忙闲。\n2. 回答：只考虑故障时，单台设备的可用率大约是多少？\n3. 调整 **操作工人数**（每人每年 10 万元），让小时产出 ≥ 64 件，人员和设备投资不超过预算。\n\n> 设备台数、节拍、故障参数和上下料时间不能改。",
+     "hints": [
+      "可用率 ≈ MTBF ÷ (MTBF + MTTR)。",
+      "1 个人每小时最多上下料 3600 ÷ 70 ≈ 51 次，而来料每小时约 75 件、每件上下料一次，就是每小时约 75 次。",
+      "人加多了也浪费：第 3 个人大部分时间在等。"
+     ],
+     "rules": [
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 64,
+       "weight": 50
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 165,
+       "weight": 30,
+       "label": "投资合计 ≤ 165 万元"
+      },
+      {
+       "key": "q_av",
+       "kind": "answer",
+       "label": "MTBF 3 小时、MTTR 25 分钟时，单台设备的可用率约",
+       "choices": [
+        "78%",
+        "88%",
+        "92%",
+        "97%"
+       ],
+       "answer": 1,
+       "weight": 20,
+       "explain": "可用率 ≈ MTBF ÷ (MTBF + MTTR) = 180 ÷ (180 + 25) ≈ 88%。"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "M1",
+       "M2",
+       "M3",
+       "M4",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode",
+        "operator"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "update_block",
+        "id": "OP1",
+        "set": {
+         "params.count": 2
+        }
+       }
+      ],
+      "answers": {
+       "q_av": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "title": "综合",
+   "lessons": [
+    {
+     "id": "m08",
+     "title": "综合：在预算内达成产能目标",
+     "kind": "plant",
+     "plant": "mc08_capstone",
+     "time_h": 8,
+     "seed": 31,
+     "brief_md": "### 综合任务：一个真实的扩产方案\n\n某精密机加厂接了新订单，壳体毛坯每小时到货约 58 件（产能至少要跟上到货，否则毛坯越堆越多，生产周期一定超标），要求：\n\n| 指标 | 要求 |\n|---|---|\n| 小时产出 | ≥ 48 件 |\n| 平均生产周期 | ≤ 60 分钟（毛坯不能在收货区堆积） |\n| 新增投资 | 预算以内（见评分标准） |\n\n车间现状：叉车把毛坯从收货区运到线边 → **数控车床 M1**（95 秒，要操作工上下料）→ **加工中心 M2**（115 秒）→ **在线检测 QC**（不合格去返修）→ 成品库。\n\n你可以：加同型号设备（数控车床 30 万、加工中心 30 万）、调缓存容量、调操作工人数（10 万/人/年）、调叉车台数（8 万/台）。\n先用前几课的方法找出瓶颈，再一步步扩产，每改一次运行验证。\n\n> 设备节拍、故障、质量参数不能改；新加设备必须是已有型号。",
+     "hints": [
+      "先算：车床每小时约 38 件、加工中心约 31 件、检测 120 件——哪道工序必须加设备？",
+      "加了加工中心以后，车床会不会变成新瓶颈？",
+      "车床加到两台时，一个操作工还忙得过来吗？看报警里的\"等待操作工\"。"
+     ],
+     "rules": [
+      {
+       "key": "thr",
+       "kind": "kpi",
+       "metric": "good_per_h",
+       "op": ">=",
+       "value": 48,
+       "weight": 40
+      },
+      {
+       "key": "lead",
+       "kind": "kpi",
+       "metric": "lead_mean_min",
+       "op": "<=",
+       "value": 60,
+       "weight": 30
+      },
+      {
+       "key": "budget",
+       "kind": "budget",
+       "metric": "cost",
+       "op": "<=",
+       "value": 200,
+       "weight": 30,
+       "label": "投资合计 ≤ 200 万元"
+      }
+     ],
+     "lock": {
+      "blocks": [
+       "SRC",
+       "B0",
+       "QC",
+       "RW",
+       "OUT"
+      ],
+      "params": {
+       "processor": [
+        "time",
+        "capacity",
+        "mtbf_h",
+        "mttr_min",
+        "setup_min",
+        "setup_matrix",
+        "times_by_product",
+        "defects",
+        "run_kw",
+        "idle_kw",
+        "load_s",
+        "operator_mode",
+        "operator"
+       ],
+       "transporter": [
+        "speed_mps",
+        "capacity",
+        "load_s"
+       ],
+       "inspect": [
+        "time",
+        "pod_pct",
+        "false_pct"
+       ],
+       "rework": [
+        "time",
+        "success_pct",
+        "max_rework",
+        "fixes"
+       ]
+      },
+      "plan": true
+     },
+     "reference": {
+      "ops": [
+       {
+        "op": "add_block",
+        "block": {
+         "id": "M1B",
+         "type": "processor",
+         "name": "2#数控车床",
+         "pos": [
+          20,
+          14
+         ],
+         "size": [
+          4,
+          3.4
+         ],
+         "node": [
+          1080,
+          300
+         ],
+         "params": {
+          "time": "normal(95,4)",
+          "operator": "OP1",
+          "operator_mode": "load",
+          "load_s": 40,
+          "mtbf_h": 8,
+          "mttr_min": 20,
+          "run_kw": 12,
+          "idle_kw": 2
+         }
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM1B0",
+         "from": "B1",
+         "from_port": "out",
+         "to": "M1B",
+         "to_port": "in"
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM1B1",
+         "from": "M1B",
+         "from_port": "out",
+         "to": "B2",
+         "to_port": "in"
+        }
+       },
+       {
+        "op": "add_block",
+        "block": {
+         "id": "M2B",
+         "type": "processor",
+         "name": "2#加工中心",
+         "pos": [
+          31,
+          14
+         ],
+         "size": [
+          4,
+          3.4
+         ],
+         "node": [
+          1480,
+          300
+         ],
+         "params": {
+          "time": "normal(115,5)",
+          "mtbf_h": 8,
+          "mttr_min": 25,
+          "run_kw": 16,
+          "idle_kw": 2,
+          "defects": [
+           {
+            "name": "毛刺",
+            "prob": "0.05"
+           }
+          ]
+         }
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM2B0",
+         "from": "B2",
+         "from_port": "out",
+         "to": "M2B",
+         "to_port": "in"
+        }
+       },
+       {
+        "op": "add_link",
+        "link": {
+         "id": "LRM2B1",
+         "from": "M2B",
+         "from_port": "out",
+         "to": "B3",
+         "to_port": "in"
+        }
+       },
+       {
+        "op": "update_block",
+        "id": "B2",
+        "set": {
+         "params.capacity": 8
+        }
+       }
+      ],
+      "answers": {}
+     }
+    }
+   ]
+  }
+ ]
+}

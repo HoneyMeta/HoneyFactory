@@ -1,0 +1,15 @@
+{
+ "某精密机加厂·物流": "Precision Machining Plant · Logistics",
+ "HSG-200 壳体": "HSG-200 Housing",
+ "收货区": "Receiving Area",
+ "机加区": "Machining Area",
+ "仓储区": "Storage Area",
+ "毛坯到货": "Raw Casting Receipt",
+ "收货暂存": "Receiving Buffer",
+ "AGV 车队": "AGV Fleet",
+ "线边库": "Line-Side Inventory",
+ "1#加工中心": "#1 Machining Center",
+ "2#加工中心": "#2 Machining Center",
+ "下线暂存": "Off-Line Buffer",
+ "成品库": "Finished Goods Warehouse"
+}

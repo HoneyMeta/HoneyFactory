@@ -1,0 +1,141 @@
+/* Control cell editor / inspector: use only Element Plus color variables to follow dark/light themes automatically. */
+.ce { display: flex; flex-direction: column; height: 100%; min-height: 0; font-size: 12.5px; color: var(--el-text-color-primary); background: var(--el-bg-color); }
+.ce-head { display: flex; gap: 4px; padding: 8px; border-bottom: 1px solid var(--el-border-color-lighter); align-items: center; }
+.ce-head .ce-sel { flex: 1; min-width: 0; }
+.ce-scenes .lv { display: inline-block; min-width: 18px; color: var(--el-color-primary); }
+.ce-empty { padding: 26px 16px; text-align: center; line-height: 1.7; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ce-empty p { margin: 0; max-width: 340px; }
+.ce-empty .el-dropdown { margin-left: 0; }
+.ce-empty-ic { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px;
+  color: var(--el-color-primary); background: var(--el-color-primary-light-9); border: 1px solid var(--el-color-primary-light-7); }
+.ce-hint { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 6px 0; padding: 6px 8px; border-radius: 6px; font-size: 12px;
+  background: var(--el-color-primary-light-9); border: 1px dashed var(--el-color-primary-light-5); color: var(--el-text-color-regular); }
+.ci-empty { display: flex; flex-direction: column; gap: 8px; padding: 6px 2px; line-height: 1.6; }
+.ci-empty p { margin: 0; }
+.ci-btns { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.ci-btns .el-button + .el-button { margin-left: 0; }
+.ci-pick { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid var(--el-border-color-lighter); border-radius: 6px; cursor: pointer; }
+.ci-pick:hover { border-color: var(--el-color-primary-light-5); background: var(--el-color-primary-light-9); }
+.ce-status { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-bottom: 1px solid var(--el-border-color-lighter); }
+.ce-status .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.ce-status .bad, .ce .bad, .ci .bad { color: var(--el-color-danger); }
+.ce .warn { color: var(--el-color-warning); }
+.ce .grow, .ci .grow { flex: 1; min-width: 0; }
+.ce .muted, .ci .muted { color: var(--el-text-color-secondary); }
+.ce .small, .ci .small { font-size: 11.5px; }
+.ce .mono, .ci .mono { font-family: Consolas, 'Courier New', monospace; }
+.ce .pad, .ci .pad { padding: 12px; }
+.ce-main { display: flex; flex-direction: column; min-height: 0; }
+.ce-pal { border-bottom: 1px solid var(--el-border-color-lighter); }
+.pal-h { display: flex; align-items: center; gap: 6px; padding: 5px 8px; cursor: pointer; color: var(--el-text-color-regular); }
+.pal-cat { padding: 2px 8px 4px; }
+.pal-ct { font-size: 11px; color: var(--el-text-color-secondary); margin: 2px 0; }
+.pal-items { display: flex; flex-wrap: wrap; gap: 3px; }
+.pal-it { display: flex; align-items: center; gap: 4px; border: 1px solid var(--el-border-color); background: var(--el-fill-color-blank); color: var(--el-text-color-regular);
+  border-radius: 4px; padding: 2px 6px; font-size: 11.5px; cursor: pointer; }
+.pal-it:hover { border-color: var(--el-color-primary-light-5); }
+.pal-it.on { border-color: var(--el-color-primary); background: var(--el-color-primary-light-9); color: var(--el-color-primary); }
+.ce-views { display: flex; flex-direction: column; gap: 6px; padding: 6px; }
+.ce-top { height: 220px; }
+.ce-tabs { flex: 1; min-height: 0; padding: 0 6px; }
+.ce-tabs .el-tabs__content { flex: 1; min-height: 0; overflow: auto; }
+.ce-tabs .el-tabs__header { margin-bottom: 6px; }
+.ce-list { display: flex; flex-direction: column; gap: 2px; }
+.ce-it { display: flex; align-items: center; gap: 6px; padding: 3px 6px; border-radius: 4px; cursor: pointer; }
+.ce-it:hover { background: var(--el-fill-color-light); }
+.ce-it.on { background: var(--el-color-primary-light-9); outline: 1px solid var(--el-color-primary-light-5); }
+.ce-it .hot { color: var(--warn, var(--el-color-warning)); }
+.ce-iobar { display: flex; gap: 4px; align-items: center; margin-bottom: 4px; flex-wrap: wrap; }
+.ce-io table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.ce-io th { text-align: left; font-weight: 500; color: var(--el-text-color-secondary); border-bottom: 1px solid var(--el-border-color); padding: 3px 4px; position: sticky; top: 0;
+  background: var(--el-bg-color); white-space: nowrap; }
+.ce-io td { border-bottom: 1px solid var(--el-border-color-lighter); padding: 2px 4px; white-space: nowrap; }
+.ce-io tr.sel td { background: var(--el-color-primary-light-9); }
+.ce-io tr.forced td { background: color-mix(in srgb, var(--warn, #e0a630) 16%, transparent); }
+.ce-io input { width: 100%; min-width: 70px; background: transparent; border: 1px solid transparent; color: inherit; border-radius: 3px; padding: 1px 3px; font-size: 11.5px; }
+.ce-io input.addr { min-width: 54px; width: 64px; }
+.ce-io input:hover:not(:disabled), .ce-io input:focus { border-color: var(--el-border-color); outline: none; background: var(--el-fill-color-blank); }
+.din { color: var(--ok, var(--el-color-success)); font-weight: 600; } .dout { color: var(--warn, var(--el-color-warning)); font-weight: 600; }
+.v1 { color: var(--ok, var(--el-color-success)); font-weight: 700; } .v0 { color: var(--el-text-color-secondary); }
+.frc button, .ci-io button { background: var(--el-fill-color); border: 1px solid var(--el-border-color); color: inherit; border-radius: 3px; padding: 0 5px; margin-left: 2px;
+  font-size: 11px; cursor: pointer; line-height: 16px; }
+.frc button:hover, .ci-io button:hover { border-color: var(--el-color-primary); }
+.ce-sec, .ci-sec { font-size: 11.5px; color: var(--el-text-color-secondary); margin: 10px 0 5px; border-bottom: 1px solid var(--el-border-color-lighter); padding-bottom: 2px; }
+.ce-panel { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.pb { border: none; border-radius: 14px; padding: 5px 12px; color: #fff; font-weight: 600; cursor: pointer; font-size: 12px; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .25); user-select: none; }
+.pb:active { transform: translateY(1px); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .35); }
+.pb.c-green { background: #1f9d55; } .pb.c-red { background: #d23c3c; } .pb.c-yellow { background: #d9a400; } .pb.c-blue { background: #2c66ad; }
+.pb.c-white { background: #e8ecef; color: #1d2125; } .pb.c-black { background: #2a2f35; }
+.pb.estop { background: #d42a24; border: 3px solid #f2c230; border-radius: 50%; width: 58px; height: 58px; padding: 0; font-size: 11px; }
+.pb.estop.on { background: #7a1512; }
+.pb.sw { background: var(--el-color-info); border-radius: 4px; }
+.lamp { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; }
+.lamp i { width: 12px; height: 12px; border-radius: 50%; background: var(--el-fill-color-darker); box-shadow: inset 0 0 0 1px var(--el-border-color-darker); }
+.lamp.on.c-green i { background: #22c55e; box-shadow: 0 0 8px #22c55e; } .lamp.on.c-red i { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+.lamp.on.c-yellow i { background: #f5c518; box-shadow: 0 0 8px #f5c518; } .lamp.on.c-blue i { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+.disp b { background: #0c0f12; color: #ff3b30; padding: 1px 6px; border-radius: 3px; font-family: Consolas, monospace; letter-spacing: 1px; }
+.pot { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; }
+.ce-kv, .ci .kv { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 3px 10px; font-size: 12px; }
+.ce-kv > span, .ci .kv > span { color: var(--el-text-color-secondary); }
+.ce-fault { display: flex; gap: 4px; align-items: center; }
+.fault-it { color: var(--warn, var(--el-color-warning)); margin-top: 3px; }
+.ce-ev { max-height: 160px; overflow: auto; }
+.ce-ev .collision, .ce-ev .jam, .ce-ev .wrong, .ce-ev .interlock { color: var(--el-color-danger); }
+.ce-ev .fault { color: var(--warn, var(--el-color-warning)); }
+.badge { display: inline-block; background: var(--el-color-danger); color: #fff; border-radius: 8px; font-size: 10px; padding: 0 5px; margin-left: 4px; line-height: 15px; }
+/* Large-window layout */
+.ce.wide { display: grid; grid-template-columns: 210px 1fr 400px; grid-template-rows: auto auto 1fr; }
+.ce.wide .ce-head { grid-column: 1 / 4; }
+.ce.wide .ce-status { grid-column: 1 / 4; }
+.ce.wide .ce-main { grid-column: 1 / 3; display: grid; grid-template-columns: 210px 1fr; min-height: 0; }
+.ce.wide .ce-pal { border-bottom: none; border-right: 1px solid var(--el-border-color-lighter); overflow: auto; }
+.ce.wide .pal-h { display: none; }
+.ce.wide .ce-views { display: grid; grid-template-rows: 1fr 1fr; min-height: 0; }
+.ce.wide .ce-top { height: auto; min-height: 0; }
+.ce.wide .ce-3d { min-height: 0; }
+.ce.wide .ce-tabs { grid-column: 3; grid-row: 3; border-left: 1px solid var(--el-border-color-lighter); padding: 0 8px; min-height: 0; }
+.ce.wide .ce-empty { grid-column: 1 / 4; }
+/* Component icons */
+.cpi { display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #8d959e; flex: none; }
+.cpi-belt_conveyor, .cpi-roller_conveyor, .cpi-curved_conveyor, .cpi-chain_transfer { background: #6f7a85; }
+.cpi-emitter, .cpi-cell_entry { background: #2e9d5b; border-radius: 50% 0 0 50%; } .cpi-remover, .cpi-cell_exit { background: #2f6fa8; }
+.cpi-diffuse_sensor, .cpi-retro_sensor, .cpi-capacitive, .cpi-inductive, .cpi-vision_sensor, .cpi-height_sensor, .cpi-encoder { background: #f2c230; border-radius: 50%; }
+.cpi-pusher, .cpi-stopper, .cpi-pivot_arm, .cpi-turntable, .cpi-lift, .cpi-pick_place, .cpi-stacker_crane, .cpi-gripper { background: #f08a1c; }
+.cpi-motor { background: #3d6b94; } .cpi-button, .cpi-switch, .cpi-potentiometer { background: #22c55e; border-radius: 50%; } .cpi-estop { background: #d42a24; border-radius: 50%; }
+.cpi-lamp { background: #f5c518; border-radius: 50%; } .cpi-display { background: #0c0f12; outline: 1px solid #ff3b30; } .cpi-rack { background: #2c66ad; } .cpi-pallet { background: #c69a62; }
+.cpi-cell { background: #0f8b8d; width: 14px; height: 14px; }
+/* Inspector */
+.ci { display: flex; flex-direction: column; height: 100%; overflow: auto; padding: 8px 10px; font-size: 12.5px; color: var(--el-text-color-primary); }
+.ci-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.ci-help { margin: 2px 0 6px; line-height: 1.55; }
+.ci .f { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+.ci .f > label { width: 78px; flex: none; color: var(--el-text-color-secondary); font-size: 12px; display: flex; align-items: center; gap: 2px; }
+.ci .f > .el-input, .ci .f > .el-select, .ci .f > .el-input-number, .ci .f > .pi { flex: 1; min-width: 0; }
+.ci .f.wide { flex-direction: column; align-items: stretch; } .ci .f.wide > label { width: auto; }
+.ci .grid3 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
+.ci .grid3 .f > label { width: 34px; }
+.ci .unit { color: var(--el-text-color-secondary); font-size: 11.5px; }
+.ci .hq { font-size: 12px; color: var(--el-text-color-placeholder); }
+.ci-io { display: flex; align-items: center; gap: 6px; padding: 2px 0; font-size: 12px; border-bottom: 1px dashed var(--el-border-color-lighter); }
+.ci-io.forced { background: color-mix(in srgb, var(--warn, #e0a630) 16%, transparent); }
+.ci-live { word-break: break-all; color: var(--el-text-color-secondary); }
+
+/* Keep status text on one line (C20): truncate overflow; hover to view full text */
+.ce-status { white-space: nowrap; overflow: hidden; }
+.ce-status .st-t { flex: none; }
+.ce-status .st-a { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ce-status .st-n { flex: none; }
+.ce-status .grow { min-width: 4px; }
+.ncb { color: var(--el-color-warning-dark-2); font-weight: 700; }
+
+/* 4.3 Device internals: control tag I/O board and PLC wiring for standard devices */
+.ce-dev { display: grid; gap: 6px; }
+.ce-devbar { display: flex; align-items: center; gap: 6px; }
+.ce-devbar .grow { flex: 1; }
+.ce-status .st-plc { flex: none; display: inline-flex; gap: 6px; font-size: 12px; }
+.ce-status .st-plc a, .ce-io a.plc-ch { color: var(--el-color-primary); cursor: pointer; }
+.ce-io a.plc-ch + a.plc-ch { margin-left: 6px; }
+.ce-io td.nowrap { white-space: nowrap; }
+.ce .warn, .ce-io .warn { color: var(--el-color-warning-dark-2); }
+.ci-plcs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 2px 0 6px; }
+.ci-plcs a { color: var(--el-color-primary); cursor: pointer; }

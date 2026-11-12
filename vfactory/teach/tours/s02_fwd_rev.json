@@ -1,0 +1,123 @@
+{
+  "id": "s02_fwd_rev",
+  "title": "跟着做：电机正反转互锁",
+  "kind": "cell",
+  "outro": "正反转互锁的要点：每个方向都是一个启停自锁，再串上对方接触器的常闭触点。下一课「传送带启停与急停」会加上急停按钮。",
+  "steps": [
+    {
+      "id": "read",
+      "title": "这一课要做什么",
+      "do": "一台电机能正转（M1_FWD）也能反转（M1_REV）。按「正转」就正转、按「反转」就反转、按「停止」就停。\n**最重要**：两个接触器**任何时候都不能同时得电**（会短路）。正转时按反转无效，要先停再换方向。",
+      "why": "这叫互锁。每个方向本身就是上一课的启停自锁。",
+      "target": [{"sel": ".task-panel .book-md"}, {"sel": ".task-panel"}],
+      "goto": {"teach_tab": "task"},
+      "manual": true
+    },
+    {
+      "id": "open-editor",
+      "title": "打开 PLC 编程窗口",
+      "do": "点左边竖排图标里的芯片图标（**PLC**），再点「**编程**」；或者点「带我去」。",
+      "target": [{"sel": "[data-act=\"open-editor\"]"}, {"panel_btn": "plc-editor"}],
+      "goto": {"panel": "plc-editor-float"},
+      "done": {"panel": "plc-editor-float"}
+    },
+    {
+      "id": "fwd",
+      "title": "梯级 1：正转自锁",
+      "do": "和上一课一样搭：常开 `FWD` 并联常开 `M1_FWD`（自锁）→ 常开 `STOP` → 常开 `M1_OL_OK` → 线圈 `M1_FWD`。",
+      "why": "STOP 和 M1_OL_OK 都是常闭输入（没按/正常时 = 1），所以用常开触点。",
+      "target": {"sel": ".lde-tools [data-tool=\"NO\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"all": [{"ld_par": ["FWD", "M1_FWD"]}, {"ld": {"var": "STOP", "t": "NO"}}, {"ld_coil": "M1_FWD"}]},
+      "wrong": [{"when": {"ld": {"var": "STOP", "t": "NC"}}, "msg": "STOP 是常闭按钮，没按时已经是 1：要用常开触点，用常闭触点梯级永远不通。"},
+                {"when": {"ld": {"var": "M1_OL_OK", "t": "NC"}}, "msg": "M1_OL_OK 正常时就是 1，用常开触点。"}],
+      "hints": [{"after": 60, "text": "选中 FWD 触点再点「并联」，就能在它下面加分支。"}]
+    },
+    {
+      "id": "interlock",
+      "title": "加互锁：正转梯级里串一个 M1_REV 的常闭触点",
+      "do": "在线圈 M1_FWD 前面串一个**常闭**触点 `M1_REV`。",
+      "why": "反转在转（M1_REV = 1）时，这个常闭触点断开，正转就启动不了。这里用常闭是对的：M1_REV 是 PLC 自己的输出，不是常闭按钮。",
+      "target": {"sel": ".lde-tools [data-tool=\"NC\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"ld": {"var": "M1_REV", "t": "NC"}}
+    },
+    {
+      "id": "rev",
+      "title": "梯级 2：反转（照着正转再来一遍）",
+      "do": "点「**梯级**」加一条：常开 `REV` 并联常开 `M1_REV` → 常开 `STOP` → 常开 `M1_OL_OK` → **常闭** `M1_FWD` → 线圈 `M1_REV`。",
+      "target": {"sel": ".lde-tools [data-tool=\"RUNG\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"all": [{"ld_par": ["REV", "M1_REV"]}, {"ld": {"var": "M1_FWD", "t": "NC"}}, {"ld_coil": "M1_REV"}]}
+    },
+    {
+      "id": "lamps",
+      "title": "两个指示灯",
+      "do": "再加两条梯级：`M1_FWD` → 线圈 `LAMP_FWD`；`M1_REV` → 线圈 `LAMP_REV`。",
+      "target": {"sel": ".lde-tools [data-tool=\"RUNG\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"all": [{"ld_coil": "LAMP_FWD"}, {"ld_coil": "LAMP_REV"}]}
+    },
+    {
+      "id": "download",
+      "title": "下载到 PLC",
+      "do": "点编程窗口工具栏上的「**下载**」（带向下箭头的按钮）。",
+      "target": {"sel": ".pw-bar .dl"},
+      "goto": {"panel": "plc-editor-float"},
+      "done": {"all": [{"downloaded": true}, {"plc": "RUN"}]}
+    },
+    {
+      "id": "press-fwd",
+      "title": "按「正转」",
+      "do": "在操作台上按一下「**正转**」。日志里：`FWD 0→1`、`M1_FWD 0→1`，正转灯亮。",
+      "target": {"tour": "btn-FWD"},
+      "goto": {"console": true},
+      "done": {"check": "fwd_ok"},
+      "wrong": [{"when": {"check_fail": "fwd_ok"}, "msg": "按了正转电机没转，看日志里红色的「诊断」和编程窗口里标红的触点。"}]
+    },
+    {
+      "id": "press-rev-while-fwd",
+      "title": "正转时按「反转」：应该没反应",
+      "do": "电机正转的时候按一下「**反转**」：M1_REV 必须保持 0，正转继续。",
+      "why": "这一步检查的就是互锁。日志里如果出现 `M1_REV 0→1`，说明互锁没做好。",
+      "target": {"tour": "btn-REV"},
+      "goto": {"console": true},
+      "done": {"pressed": "REV"},
+      "delay": 2500,
+      "wrong": [{"when": {"check_fail": "interlock_ok"}, "msg": "正转和反转同时得电了！正转梯级里要串 M1_REV 的常闭触点，反转梯级里串 M1_FWD 的常闭触点。"}]
+    },
+    {
+      "id": "stop-rev",
+      "title": "先停，再反转",
+      "do": "按「**停止**」让电机停下，再按「**反转**」：电机反转，反转灯亮。",
+      "target": [{"tour": "btn-STOP"}, {"tour": "btn-REV"}],
+      "goto": {"console": true},
+      "done": {"all": [{"check": "stop_ok"}, {"check": "rev_ok"}]},
+      "hints": [{"after": 30, "text": "停止要在电机转着的时候按，才会检查「按停止全停」。"}]
+    },
+    {
+      "id": "overload",
+      "title": "过载保护：让系统演示",
+      "do": "点「带我去」打开任务面板的「评分标准（检查表）」页签，在「过载保护」这一项右边点「**演示**」。",
+      "target": [{"sel": "[data-act=\"trial-overload_ok\"]"}, {"sel": ".task-panel [data-tour=\"checklist\"]"}],
+      "goto": {"teach_tab": "goals"},
+      "done": {"check": "overload_ok"}
+    },
+    {
+      "id": "all",
+      "title": "检查表全部打勾",
+      "do": "检查表里还没打勾的项目照着「怎么试」做一遍，或者点「演示全部」。",
+      "target": {"sel": ".task-panel [data-tour=\"checklist\"]"},
+      "goto": {"teach_tab": "goals"},
+      "done": {"checks_all": true}
+    },
+    {
+      "id": "submit",
+      "title": "提交评分",
+      "do": "点绿色的「**提交评分**」。",
+      "target": [{"sel": "[data-act=\"checklist-submit\"]"}, {"sel": "[data-k=\"submit-score\"]"}],
+      "goto": {"teach_tab": "goals"},
+      "done": {"submitted": true}
+    }
+  ]
+}

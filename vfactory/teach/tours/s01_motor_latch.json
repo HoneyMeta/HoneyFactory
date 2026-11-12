@@ -1,0 +1,421 @@
+{
+  "id": "s01_motor_latch",
+  "title": "跟着做：电机启停自锁",
+  "kind": "cell",
+  "outro": "你写出了第一个 PLC 程序：启动、自锁、停止、过载保护、运行灯。下一课「电机正反转互锁」在这个基础上加一个方向，思路完全一样。",
+  "steps": [
+    {
+      "id": "read",
+      "title": "先看这一课要做什么",
+      "do": "左边是任务书。一句话：用操作台上的 **启动** 和 **停止** 两个按钮控制电机 M1。\n**做对了是这样**：按一下启动马上松手，输送带一直转、运行灯亮；按一下停止，输送带停、灯灭。\n看完点「下一步」。",
+      "why": "PLC 课的套路都一样：读任务 → 写程序 → 下载到 PLC → 按操作台试 → 看检查表打勾 → 提交评分。这个教程会一步一步带你走一遍。",
+      "target": [
+        {
+          "sel": ".task-panel .book-md"
+        },
+        {
+          "sel": ".task-panel"
+        }
+      ],
+      "goto": {
+        "teach_tab": "task"
+      },
+      "manual": true
+    },
+    {
+      "id": "nc",
+      "title": "认识「常闭」按钮（最容易错的地方）",
+      "do": "看操作台下面的黄色小字：**STOP 常闭：未按下时为 1**。\n停止按钮和热继电器 `M1_OL_OK` 都是常闭：**没按时 = 1，按下时 = 0**。所以程序里它们要画成 **常开触点 -| |-**（没按时接通，按下时断开）。",
+      "why": "现场的停止按钮都接常闭：线断了也等于按了停止，电机会停，这样更安全。PLC 读到的是 1，你再用常闭触点就等于又取反成 0，梯级永远不通——按启动也没反应。",
+      "target": [
+        {
+          "sel": ".cco-f"
+        },
+        {
+          "sel": ".cco"
+        }
+      ],
+      "goto": {
+        "console": true
+      },
+      "manual": true
+    },
+    {
+      "id": "open-editor",
+      "title": "打开 PLC 编程窗口",
+      "do": "点左边竖排图标里的芯片图标（**PLC**），再点面板上的「**编程**」。也可以直接点下面的「带我去」。",
+      "why": "PLC1 是一台单独的 PLC，通过信号线读写实训单元的全部输入输出。程序就写在它里面。",
+      "target": [
+        {
+          "sel": "[data-act=\"open-editor\"]"
+        },
+        {
+          "panel_btn": "plc-editor"
+        }
+      ],
+      "goto": {
+        "panel": "plc-editor-float"
+      },
+      "done": {
+        "panel": "plc-editor-float"
+      }
+    },
+    {
+      "id": "start",
+      "title": "放一个常开触点 START",
+      "do": "在编程窗口的工具条上点「**常开**」，在弹出的输入框里填 `START` 回车。（第一次用：先点一下梯级 1 的标题行选中这一行）",
+      "why": "梯形图从左往右看：左边一根一直有电的母线，电流经过一串触点流到右边的线圈。启动按钮是常开按钮，按下时 START = 1，常开触点接通。",
+      "target": {
+        "sel": ".lde-tools [data-tool=\"NO\"]"
+      },
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld": {
+          "var": "START",
+          "t": "NO"
+        }
+      },
+      "wrong": [
+        {
+          "when": {
+            "ld": {
+              "var": "START",
+              "t": "NC"
+            }
+          },
+          "msg": "START 是常开按钮（按下才是 1），要用常开触点 -| |-，不要用常闭。选中它按 Del 删掉再放一个常开。"
+        }
+      ],
+      "hints": [
+        {
+          "after": 30,
+          "text": "点了「常开」以后，梯级上会出现一个触点和输入框；输入框里打 START（会自动补全），回车。"
+        }
+      ]
+    },
+    {
+      "id": "stop",
+      "title": "串联停止按钮 STOP（用常开触点！）",
+      "do": "刚放的 START 是选中的（蓝色），再点「**常开**」填 `STOP`：新元件会放在选中元件的右边，也就是**串联**。",
+      "why": "STOP 是常闭按钮：没按时 = 1，常开触点接通，电机能转；按下停止时 = 0，触点断开，电机停。用常闭触点就反了。",
+      "target": {
+        "sel": ".lde-tools [data-tool=\"NO\"]"
+      },
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld": {
+          "var": "STOP",
+          "t": "NO"
+        }
+      },
+      "wrong": [
+        {
+          "when": {
+            "ld": {
+              "var": "STOP",
+              "t": "NC"
+            }
+          },
+          "msg": "STOP 用了常闭触点：STOP 是常闭按钮，没按时已经是 1，常闭触点会把它取反成 0，梯级永远不通、按启动没反应。选中它，右键改成常开触点（或删掉重放）。"
+        }
+      ]
+    },
+    {
+      "id": "ol",
+      "title": "串联热继电器 M1_OL_OK（也是常开触点）",
+      "do": "STOP 选中的时候再点「**常开**」，填 `M1_OL_OK`，串在 STOP 后面。",
+      "why": "M1_OL_OK 是电机热继电器的常闭触点：正常时 = 1，电机过载时变 0，梯级断开、电机立刻停。",
+      "target": {
+        "sel": ".lde-tools [data-tool=\"NO\"]"
+      },
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld": {
+          "var": "M1_OL_OK",
+          "t": "NO"
+        }
+      },
+      "wrong": [
+        {
+          "when": {
+            "ld": {
+              "var": "M1_OL_OK",
+              "t": "NC"
+            }
+          },
+          "msg": "M1_OL_OK 正常时就是 1，要用常开触点（和 STOP 一样）。"
+        }
+      ]
+    },
+    {
+      "id": "coil",
+      "title": "最右边放线圈 M1_RUN",
+      "do": "再点「**线圈**」，填 `M1_RUN`。线圈总是放在梯级最右边。现在这条梯级是：START → STOP → M1_OL_OK → (M1_RUN)。",
+      "why": "线圈就是输出：左边的触点都接通时线圈得电，M1_RUN = 1，接触器吸合，电机转。",
+      "target": {
+        "sel": ".lde-tools [data-tool=\"COIL\"]"
+      },
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld_coil": "M1_RUN"
+      }
+    },
+    {
+      "id": "latch",
+      "title": "给 START 并联一个 M1_RUN 触点（自锁）",
+      "do": "点一下 **START** 触点选中它，再点工具条上的「**并联**」，在下面新出来的分支里填 `M1_RUN`（常开触点）。",
+      "why": "按钮一松开 START 就回到 0。并联一个电机自己的输出 M1_RUN：电机一转起来，这条分支就接通，松开按钮也能保持——这就叫**自锁**。",
+      "target": [
+        {
+          "ld": {
+            "var": "START"
+          }
+        },
+        {
+          "sel": ".lde-tools [data-tool=\"PAR\"]"
+        }
+      ],
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld_par": [
+          "START",
+          "M1_RUN"
+        ]
+      },
+      "hints": [
+        {
+          "after": 40,
+          "text": "先选中 START（点一下变蓝），再点「并联」，新分支里会出现一个空触点，双击填 M1_RUN。"
+        }
+      ]
+    },
+    {
+      "id": "lamp",
+      "title": "第二个梯级：运行灯",
+      "do": "点工具条上的「**梯级**」加一条新梯级，在里面放 常开触点 `M1_RUN` → 线圈 `LAMP_RUN`。",
+      "why": "电机运行时运行灯亮：灯跟着 M1_RUN 走就行。",
+      "target": {
+        "sel": ".lde-tools [data-tool=\"RUNG\"]"
+      },
+      "goto": {
+        "panel": "plc-editor-float",
+        "plc_tab": "prog"
+      },
+      "done": {
+        "ld_coil": "LAMP_RUN"
+      }
+    },
+    {
+      "id": "download",
+      "title": "下载到 PLC",
+      "do": "点编程窗口工具栏上的「**下载**」（带向下箭头的按钮）。第一次下载后 PLC 会自动运行（右上角显示「运行」）。",
+      "why": "编辑器里的程序只是草稿，下载以后 PLC 才按它运行。程序有错时不会下载，底部会显示红字。",
+      "target": {
+        "sel": ".pw-bar .dl"
+      },
+      "goto": {
+        "panel": "plc-editor-float"
+      },
+      "done": {
+        "all": [
+          {
+            "downloaded": true
+          },
+          {
+            "plc": "RUN"
+          }
+        ]
+      },
+      "hints": [
+        {
+          "after": 25,
+          "text": "下载失败的话，看编程窗口底部的红字（点它会跳到出错的梯级）。"
+        }
+      ]
+    },
+    {
+      "id": "press-start",
+      "title": "按一下「启动」",
+      "do": "在操作台上**按一下「启动」再松手**。看操作台下面的运行日志：会出现 `输入 I0.2 START 0→1` 和 `输出 Q0.0 M1_RUN 0→1`。",
+      "why": "日志就是你在现场看不到的东西：哪个输入变了、PLC 输出了什么、检查表哪一项过了。按了没反应时，日志里会有一条红色的「诊断」告诉你断在哪。",
+      "target": {
+        "tour": "btn-START"
+      },
+      "goto": {
+        "console": true
+      },
+      "done": {
+        "check": "start_ok"
+      },
+      "wrong": [
+        {
+          "when": {
+            "check_fail": "start_ok"
+          },
+          "msg": "按了启动电机没转。看日志里红色的「诊断」和编程窗口里标红的触点，改好以后重新下载，再按一次启动。"
+        }
+      ],
+      "hints": [
+        {
+          "after": 20,
+          "text": "按钮要按下再松开（点一下就行）。如果日志里写「PLC 停止」，先在编程窗口点「运行」。"
+        }
+      ]
+    },
+    {
+      "id": "latch-check",
+      "title": "松开后电机还在转吗？（自锁）",
+      "do": "松开启动按钮后等 3 秒：输送带应该一直转、运行灯一直亮。检查表里「松开按钮后保持运行（自锁）」会打勾。",
+      "why": "如果一松手电机就停，说明并联的 M1_RUN 自锁分支没接对。",
+      "target": {
+        "tour": "checklist"
+      },
+      "goto": {
+        "console": true,
+        "console_tab": "check"
+      },
+      "done": {
+        "check": "latch_ok"
+      },
+      "wrong": [
+        {
+          "when": {
+            "check_fail": "latch_ok"
+          },
+          "msg": "松手以后电机停了：START 下面要并联一个 M1_RUN 常开触点（自锁）。改好后下载，再按一次启动。"
+        }
+      ]
+    },
+    {
+      "id": "press-stop",
+      "title": "按一下「停止」",
+      "do": "电机转着的时候，在操作台上**按一下「停止」**。电机停、运行灯灭，松开停止后也不能自己再转。",
+      "why": "按下停止时 STOP 从 1 变 0（日志里能看到 `STOP 1→0`），串在梯级里的 STOP 常开触点断开，自锁也跟着断了。",
+      "target": {
+        "tour": "btn-STOP"
+      },
+      "goto": {
+        "console": true
+      },
+      "done": {
+        "check": "stop_ok"
+      },
+      "wrong": [
+        {
+          "when": {
+            "check_fail": "stop_ok"
+          },
+          "msg": "按了停止电机还在转：STOP 要串在梯级里（在并联块右边），而且是常开触点。"
+        }
+      ],
+      "hints": [
+        {
+          "after": 25,
+          "text": "要先让电机转起来（按一下启动），再按停止，这一项才会检查。"
+        }
+      ]
+    },
+    {
+      "id": "priority",
+      "title": "同时按：停止优先",
+      "do": "先让电机转起来。然后**按住 Shift 点「启动」**（启动会一直按着，按钮变暗），**再点「停止」**，电机应该停。最后再 Shift 点一下「启动」松开它。\n不想自己按的话，点检查表上面的「演示全部」，看系统评分时是怎么测的。",
+      "why": "启动和停止同时按下时必须停——这叫停止优先。你的梯级里 STOP 串在自锁并联块外面，就是停止优先。",
+      "target": [
+        {
+          "tour": "btn-START"
+        },
+        {
+          "tour": "checklist"
+        }
+      ],
+      "goto": {
+        "console": true
+      },
+      "done": {
+        "check": "stop_priority"
+      },
+      "hints": [
+        {
+          "after": 40,
+          "text": "鼠标一次只能按一个按钮，所以用 Shift+点击把启动「锁住按下」。"
+        }
+      ]
+    },
+    {
+      "id": "overload",
+      "title": "过载保护：让系统演示一次",
+      "do": "热继电器过载你在操作台上按不出来。点「带我去」打开任务面板的「评分标准（检查表）」页签，在「过载保护且不自启」这一项右边点「**演示**」：系统会按评分时的测试顺序启动电机、模拟过载、再复位。",
+      "why": "过载时 M1_OL_OK 变 0，串着的常开触点断开，电机停；热继电器复位后 M1_OL_OK 回到 1，但自锁已经断了，电机不会自己转——要重新按启动，这是安全要求。",
+      "target": [
+        {
+          "sel": "[data-act=\"trial-overload_ok\"]"
+        },
+        {
+          "sel": ".task-panel [data-tour=\"checklist\"]"
+        }
+      ],
+      "goto": {
+        "teach_tab": "goals"
+      },
+      "done": {
+        "check": "overload_ok"
+      }
+    },
+    {
+      "id": "all",
+      "title": "检查表全部打勾",
+      "do": "任务面板「检查表」里每一项都应该是 ✓。没打勾的项目下面写着怎么试；红色的项目写着哪里没做到。",
+      "why": "检查表和提交评分用的是同一套判断。全部打勾，提交时基本就是满分。",
+      "target": {
+        "sel": ".task-panel [data-tour=\"checklist\"]"
+      },
+      "goto": {
+        "teach_tab": "goals"
+      },
+      "done": {
+        "checks_all": true
+      },
+      "hints": [
+        {
+          "after": 30,
+          "text": "还差哪一项，就照它下面「怎么试」的说明在操作台上做一遍；也可以点「演示全部」。"
+        }
+      ]
+    },
+    {
+      "id": "submit",
+      "title": "提交评分",
+      "do": "点任务面板上绿色的「**提交评分**」。系统会用你的程序从头自动测一遍，逐项打分。",
+      "why": "可以改了再交，成绩取最高分。",
+      "target": [
+        {
+          "sel": "[data-act=\"checklist-submit\"]"
+        },
+        {
+          "sel": "[data-k=\"submit-score\"]"
+        }
+      ],
+      "goto": {
+        "teach_tab": "goals"
+      },
+      "done": {
+        "submitted": true
+      }
+    }
+  ]
+}

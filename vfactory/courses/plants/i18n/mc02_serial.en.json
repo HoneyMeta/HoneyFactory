@@ -1,0 +1,15 @@
+{
+ "某精密机加厂·三工序串行线": "Precision Machining Plant · Three-Operation Serial Line",
+ "HSG-200 壳体": "HSG-200 Housing",
+ "收货区": "Receiving Area",
+ "机加区": "Machining Area",
+ "仓储区": "Storage Area",
+ "毛坯来料": "Raw Casting Infeed",
+ "毛坯库": "Raw Casting Warehouse",
+ "1#车削": "#1 Turning",
+ "缓存 1": "Buffer 1",
+ "2#钻孔": "#2 Drilling",
+ "缓存 2": "Buffer 2",
+ "3#铣削": "#3 Milling",
+ "成品库": "Finished Goods Warehouse"
+}

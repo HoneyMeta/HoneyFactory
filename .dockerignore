@@ -1,0 +1,34 @@
+# Build context for the Dockerfile: only requirements.txt, vfactory/, templates/, plants/, tests/scripts/,
+# config/llm.example.json and web/ are used.
+.git
+.github
+.gitignore
+.vscode
+.idea
+**/__pycache__
+**/*.pyc
+**/*.log
+*.cmd
+
+# local data, secrets and build output
+data/
+logs/
+config/*
+!config/llm.example.json
+.env*
+web/node_modules/
+web/dist/
+web/dist-plc/
+web/.vite/
+test-results/
+dist-client/
+dist-electron/
+
+# not part of the server image
+desktop/
+vfmes/
+tools/
+docs/
+issues/
+docker-compose*.yml
+docker/

@@ -1,0 +1,91 @@
+version: 2
+
+plant:
+  name: 某支架厂·按节拍投料
+  product: 支架
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [46, 16]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 生产区, x: [10, 38], color: '#E3ECF2'}
+- {name: 仓储区, x: [38, 46], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 投料
+  pos: [2, 6]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(40)
+- id: B0
+  type: buffer
+  name: 线边库
+  pos: [7.5, 6.5]
+  size: [2.5, 2.5]
+  node: [280, 160]
+  params:
+    capacity: 60
+- id: M1
+  type: processor
+  name: 1#冲压
+  pos: [11, 6]
+  size: [4, 3.4]
+  node: [480, 160]
+  params: {time: 'normal(50,2)', run_kw: 12, idle_kw: 2}
+- id: B1
+  type: buffer
+  name: 缓存 1
+  pos: [17, 6.5]
+  size: [2.5, 2.5]
+  node: [680, 160]
+  params:
+    capacity: 5
+- id: M2
+  type: processor
+  name: 2#焊接
+  pos: [21, 6]
+  size: [4, 3.4]
+  node: [880, 160]
+  params: {time: 'normal(55,2)', run_kw: 15, idle_kw: 2}
+- id: B2
+  type: buffer
+  name: 缓存 2
+  pos: [27, 6.5]
+  size: [2.5, 2.5]
+  node: [1080, 160]
+  params:
+    capacity: 5
+- id: M3
+  type: processor
+  name: 3#喷涂
+  pos: [31, 6]
+  size: [4, 3.4]
+  node: [1280, 160]
+  params: {time: 'normal(45,2)', run_kw: 10, idle_kw: 2}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [40, 5.5]
+  size: [4, 4]
+  node: [1480, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: B1, to_port: in}
+- {id: L4, from: B1, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M2, from_port: out, to: B2, to_port: in}
+- {id: L6, from: B2, from_port: out, to: M3, to_port: in}
+- {id: L7, from: M3, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

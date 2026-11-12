@@ -1,0 +1,122 @@
+version: 2
+
+plant:
+  name: 实训单元·电机启停（观察）
+  product: 实训零件
+  seed: 7
+  start: '2026-11-02T08:00:00'
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 电机启停自锁
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: M1
+        type: motor
+        pos: [-2.6, -1.0, 0]
+        rot: 0
+        label: 输送电机
+        params: {ramp: 0.6, kw: 1.5}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.2, 0, 0]
+        rot: 0
+        size: [6.6, 0.6]
+        label: 输送带（由 M1 拖动）
+        params: {speed: 0.3, motor: M1}
+      - id: E1
+        type: emitter
+        pos: [-3.0, 0, 0.27]
+        rot: 0
+        params:
+          interval: '6'
+          parts:
+          - {kind: box, color: blue, h: 0.2, w: 0.25}
+      - {id: R1, type: remover, pos: [3.7, 0, 0], rot: 0, size: [0.5, 0.9]}
+      - id: START
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 启动
+        params:
+          color: green
+      - id: STOP
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - id: LAMP_RUN
+        type: lamp
+        pos: [-3.15, 1.6, 0.95]
+        rot: 0
+        label: 运行
+        params:
+          color: green
+      io:
+      - {name: M1_RUNNING, dir: in, type: BOOL, addr: '%I0.0', comp: M1, signal: running, comment: 输送电机 M1 运行反馈, contact: 'NO', idle: 0}
+      - {name: M1_OL_OK, dir: in, type: BOOL, addr: '%I0.1', comp: M1, signal: ol_ok, comment: 输送电机 M1 热继电器正常（常闭）, contact: NC, idle: 1}
+      - {name: M1_RUN, dir: out, type: BOOL, addr: '%Q0.0', comp: M1, signal: run, comment: 输送电机 M1 接触器, idle: false}
+      - {name: START, dir: in, type: BOOL, addr: '%I0.2', comp: START, signal: value, comment: 启动 START 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.3', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_RUN, dir: out, type: BOOL, addr: '%Q0.1', comp: LAMP_RUN, signal: 'on', comment: 运行 LAMP_RUN 点亮, idle: false}
+      metrics: [interlock_violations, hard_reversals]
+- id: PLC1
+  type: plc
+  name: 电机启停自锁 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: 'PROGRAM MotorLatch
+
+        (* 启动按钮并联自锁触点，再串常闭的停止按钮和热继电器 *)
+
+        M1_RUN := (START OR M1_RUN) AND STOP AND M1_OL_OK;
+
+        LAMP_RUN := M1_RUN;
+
+        END_PROGRAM
+
+        '}
+    di: 4
+    do: 2
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: M1_RUNNING, ch: I0.0, dir: in}
+  - {point: M1_OL_OK, ch: I0.1, dir: in}
+  - {point: M1_RUN, ch: Q0.0, dir: out}
+  - {point: START, ch: I0.2, dir: in}
+  - {point: STOP, ch: I0.3, dir: in}
+  - {point: LAMP_RUN, ch: Q0.1, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []

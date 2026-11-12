@@ -1,0 +1,153 @@
+{
+  "id": "intro_io/x01",
+  "title": "跟着做：输入和输出",
+  "kind": "plant",
+  "outro": "记住：按钮、传感器、反馈是输入（%I），接触器、灯、电磁阀是输出（%Q）。下一课专门讲停止按钮为什么平时是 1。",
+  "steps": [
+    {
+      "id": "read",
+      "title": "这一课要做什么",
+      "do": "实训单元里有一台电机、启动和停止两个按钮、一个运行灯。**PLC 里已经装好程序**，你不用写程序，只要按按钮、看信号，然后回答 5 道题。\n**成功的样子**：5 道题全对，得 100 分。",
+      "why": "学 PLC 之前，先分清哪些信号是 PLC 读进来的（输入），哪些是它写出去的（输出）。",
+      "target": [
+        {
+          "sel": ".task-panel .book-md"
+        },
+        {
+          "sel": ".task-panel"
+        }
+      ],
+      "goto": {
+        "teach_tab": "task"
+      },
+      "manual": true
+    },
+    {
+      "id": "open-plc",
+      "title": "打开 PLC 面板",
+      "do": "点最左边竖排图标里的「**PLC**」（芯片图标）。左栏下半部分是 **I/O 监视表**：上面一段是输入 %I，下面一段是输出 %Q。",
+      "why": "I/O 监视表实时显示每个信号的值：TRUE 就是 1，FALSE 就是 0。",
+      "target": {
+        "panel_btn": "plc-editor"
+      },
+      "goto": {
+        "panel": "plc-editor"
+      },
+      "done": {
+        "panel": "plc-editor"
+      }
+    },
+    {
+      "id": "idle",
+      "title": "先什么都别按，看一眼",
+      "do": "看 I/O 表：START 是 FALSE（0），**STOP 却是 TRUE（1）**，M1_RUN 是 FALSE。STOP 为什么是 1？下一课细讲，这里先记住。看完点「下一步」。",
+      "why": "START 是常开按钮，没按时是 0；STOP 是常闭按钮，没按时是 1。",
+      "target": {
+        "sel": ".ed-left"
+      },
+      "manual": true
+    },
+    {
+      "id": "press-start",
+      "title": "按一下启动",
+      "do": "在操作台上点「**启动**」（按住一会儿再松开）。看 I/O 表里 START 变成 TRUE，接着 **M1_RUN**、**LAMP_RUN** 也变成 TRUE，电机转起来了。",
+      "why": "START 是输入：你按了，PLC 读到 1；M1_RUN 是输出：PLC 算完以后写 1，接触器吸合、电机转。",
+      "target": {
+        "tour": "btn-START"
+      },
+      "goto": {
+        "console": true
+      },
+      "done": {
+        "all": [
+          {
+            "pressed": "START"
+          },
+          {
+            "io": {
+              "name": "M1_RUN",
+              "eq": true
+            }
+          }
+        ]
+      },
+      "hints": [
+        {
+          "after": 30,
+          "text": "操作台窗口关了的话：选中实训单元，在右边「属性」里点「操作台」。"
+        }
+      ]
+    },
+    {
+      "id": "press-stop",
+      "title": "再按一下停止",
+      "do": "点操作台上的「**停止**」。看 STOP 变成 FALSE，M1_RUN 跟着变成 FALSE，电机停了。",
+      "why": "停止按钮按下时信号从 1 变 0，程序看到 0 就断开电机。",
+      "target": {
+        "tour": "btn-STOP"
+      },
+      "goto": {
+        "console": true
+      },
+      "done": {
+        "all": [
+          {
+            "pressed": "STOP"
+          },
+          {
+            "io": {
+              "name": "M1_RUN",
+              "eq": false
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "answer",
+      "title": "回答 5 道题",
+      "do": "打开任务面板的「**目标与作答**」，5 道题都选好。不确定的就回操作台再按一次看看。",
+      "target": [
+        {
+          "sel": ".task-panel [data-tour=\"goal-list\"]"
+        },
+        {
+          "sel": "#tab-goals"
+        }
+      ],
+      "goto": {
+        "teach_tab": "goals"
+      },
+      "done": {
+        "all": [
+          {
+            "answered": "q_in"
+          },
+          {
+            "answered": "q_out"
+          },
+          {
+            "answered": "q_press"
+          },
+          {
+            "answered": "q_fb"
+          },
+          {
+            "answered": "q_addr"
+          }
+        ]
+      }
+    },
+    {
+      "id": "submit",
+      "title": "提交评分",
+      "do": "点任务面板上绿色的「**提交评分**」。",
+      "target": {
+        "sel": "[data-k=\"submit-score\"]"
+      },
+      "done": {
+        "submitted": true
+      }
+    }
+  ]
+}

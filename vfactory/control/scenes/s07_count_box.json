@@ -1,0 +1,598 @@
+{
+ "id": "s07_count_box",
+ "name": "计数装箱",
+ "level": 7,
+ "order": 7,
+ "desc": "每 5 个零件装一箱：计数器计数，装满后换箱。",
+ "cell": {
+  "size": [
+   8,
+   4.4
+  ],
+  "components": [
+   {
+    "id": "E1",
+    "type": "emitter",
+    "pos": [
+     -3.6,
+     0,
+     0.72
+    ],
+    "rot": 0,
+    "params": {
+     "interval": "uniform(3,4)",
+     "parts": [
+      {
+       "kind": "box",
+       "color": "yellow",
+       "h": 0.12,
+       "w": 0.15
+      }
+     ]
+    }
+   },
+   {
+    "id": "C1",
+    "type": "belt_conveyor",
+    "pos": [
+     -1.0,
+     0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     5.6,
+     0.6
+    ],
+    "label": "零件输送带",
+    "params": {
+     "speed": 0.3,
+     "height": 0.7
+    }
+   },
+   {
+    "id": "S1",
+    "type": "diffuse_sensor",
+    "pos": [
+     1.75,
+     0.35,
+     0.78
+    ],
+    "rot": 0,
+    "label": "落料计数光电"
+   },
+   {
+    "id": "E_BOX",
+    "type": "emitter",
+    "pos": [
+     1.95,
+     -1.65,
+     0.27
+    ],
+    "rot": 0,
+    "label": "空箱料仓",
+    "params": {
+     "trigger": "signal",
+     "parts": [
+      {
+       "kind": "tote",
+       "color": "blue",
+       "h": 0.3,
+       "w": 0.5
+      }
+     ]
+    }
+   },
+   {
+    "id": "C2",
+    "type": "belt_conveyor",
+    "pos": [
+     1.95,
+     0,
+     0
+    ],
+    "rot": 90,
+    "size": [
+     4.0,
+     0.7
+    ],
+    "label": "装箱输送带",
+    "params": {
+     "speed": 0.3
+    }
+   },
+   {
+    "id": "S_BOX",
+    "type": "diffuse_sensor",
+    "pos": [
+     2.45,
+     0.25,
+     0.4
+    ],
+    "rot": -90,
+    "label": "箱子到位光电",
+    "params": {
+     "range": 0.9
+    }
+   },
+   {
+    "id": "R_BOX",
+    "type": "remover",
+    "pos": [
+     1.95,
+     2.0,
+     0
+    ],
+    "rot": 0,
+    "size": [
+     0.8,
+     0.4
+    ],
+    "label": "满箱出口",
+    "params": {
+     "accept": {
+      "count": 5
+     }
+    }
+   },
+   {
+    "id": "START",
+    "type": "button",
+    "pos": [
+     -3.6,
+     1.8,
+     0.95
+    ],
+    "rot": 0,
+    "label": "启动",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "STOP",
+    "type": "button",
+    "pos": [
+     -3.4,
+     1.8,
+     0.95
+    ],
+    "rot": 0,
+    "label": "停止",
+    "params": {
+     "color": "red",
+     "nc": true
+    }
+   },
+   {
+    "id": "ESTOP",
+    "type": "estop",
+    "pos": [
+     -3.15,
+     1.8,
+     0.95
+    ],
+    "rot": 0,
+    "label": "急停"
+   },
+   {
+    "id": "LAMP_RUN",
+    "type": "lamp",
+    "pos": [
+     -2.9000000000000004,
+     1.8,
+     0.95
+    ],
+    "rot": 0,
+    "label": "运行",
+    "params": {
+     "color": "green"
+    }
+   },
+   {
+    "id": "LAMP_FULL",
+    "type": "lamp",
+    "pos": [
+     -2.7,
+     1.8,
+     0.95
+    ],
+    "rot": 0,
+    "label": "满箱",
+    "params": {
+     "color": "yellow"
+    }
+   }
+  ],
+  "io": [
+   {
+    "name": "C1_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.0",
+    "comp": "C1",
+    "signal": "fwd",
+    "comment": "零件输送带 C1 正转",
+    "idle": false
+   },
+   {
+    "name": "S1",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.0",
+    "comp": "S1",
+    "signal": "detect",
+    "comment": "落料计数光电 S1 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "E_BOX_RELEASE",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.1",
+    "comp": "E_BOX",
+    "signal": "release",
+    "comment": "空箱料仓 E_BOX 放料（上升沿放一件）",
+    "idle": false
+   },
+   {
+    "name": "C2_FWD",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.2",
+    "comp": "C2",
+    "signal": "fwd",
+    "comment": "装箱输送带 C2 正转",
+    "idle": false
+   },
+   {
+    "name": "S_BOX",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.1",
+    "comp": "S_BOX",
+    "signal": "detect",
+    "comment": "箱子到位光电 S_BOX 检测到",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "START",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.2",
+    "comp": "START",
+    "signal": "value",
+    "comment": "启动 START 触点",
+    "contact": "NO",
+    "idle": 0
+   },
+   {
+    "name": "STOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.3",
+    "comp": "STOP",
+    "signal": "value",
+    "comment": "停止 STOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "ESTOP",
+    "dir": "in",
+    "type": "BOOL",
+    "addr": "%I0.4",
+    "comp": "ESTOP",
+    "signal": "value",
+    "comment": "急停 ESTOP 触点",
+    "contact": "NC",
+    "idle": 1
+   },
+   {
+    "name": "LAMP_RUN",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.3",
+    "comp": "LAMP_RUN",
+    "signal": "on",
+    "comment": "运行 LAMP_RUN 点亮",
+    "idle": false
+   },
+   {
+    "name": "LAMP_FULL",
+    "dir": "out",
+    "type": "BOOL",
+    "addr": "%Q0.4",
+    "comp": "LAMP_FULL",
+    "signal": "on",
+    "comment": "满箱 LAMP_FULL 点亮",
+    "idle": false
+   }
+  ],
+  "metrics": [
+   "bins.R_BOX.ok",
+   "sorted_wrong",
+   "dropped",
+   "collisions"
+  ]
+ },
+ "plc": {
+  "mode": "internal",
+  "scan_ms": 20
+ },
+ "io": [
+  {
+   "name": "C1_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.0",
+   "comp": "C1",
+   "signal": "fwd",
+   "comment": "零件输送带 C1 正转",
+   "idle": false
+  },
+  {
+   "name": "S1",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.0",
+   "comp": "S1",
+   "signal": "detect",
+   "comment": "落料计数光电 S1 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "E_BOX_RELEASE",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.1",
+   "comp": "E_BOX",
+   "signal": "release",
+   "comment": "空箱料仓 E_BOX 放料（上升沿放一件）",
+   "idle": false
+  },
+  {
+   "name": "C2_FWD",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.2",
+   "comp": "C2",
+   "signal": "fwd",
+   "comment": "装箱输送带 C2 正转",
+   "idle": false
+  },
+  {
+   "name": "S_BOX",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.1",
+   "comp": "S_BOX",
+   "signal": "detect",
+   "comment": "箱子到位光电 S_BOX 检测到",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "START",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.2",
+   "comp": "START",
+   "signal": "value",
+   "comment": "启动 START 触点",
+   "contact": "NO",
+   "idle": 0
+  },
+  {
+   "name": "STOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.3",
+   "comp": "STOP",
+   "signal": "value",
+   "comment": "停止 STOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "ESTOP",
+   "dir": "in",
+   "type": "BOOL",
+   "addr": "%I0.4",
+   "comp": "ESTOP",
+   "signal": "value",
+   "comment": "急停 ESTOP 触点",
+   "contact": "NC",
+   "idle": 1
+  },
+  {
+   "name": "LAMP_RUN",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.3",
+   "comp": "LAMP_RUN",
+   "signal": "on",
+   "comment": "运行 LAMP_RUN 点亮",
+   "idle": false
+  },
+  {
+   "name": "LAMP_FULL",
+   "dir": "out",
+   "type": "BOOL",
+   "addr": "%Q0.4",
+   "comp": "LAMP_FULL",
+   "signal": "on",
+   "comment": "满箱 LAMP_FULL 点亮",
+   "idle": false
+  }
+ ],
+ "task_md": "## 任务：计数装箱\n\n零件从高处的输送带 C1 落进下面输送带 C2 上的周转箱。每箱装 **5 个**。\n\n1. 启停与急停：按 **启动** 运行，按 **停止** 停止；按下 **急停** 所有运动立即停止，急停复位后设备不能自己恢复，必须重新按启动；急停拍下后会一直保持（操作台上的按钮变成\"复位\"），再点一下才复位；运行时运行灯 `LAMP_RUN` 亮（开始时要等空箱到位 C1 才转，所以评分用运行灯判断\"已启动\"）；\n2. 开始时用 `E_BOX_RELEASE` 放出空箱（它从 0 变 1 一次放一个空箱；一直保持 1 也只放一个，要再放就先回 0）放出空箱，C2 把箱子送到装箱位（光电 `S_BOX` 检测到）后停下；\n3. C1 运行，光电 `S1` 每检测到一个零件掉落计数一次；第 5 个零件**完全掉进箱子**（S1 信号消失）后 C1 立即停止，满箱灯亮；\n4. 然后放出下一个空箱、C2 运行：满箱被送走（`S_BOX` 先变 0），新空箱到位（`S_BOX` 再变 1）后 C2 停止，计数清零，C1 继续；\n5. 每箱正好 5 个，不掉件、不碰撞（箱子不在装箱位、`S_BOX` = 0 时 C1 必须停，否则零件掉到地上）。\n\n> 触点说明：`STOP`、`ESTOP` 是**常闭触点**，未按下（未动作）时为 **1**，按下（动作）时为 0——梯形图里用**常开触点**串联它们（ST 里直接 AND），不要取反；其余按钮和传感器是常开触点，未动作时为 0。\n\n### I/O 分配表\n\n| 名称 | 方向 | 类型 | 地址 | 触点 | 未操作时 | 说明 |\n|---|---|---|---|---|---|---|\n| `C1_FWD` | 输出 | BOOL | %Q0.0 | — | 0 | 零件输送带 C1 正转 |\n| `S1` | 输入 | BOOL | %I0.0 | 常开 | 0 | 落料计数光电 S1 检测到 |\n| `E_BOX_RELEASE` | 输出 | BOOL | %Q0.1 | — | 0 | 空箱料仓 E_BOX 放料（上升沿放一件） |\n| `C2_FWD` | 输出 | BOOL | %Q0.2 | — | 0 | 装箱输送带 C2 正转 |\n| `S_BOX` | 输入 | BOOL | %I0.1 | 常开 | 0 | 箱子到位光电 S_BOX 检测到 |\n| `START` | 输入 | BOOL | %I0.2 | 常开 | 0 | 启动 START 触点 |\n| `STOP` | 输入 | BOOL | %I0.3 | **常闭** | 1 | 停止 STOP 触点 |\n| `ESTOP` | 输入 | BOOL | %I0.4 | **常闭** | 1 | 急停 ESTOP 触点 |\n| `LAMP_RUN` | 输出 | BOOL | %Q0.3 | — | 0 | 运行 LAMP_RUN 点亮 |\n| `LAMP_FULL` | 输出 | BOOL | %Q0.4 | — | 0 | 满箱 LAMP_FULL 点亮 |\n\n### 评分标准（满分 100 分）\n\n- 装满 5 个的箱数 ≥ 5：**35 分**\n  - 怎么试：连续运行约 3 分钟，至少送走 5 个正好装了 5 件的满箱（这里显示当前数）\n- 数量不对的箱子：必须为 0（不能出现）：**20 分**\n  - 怎么试：每箱正好 5 个（这里显示装错的件数）\n- 掉件数：必须为 0（不能出现）：**10 分**\n  - 怎么试：零件不能掉到地上（这里显示当前掉件数）\n- 碰撞次数：必须为 0（不能出现）：**10 分**\n  - 怎么试：连续运行时不能出现碰撞（这里显示当前次数）\n- 启动正常（做到）：**5 分**\n  - 怎么试：按一下启动，主输送带（评分看 C1_FWD）开始运行\n- 急停：立即停止且复位后不自启（做到）：**15 分**\n  - 怎么试：运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动\n- 急停复位后可以重新启动（做到）：**5 分**\n  - 怎么试：急停复位后按启动，C1_FWD 重新运行\n\n> 进沙箱以后，「评分标准（检查表）」页签会边操作边打勾，判断方法和提交评分完全一样。\n",
+ "hints": [
+  "用 CTU 计数器：CU 接 S1，PV = 5；用状态机（CASE）分\"等箱子 / 装箱 / 换箱\"几个步骤。",
+  "第 5 个零件挡住 S1 的那一刻它还在 C1 上，等 S1 的下降沿再停 C1。"
+ ],
+ "scoring": {
+  "rules": [
+   {
+    "key": "bins.R_BOX.ok",
+    "label": "装满 5 个的箱数",
+    "op": ">=",
+    "value": 5,
+    "weight": 35,
+    "how": "连续运行约 3 分钟，至少送走 5 个正好装了 5 件的满箱（这里显示当前数）"
+   },
+   {
+    "key": "sorted_wrong",
+    "label": "数量不对的箱子",
+    "op": "==",
+    "value": 0,
+    "weight": 20,
+    "how": "每箱正好 5 个（这里显示装错的件数）"
+   },
+   {
+    "key": "dropped",
+    "label": "掉件数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "零件不能掉到地上（这里显示当前掉件数）"
+   },
+   {
+    "key": "collisions",
+    "label": "碰撞次数",
+    "op": "==",
+    "value": 0,
+    "weight": 10,
+    "how": "连续运行时不能出现碰撞（这里显示当前次数）"
+   },
+   {
+    "key": "start_ok",
+    "label": "启动正常",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "按一下启动，主输送带（评分看 C1_FWD）开始运行"
+   },
+   {
+    "key": "estop_ok",
+    "label": "急停：立即停止且复位后不自启",
+    "op": "==",
+    "value": 1,
+    "weight": 15,
+    "how": "运行时点一下急停：0.2 秒内运动输出全部断开；再点一下复位，设备不能自己动"
+   },
+   {
+    "key": "restart_ok",
+    "label": "急停复位后可以重新启动",
+    "op": "==",
+    "value": 1,
+    "weight": 5,
+    "how": "急停复位后按启动，C1_FWD 重新运行"
+   }
+  ]
+ },
+ "test": {
+  "duration": 186,
+  "steps": [
+   {
+    "t": 1.0,
+    "press": "START"
+   },
+   {
+    "t": 2.0,
+    "key": "start_ok",
+    "check": {
+     "out": "LAMP_RUN",
+     "eq": true
+    },
+    "desc": "按启动 1 秒后 LAMP_RUN 还是 0（没有运行）"
+   },
+   {
+    "t": 175.0,
+    "snapshot": true
+   },
+   {
+    "t": 176.0,
+    "press": "ESTOP"
+   },
+   {
+    "t": 176.2,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD"
+     ]
+    },
+    "desc": "按下急停后运动输出没有立即断开"
+   },
+   {
+    "t": 177.0,
+    "release": "ESTOP"
+   },
+   {
+    "t": 179.0,
+    "key": "estop_ok",
+    "check": {
+     "all_off": [
+      "C1_FWD",
+      "C2_FWD"
+     ]
+    },
+    "desc": "急停复位后设备自己重新启动了（必须再按启动）"
+   },
+   {
+    "t": 180.0,
+    "press": "START"
+   },
+   {
+    "t": 181.0,
+    "key": "restart_ok",
+    "check": {
+     "out": "LAMP_RUN",
+     "eq": true
+    },
+    "desc": "急停复位后按启动不能恢复运行"
+   }
+  ]
+ },
+ "reference": {
+  "st": {
+   "id": "reference",
+   "name": "参考答案",
+   "lang": "ST",
+   "vars": [],
+   "source": "PROGRAM CountBox\nVAR\n    RUN : BOOL;\n    STEP : INT := 0;        (* 0 放空箱  1 空箱到位中  2 装箱  3 等满箱离开  4 等新箱到位 *)\n    CNT : CTU;\n    S1_FALL : F_TRIG;\n    BOX_RISE : R_TRIG;\n    BOX_FALL : F_TRIG;\n    REL : BOOL;\nEND_VAR\n    (* 启停：启动按钮自锁，停止按钮和急停按钮都是常闭触点（没按时为 TRUE） *)\n    RUN := (START OR RUN) AND STOP AND ESTOP;\n    LAMP_RUN := RUN;\n    S1_FALL(CLK := S1);\n    BOX_RISE(CLK := S_BOX);\n    BOX_FALL(CLK := S_BOX);\n    CNT(CU := S1 AND STEP = 2, R := STEP <> 2, PV := 5);\n    REL := FALSE;\n    CASE STEP OF\n        0:  IF RUN THEN REL := TRUE; STEP := 1; END_IF;          (* 放第一个空箱 *)\n        1:  IF S_BOX THEN STEP := 2; END_IF;                       (* 空箱到装箱位 *)\n        2:  IF CNT.Q AND S1_FALL.Q THEN STEP := 3; REL := TRUE; END_IF;   (* 第 5 个零件落下：放下一个空箱 *)\n        3:  IF BOX_FALL.Q THEN STEP := 4; END_IF;                  (* 满箱离开光电 *)\n        4:  IF BOX_RISE.Q THEN STEP := 2; END_IF;                  (* 新空箱到位 *)\n    END_CASE;\n    E_BOX_RELEASE := REL;\n    C1_FWD := RUN AND STEP = 2 AND NOT (CNT.Q AND NOT S1);\n    C2_FWD := RUN AND (STEP = 1 OR STEP = 3 OR STEP = 4);\n    LAMP_FULL := STEP = 3 OR STEP = 4;\nEND_PROGRAM\n"
+  }
+ },
+ "faults": [
+  {
+   "comp": "S1",
+   "kind": "sensor_flicker",
+   "label": "S1 传感器信号抖动",
+   "symptom": "计数偏多，箱子没满就换箱"
+  },
+  {
+   "comp": "S1",
+   "kind": "sensor_stuck_off",
+   "label": "S1 传感器常断（一直为 0）",
+   "symptom": "一直不换箱，零件越堆越高"
+  },
+  {
+   "comp": "S_BOX",
+   "kind": "sensor_stuck_on",
+   "label": "S_BOX 传感器常通（一直为 1）",
+   "symptom": "C2 不动或箱子不停"
+  },
+  {
+   "comp": "C2",
+   "kind": "motor_overload",
+   "label": "C2 电机过载跳闸",
+   "symptom": "满箱送不走"
+  }
+ ],
+ "version": 1
+}

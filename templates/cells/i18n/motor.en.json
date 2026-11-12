@@ -1,0 +1,22 @@
+{
+ "控制单元演示：电机正反转互锁（按面板按钮操作）": "Control Unit Demo: Motor Forward/Reverse Interlock (Operate Using the Panel Buttons)",
+ "实训零件": "Lab Part",
+ "实训区": "Lab Area",
+ "电机正反转互锁": "Motor Forward/Reverse Interlock",
+ "输送电机": "Conveyor Motor",
+ "输送带（由 M1 拖动）": "Belt Conveyor (driven by M1)",
+ "正转": "Forward",
+ "反转": "Reverse",
+ "停止": "Stop",
+ "输送电机 M1 运行反馈": "Conveyor motor M1 running feedback",
+ "输送电机 M1 热继电器正常（常闭）": "Conveyor motor M1 overload relay healthy (NC)",
+ "输送电机 M1 正转接触器": "Conveyor motor M1 forward contactor",
+ "输送电机 M1 反转接触器": "Conveyor motor M1 reverse contactor",
+ "正转 FWD 触点": "Forward FWD contact",
+ "反转 REV 触点": "Reverse REV contact",
+ "停止 STOP 触点": "Stop STOP Contact",
+ "正转 LAMP_FWD 点亮": "Forward LAMP_FWD on",
+ "反转 LAMP_REV 点亮": "Reverse LAMP_REV on",
+ "电机正反转互锁 PLC": "Motor forward/reverse interlock PLC",
+ "参考答案": "Answer Key"
+}

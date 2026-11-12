@@ -1,0 +1,51 @@
+# 模板：机加工厂（毛坯来料 → CNC → 去毛刺 → 内窥检测 → 立库）
+plant:
+  name: 新建机加工厂
+  product: 外购铸件精加工
+  seed: 11
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 10
+  warmup_h: 2
+  floor: [80, 50]
+
+areas:
+  - {name: 收货区, x: [0, 14], color: '#F2EEE3'}
+  - {name: 机加区, x: [14, 44], color: '#E3ECF2'}
+  - {name: 检测区, x: [44, 58], color: '#E8E3F2'}
+  - {name: 仓储区, x: [58, 80], color: '#E3F0E6'}
+
+buffers:
+  raw: 200
+  cnc_in: 40
+  deb_in: 24
+  ins_in: 24
+  fg: 200
+
+stations:
+  - {id: RCV1, type: receiving, name: 毛坯来料, pos: [6, 12], size: [6, 6], pcs_per_hour: 34, porosity_pct: 3.0, supplier: 外购毛坯}
+  - {id: CNC1, type: cnc, group: CNC, name: 1#加工中心, pos: [20, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC2, type: cnc, group: CNC, name: 2#加工中心, pos: [27, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC3, type: cnc, group: CNC, name: 3#加工中心, pos: [34, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC4, type: cnc, group: CNC, name: 4#加工中心, pos: [20, 18], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: DEB1, type: deburr_cell, name: 机器人去毛刺单元, pos: [47, 12], size: [5, 5], mtbf_h: 200, mttr_min: 20}
+  - {id: INS1, type: inspection, name: 自动内窥检测站, pos: [54, 12], size: [4, 4], mtbf_h: 300, mttr_min: 20}
+  - {id: ASRS1, type: warehouse, name: 成品立体仓库, pos: [69, 13], size: [12, 18], slots: 600, ship_every_h: 4}
+  - id: AGV
+    type: agv_fleet
+    name: AGV 车队
+    pos: [40, -8]
+    size: [1, 1]
+    count: 2
+    speed: 1.2
+    corridor_y: -3
+    nodes: {raw: [8, 4], cnc_in: [27, 3], fg: [56, 4], asrs: [63, 4], charger: [30, -12]}
+  - id: CREW
+    type: worker_crew
+    name: 生产班组
+    pos: [30, 30]
+    size: [1, 1]
+    roles:
+      - {name: CNC 操作工, count: 2, stations: [CNC1, CNC2, CNC3, CNC4]}
+      - {name: 去毛刺/返修工, count: 1, stations: [DEB1, INS1]}
+      - {name: 仓管员, count: 1, stations: [ASRS1]}

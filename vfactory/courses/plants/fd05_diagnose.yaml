@@ -1,0 +1,134 @@
+version: 2
+
+plant:
+  name: 某小型铸造厂·排故
+  product: 球铁铸件
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [96, 26]
+
+areas:
+- {name: 熔炼区, x: [0, 14], color: '#F4E3D7'}
+- {name: 造型区, x: [14, 60], color: '#EDE6DA'}
+- {name: 清理区, x: [60, 84], color: '#E6E9EC'}
+- {name: 仓储区, x: [84, 96], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 砂型下芯
+  pos: [5, 8]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(52)
+- id: B0
+  type: buffer
+  name: 待造型
+  pos: [9.5, 8]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 60
+- id: MOLD
+  type: processor
+  name: 造型机
+  pos: [15, 8]
+  size: [6, 4]
+  node: [480, 160]
+  params: {time: 'normal(44,2)', run_kw: 30, idle_kw: 5}
+- id: POUR
+  type: processor
+  name: 浇注
+  pos: [21, 8]
+  size: [4, 4]
+  node: [680, 160]
+  params:
+    time: normal(30,2)
+    run_kw: 8
+    idle_kw: 2
+    attrs:
+      temp: normal(1440,10)
+- id: COOL
+  type: conveyor
+  name: 冷却线
+  pos: [41.5, 8]
+  size: [35, 2.5]
+  node: [880, 160]
+  params: {length_m: 60, speed_mps: 0.025, pitch_m: 1, run_kw: 4, idle_kw: 1}
+- id: SHAKE
+  type: processor
+  name: 落砂
+  pos: [62, 8]
+  size: [4, 4]
+  node: [1080, 160]
+  params:
+    time: normal(38,2)
+    run_kw: 15
+    idle_kw: 2
+    defects:
+    - {name: 冷隔, prob: '0.01 + 0.35*(item.get(''temp'',1440) < 1415)'}
+- id: B1
+  type: buffer
+  name: 待抛丸
+  pos: [67, 8]
+  size: [3, 3]
+  node: [1280, 160]
+  params:
+    capacity: 80
+- id: SHOT
+  type: batch
+  name: 吊钩抛丸机
+  pos: [71.5, 8]
+  size: [5, 5]
+  node: [1480, 160]
+  params: {batch: 12, time: '600', max_wait_min: 20, run_kw: 45, idle_kw: 4}
+- id: B2
+  type: buffer
+  name: 待打磨
+  pos: [76.5, 8]
+  size: [2.5, 2.5]
+  node: [1680, 160]
+  params:
+    capacity: 120
+- id: GRIND
+  type: processor
+  name: 清理打磨
+  pos: [80.5, 8]
+  size: [3, 3]
+  node: [1880, 160]
+  params: {time: 'normal(70,4)', capacity: 2, run_kw: 6, idle_kw: 1}
+- id: QC
+  type: inspect
+  name: 终检
+  pos: [80.5, 13]
+  size: [4, 4]
+  node: [2080, 160]
+  params: {time: '20', pod_pct: 92, false_pct: 1}
+- id: OUT
+  type: sink
+  name: 毛坯库
+  pos: [86.5, 13]
+  size: [5, 5]
+  node: [2280, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: MOLD, to_port: in}
+- {id: L3, from: MOLD, from_port: out, to: POUR, to_port: in}
+- {id: L4, from: POUR, from_port: out, to: COOL, to_port: in}
+- {id: L5, from: COOL, from_port: out, to: SHAKE, to_port: in}
+- {id: L6, from: SHAKE, from_port: out, to: B1, to_port: in}
+- {id: L7, from: B1, from_port: out, to: SHOT, to_port: in}
+- {id: L8, from: SHOT, from_port: out, to: B2, to_port: in}
+- {id: L9, from: B2, from_port: out, to: GRIND, to_port: in}
+- {id: L10, from: GRIND, from_port: out, to: QC, to_port: in}
+- {id: L11, from: QC, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []

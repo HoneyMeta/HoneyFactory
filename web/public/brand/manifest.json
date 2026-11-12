@@ -1,0 +1,672 @@
+{
+ "name": "HoneyFactory brand assets",
+ "generated": "2026-11-03",
+ "generator": "OpenAI gpt-image-2.5-sunburst / flare + PIL post-processing; prompts in docs/brand/prompts.md",
+ "notes": [
+  "Paths under /brand/ are served from web/public/brand (Vite public dir).",
+  "Use the -dark variant when html.dark is set; light backgrounds are #f9f7f4, dark #15181c (html.dark body).",
+  "@2x files are for high-DPI: <img srcset='x.png 1x, x@2x.webp 2x'> (hero/whatsnew @2x are WebP, empty-state @2x are PNG). welcome-hero@2x is upscaled from a 2304 px source.",
+  "Course covers have their own light background and work on either theme.",
+  "Entries whose path does not start with /brand/ are repo-relative (desktop/build, docs/brand, web/public/logo.png).",
+  "Mark sizes: <=32 px use the hand-pixelled simplified mark (logo-mark-32, favicon 16/32, tray, ico 16/24/32); >=48 px use the full mark. Mark fill #d99528 (small sizes #ce841e)."
+ ],
+ "assets": [
+  {
+   "path": "/brand/course-foundry.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 133020,
+   "purpose": "Course cover: Foundry Operations (Comprehensive) (course id foundry)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-machining.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 134359,
+   "purpose": "Course cover: Production Line Simulation and Optimization (Machining) (course id machining)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-plc-handling.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 134813,
+   "purpose": "PLC lesson group cover: c3 Material Handling and Storage (s09-s13)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-plc-line.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 135379,
+   "purpose": "PLC lesson group cover: c4 Interlocks and Full-Line Control (s14,s15)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-plc-logic.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 125094,
+   "purpose": "PLC lesson group cover: c1 Basic Logic (s01,s02,s03,s08)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-plc-sorting.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 126647,
+   "purpose": "PLC lesson group cover: c2 Sorting and Counting (s04-s07)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-plc.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 131438,
+   "purpose": "Course cover: PLC Control Fundamentals (course id plc_basics)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-factories-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 19931,
+   "purpose": "Empty state: no factories yet (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-factories-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 53982,
+   "purpose": "Empty state: no factories yet (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-factories.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 14413,
+   "purpose": "Empty state: no factories yet (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-factories@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 38036,
+   "purpose": "Empty state: no factories yet (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-homework-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 19253,
+   "purpose": "Empty state: no homework / assignments (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-homework-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 51978,
+   "purpose": "Empty state: no homework / assignments (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-homework.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 17489,
+   "purpose": "Empty state: no homework / assignments (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-homework@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 47455,
+   "purpose": "Empty state: no homework / assignments (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-offline-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 15415,
+   "purpose": "Empty state: offline / cannot reach server (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-offline-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 41226,
+   "purpose": "Empty state: offline / cannot reach server (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-offline.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 11743,
+   "purpose": "Empty state: offline / cannot reach server (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-offline@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 31336,
+   "purpose": "Empty state: offline / cannot reach server (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-search-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 15929,
+   "purpose": "Empty state: no search results (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-search-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 42437,
+   "purpose": "Empty state: no search results (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-search.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 12908,
+   "purpose": "Empty state: no search results (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-search@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 32304,
+   "purpose": "Empty state: no search results (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-submissions-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 13481,
+   "purpose": "Empty state: no submissions yet (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-submissions-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 35224,
+   "purpose": "Empty state: no submissions yet (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-submissions.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 11111,
+   "purpose": "Empty state: no submissions yet (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-submissions@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 29325,
+   "purpose": "Empty state: no submissions yet (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/favicon.ico",
+   "width": 48,
+   "height": 48,
+   "bytes": 4300,
+   "purpose": "Browser favicon (ico: 16/32 hand-pixelled + 48; png: 32 hand-pixelled)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/favicon.png",
+   "width": 32,
+   "height": 32,
+   "bytes": 1096,
+   "purpose": "Browser favicon (ico: 16/32 hand-pixelled + 48; png: 32 hand-pixelled)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/login-bg-dark.png",
+   "width": 900,
+   "height": 1100,
+   "bytes": 192130,
+   "purpose": "Login page left-side illustration; top ~45% empty for logo/title/bullets, scene in lower half. Background flat #15181c.",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/login-bg.png",
+   "width": 900,
+   "height": 1100,
+   "bytes": 190972,
+   "purpose": "Login page left-side illustration; top ~45% empty for logo/title/bullets, scene in lower half. Background flat #f9f7f4.",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-dark.png",
+   "width": 440,
+   "height": 96,
+   "bytes": 10599,
+   "purpose": "Wordmark (mark + HoneyFactory) for dark backgrounds, transparent; display at 220x48",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-light.png",
+   "width": 440,
+   "height": 96,
+   "bytes": 10683,
+   "purpose": "Wordmark (mark + HoneyFactory) for light backgrounds, transparent; display at 220x48",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-mark-128.png",
+   "width": 128,
+   "height": 128,
+   "bytes": 6859,
+   "purpose": "Brand mark (hexagon + factory + half gear), transparent",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-mark-32.png",
+   "width": 32,
+   "height": 32,
+   "bytes": 1096,
+   "purpose": "Brand mark (hexagon + factory + half gear), transparent",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-mark-64.png",
+   "width": 64,
+   "height": 64,
+   "bytes": 3427,
+   "purpose": "Brand mark (hexagon + factory + half gear), transparent",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/logo-mark.png",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 58623,
+   "purpose": "Brand mark (hexagon + factory + half gear), transparent",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/welcome-hero-dark.png",
+   "width": 1600,
+   "height": 360,
+   "bytes": 103527,
+   "purpose": "Welcome/start page banner; isometric line + mint digital-twin layer on the right, left ~40% empty for headline text. Background is flat #15181c.",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/welcome-hero-dark@2x.webp",
+   "width": 3200,
+   "height": 720,
+   "bytes": 96274,
+   "purpose": "Welcome/start page banner; isometric line + mint digital-twin layer on the right, left ~40% empty for headline text. Background is flat #15181c.",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/welcome-hero.png",
+   "width": 1600,
+   "height": 360,
+   "bytes": 104744,
+   "purpose": "Welcome/start page banner; isometric line + mint digital-twin layer on the right, left ~40% empty for headline text. Background is flat #f9f7f4.",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/welcome-hero@2x.webp",
+   "width": 3200,
+   "height": 720,
+   "bytes": 97568,
+   "purpose": "Welcome/start page banner; isometric line + mint digital-twin layer on the right, left ~40% empty for headline text. Background is flat #f9f7f4.",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/whatsnew-dark.png",
+   "width": 960,
+   "height": 240,
+   "bytes": 23056,
+   "purpose": "'What's new' dialog header; content right of centre, left ~40% empty for title. Background flat #15181c.",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/whatsnew-dark@2x.webp",
+   "width": 1920,
+   "height": 480,
+   "bytes": 20910,
+   "purpose": "'What's new' dialog header; content right of centre, left ~40% empty for title. Background flat #15181c.",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/whatsnew.png",
+   "width": 960,
+   "height": 240,
+   "bytes": 21293,
+   "purpose": "'What's new' dialog header; content right of centre, left ~40% empty for title. Background flat #f9f7f4.",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/whatsnew@2x.webp",
+   "width": 1920,
+   "height": 480,
+   "bytes": 20312,
+   "purpose": "'What's new' dialog header; content right of centre, left ~40% empty for title. Background flat #f9f7f4.",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "desktop/build/icon.ico",
+   "width": 256,
+   "height": 256,
+   "bytes": 28972,
+   "purpose": "Windows app icon; frames 16,24,32 hand-pixelled, 48-256 full mark",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/icon.png",
+   "width": 512,
+   "height": 512,
+   "bytes": 26095,
+   "purpose": "App icon 512 (electron-builder icon / BrowserWindow icon)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/icon-1024.png",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 58623,
+   "purpose": "App icon 1024 master",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/tray-16.png",
+   "width": 16,
+   "height": 16,
+   "bytes": 552,
+   "purpose": "Tray icon for LIGHT taskbars (deeper amber), hand-pixelled",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/tray-32.png",
+   "width": 32,
+   "height": 32,
+   "bytes": 1096,
+   "purpose": "Tray icon @2x for LIGHT taskbars, hand-pixelled reduced gear",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/tray-dark-16.png",
+   "width": 16,
+   "height": 16,
+   "bytes": 575,
+   "purpose": "Tray icon for DARK taskbars (brighter amber), hand-pixelled",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/tray-dark-32.png",
+   "width": 32,
+   "height": 32,
+   "bytes": 1109,
+   "purpose": "Tray icon @2x for DARK taskbars",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/installerSidebar.bmp",
+   "width": 164,
+   "height": 314,
+   "bytes": 154542,
+   "purpose": "NSIS welcome/finish sidebar (MUI_WELCOMEFINISHPAGE_BITMAP), 24-bit BMP",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/installerHeader.bmp",
+   "width": 150,
+   "height": 57,
+   "bytes": 25818,
+   "purpose": "NSIS page header (MUI_HEADERIMAGE_BITMAP), 24-bit BMP, white bg",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "desktop/build/splash.png",
+   "width": 640,
+   "height": 400,
+   "bytes": 104650,
+   "purpose": "Electron splash 640x400, light #f9f7f4; mark+name top-left, art y 160-300; bottom 90 px (y>310) clear for version + progress overlay; faint divider at y=310",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "web/public/logo.png",
+   "width": 256,
+   "height": 256,
+   "bytes": 13153,
+   "purpose": "Legacy /logo.png used by Layout/Login/Workbench/index.html; now the new mark at 256",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "docs/brand/logo-mark.svg",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 6002,
+   "purpose": "Vector master of the mark (hand-built geometry, 1024 viewBox)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "docs/brand/logo-mark-1024.png",
+   "width": 1024,
+   "height": 1024,
+   "bytes": 58623,
+   "purpose": "1024 PNG master of the mark",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/courses-hero-dark.png",
+   "width": 960,
+   "height": 240,
+   "bytes": 22804,
+   "purpose": "Courses page header banner; hexagon learning path leading to a small factory cell (CNC, PLC cabinet, conveyor) with a mint digital-twin layer, content on the right, left ~45% empty for title. Background flat #15181c.",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/courses-hero-dark@2x.webp",
+   "width": 1920,
+   "height": 480,
+   "bytes": 23362,
+   "purpose": "Courses page header banner; hexagon learning path leading to a small factory cell (CNC, PLC cabinet, conveyor) with a mint digital-twin layer, content on the right, left ~45% empty for title. Background flat #15181c.",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/courses-hero.png",
+   "width": 960,
+   "height": 240,
+   "bytes": 21697,
+   "purpose": "Courses page header banner; hexagon learning path leading to a small factory cell (CNC, PLC cabinet, conveyor) with a mint digital-twin layer, content on the right, left ~45% empty for title. Background flat #f9f7f4.",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/courses-hero@2x.webp",
+   "width": 1920,
+   "height": 480,
+   "bytes": 21978,
+   "purpose": "Courses page header banner; hexagon learning path leading to a small factory cell (CNC, PLC cabinet, conveyor) with a mint digital-twin layer, content on the right, left ~45% empty for title. Background flat #f9f7f4.",
+   "theme": "light",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/course-custom-quiz.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 123713,
+   "purpose": "Course cover for teacher-made courses: knowledge check / quiz (open textbook, floating tick-box hexagon cards, PLC module, gear)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-custom-line.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 130587,
+   "purpose": "Course cover for teacher-made courses: production-line task (two machines, buffer rack, mint gauge/target)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-custom-mes.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 125543,
+   "purpose": "Course cover for teacher-made courses: MES operations (shop-floor terminal, work-order board, AGV, tablet)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-custom-mixed.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 118954,
+   "purpose": "Course cover for teacher-made courses: generic / mixed (hexagon blocks stacked into a factory, pencil, ruler)",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-intro_factory.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 121420,
+   "purpose": "Course cover: Introduction to Factories and Equipment (course id intro_factory); a small machining line from raw blanks to finished-goods shelf, with a mint dotted path tracing one part",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-intro_io.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 132273,
+   "purpose": "Course cover: Sensors and Actuators (PLC Prerequisite) (course id intro_io); push-button station, belt conveyor with motor, photoelectric and proximity sensors, pneumatic pusher, PLC module, floating square-wave signals",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/course-intro_ops.png",
+   "width": 640,
+   "height": 360,
+   "bytes": 126937,
+   "purpose": "Course cover: Production Operations Fundamentals (course id intro_ops); three-station line with buffers, stopwatch, floating bar chart with a takt line and a gauge",
+   "theme": "any",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-courses-dark.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 13851,
+   "purpose": "Empty state: empty course library (transparent)",
+   "theme": "dark",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-courses-dark@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 38867,
+   "purpose": "Empty state: empty course library (transparent)",
+   "theme": "dark",
+   "scale": "2x"
+  },
+  {
+   "path": "/brand/empty-courses.png",
+   "width": 480,
+   "height": 320,
+   "bytes": 11047,
+   "purpose": "Empty state: empty course library (transparent)",
+   "theme": "light",
+   "scale": "1x"
+  },
+  {
+   "path": "/brand/empty-courses@2x.png",
+   "width": 960,
+   "height": 640,
+   "bytes": 29272,
+   "purpose": "Empty state: empty course library (transparent)",
+   "theme": "light",
+   "scale": "2x"
+  }
+ ]
+}

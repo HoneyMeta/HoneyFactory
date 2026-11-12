@@ -1,0 +1,73 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·多品种
+  product: HSG 壳体（A/B/C）
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [36, 14]
+
+areas:
+- {name: 收货区, x: [0, 10], color: '#F2EEE3'}
+- {name: 机加区, x: [10, 28], color: '#E3ECF2'}
+- {name: 仓储区, x: [28, 36], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 按订单投料
+  pos: [2, 5]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: '40'
+- id: B0
+  type: buffer
+  name: 待加工
+  pos: [7, 5]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 12
+- id: M1
+  type: processor
+  name: 1#柔性加工中心
+  pos: [14, 5]
+  size: [4, 3.4]
+  node: [480, 160]
+  params: {time: 'normal(50,2)', setup_min: 45, run_kw: 14, idle_kw: 2}
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [29, 5]
+  size: [4, 4]
+  node: [680, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: M1, to_port: in}
+- {id: L3, from: M1, from_port: out, to: OUT, to_port: in}
+
+groups: []
+
+notes: []
+
+plan:
+  shifts:
+  - {name: 早班, start: '07:00', end: '15:00'}
+  - {name: 中班, start: '15:00', end: '23:00'}
+  products:
+  - {code: HSG-A, name: 壳体 A, cycle_factor: 1.0}
+  - {code: HSG-B, name: 壳体 B, cycle_factor: 1.0}
+  - {code: HSG-C, name: 壳体 C, cycle_factor: 1.0}
+  orders:
+  - {code: SO-01, product: HSG-A, qty: 130, due: '2026-11-02 21:00'}
+  - {code: SO-02, product: HSG-B, qty: 130, due: '2026-11-02 21:00'}
+  - {code: SO-03, product: HSG-A, qty: 130, due: '2026-11-02 21:00'}
+  - {code: SO-04, product: HSG-C, qty: 130, due: '2026-11-02 21:00'}
+  - {code: SO-05, product: HSG-B, qty: 130, due: '2026-11-02 21:00'}
+  - {code: SO-06, product: HSG-C, qty: 130, due: '2026-11-02 21:00'}

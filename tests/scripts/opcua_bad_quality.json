@@ -1,0 +1,26 @@
+{
+  "name": "OPC UA 坏质量（通讯故障 bad）",
+  "plant": "foundry-housing",
+  "speed": 30,
+  "steps": [
+    {
+      "kind": "comm_fault",
+      "protocol": "opcua",
+      "mode": "bad"
+    },
+    {
+      "kind": "assert",
+      "via": "opcua",
+      "station": "CNC1",
+      "tag": "Monitoring/Feed/Override",
+      "expect_bad": true,
+      "within": 6,
+      "name": "OPC UA 读到坏质量"
+    },
+    {
+      "kind": "comm_fault",
+      "protocol": "opcua",
+      "mode": ""
+    }
+  ]
+}

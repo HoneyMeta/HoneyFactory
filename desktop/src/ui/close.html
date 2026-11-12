@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>关闭蜂元虚拟工厂</title>
+<style>
+  /* 5.0.1 只有浅色（和主界面、蜂元 MES 同一套颜色） */
+  :root { --bg: #ffffff; --fg: #0f1b2d; --muted: #44536a; --line: #e2e8f0; --card: #f7f9fc; --accent: #1463d6; --accent-bg: #e8f0fd; --btn: #1463d6; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font-family: "HarmonyOS Sans SC", "Microsoft YaHei UI", "Segoe UI", sans-serif; user-select: none; }
+  .wrap { padding: 20px 22px 16px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+  h3 { margin: 0 0 4px; font-size: 16px; }
+  .sub { margin: 0 0 14px; color: var(--muted); font-size: 12.5px; }
+  .opt { display: flex; gap: 12px; align-items: flex-start; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; cursor: pointer; background: var(--card); }
+  .opt:hover, .opt:focus { border-color: var(--accent); outline: none; }
+  .opt.on { border-color: var(--accent); background: var(--accent-bg); }
+  .opt b { display: block; font-size: 13.5px; margin-bottom: 2px; }
+  .opt span { font-size: 12px; color: var(--muted); }
+  .dot { flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); margin-top: 2px; box-sizing: border-box; }
+  .opt.on .dot { border: 4px solid var(--accent); }
+  .foot { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+  label { font-size: 12.5px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .grow { flex: 1; }
+  button { font: inherit; font-size: 13px; padding: 6px 16px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+  button.primary { background: var(--btn); border-color: var(--btn); color: #fff; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h3>关闭主窗口</h3>
+  <p class="sub">本机工厂和待交作业由后台的本地服务负责，关掉窗口后要怎么办？</p>
+  <div class="opt on" id="oTray" tabindex="0" data-v="tray"><i class="dot"></i><div><b>最小化到托盘</b><span>继续在后台运行（离线交的作业联网后照样自动补交），从右下角托盘图标打开。</span></div></div>
+  <div class="opt" id="oQuit" tabindex="0" data-v="quit"><i class="dot"></i><div><b>退出</b><span>关闭窗口并停止本地服务。</span></div></div>
+  <div class="foot">
+    <label><input type="checkbox" id="remember"> 记住我的选择（可在 设置 里改）</label>
+    <span class="grow"></span>
+    <button id="bCancel">取消</button>
+    <button id="bOk" class="primary">确定</button>
+  </div>
+</div>
+<script>
+  let v = 'tray';
+  const opts = [...document.querySelectorAll('.opt')];
+  const pick = (el) => { v = el.dataset.v; opts.forEach((o) => o.classList.toggle('on', o === el)); };
+  opts.forEach((o) => { o.onclick = () => pick(o); o.ondblclick = () => done(); o.onkeydown = (e) => { if (e.key === ' ') pick(o); }; });
+  const done = () => window.vfUi.send('close-choice', { choice: v, remember: document.getElementById('remember').checked });
+  document.getElementById('bOk').onclick = done;
+  document.getElementById('bCancel').onclick = () => window.vfUi.send('close-choice', { choice: 'cancel' });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.vfUi.send('close-choice', { choice: 'cancel' });
+    if (e.key === 'Enter') done();
+  });
+  document.getElementById('bOk').focus();
+</script>
+</body>
+</html>

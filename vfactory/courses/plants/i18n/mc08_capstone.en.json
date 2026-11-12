@@ -1,0 +1,22 @@
+{
+ "某精密机加厂·机加车间": "Precision Machining Plant · Machining Workshop",
+ "HSG-200 壳体": "HSG-200 Housing",
+ "收货区": "Receiving Area",
+ "机加区": "Machining Area",
+ "检测区": "Inspection Area",
+ "仓储区": "Storage Area",
+ "毛坯到货": "Raw Casting Receipt",
+ "气孔": "Gas Porosity",
+ "收货暂存": "Receiving Buffer",
+ "叉车": "Forklift",
+ "线边库": "Line-Side Inventory",
+ "车削操作工": "Lathe Operator",
+ "1#数控车床": "#1 CNC Lathe",
+ "车铣之间": "Between Turning and Milling",
+ "1#加工中心": "#1 Machining Center",
+ "毛刺": "Burr",
+ "待检": "Awaiting Inspection",
+ "在线检测": "In-Line Inspection",
+ "返修台": "Rework Station",
+ "成品库": "Finished Goods Warehouse"
+}

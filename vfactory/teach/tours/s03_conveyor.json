@@ -1,0 +1,104 @@
+{
+  "id": "s03_conveyor",
+  "title": "跟着做：传送带启停与急停",
+  "kind": "cell",
+  "outro": "急停和停止的区别：急停拍下后会一直保持，复位以后设备也不能自己转，必须重新按启动。下一课「定时放料与工位停留」开始用定时器。",
+  "steps": [
+    {
+      "id": "read",
+      "title": "这一课要做什么",
+      "do": "输送带 C1 用 启动 / 停止 / **急停** 控制，运行灯和停止灯要跟着亮灭。\n**做对了是这样**：按启动输送带转、运行灯亮、停止灯灭；拍急停马上停；急停复位后不能自己转，要再按启动。",
+      "why": "急停和停止按钮一样是**常闭**：没拍下时 ESTOP = 1。",
+      "target": [{"sel": ".task-panel .book-md"}, {"sel": ".task-panel"}],
+      "goto": {"teach_tab": "task"},
+      "manual": true
+    },
+    {
+      "id": "open-editor",
+      "title": "打开 PLC 编程窗口",
+      "do": "点左边竖排图标里的 **PLC**，再点「**编程**」；或者点「带我去」。",
+      "target": [{"sel": "[data-act=\"open-editor\"]"}, {"panel_btn": "plc-editor"}],
+      "goto": {"panel": "plc-editor-float"},
+      "done": {"panel": "plc-editor-float"}
+    },
+    {
+      "id": "run",
+      "title": "梯级 1：启停 + 急停",
+      "do": "常开 `START` 并联常开 `C1_FWD`（自锁）→ 常开 `STOP` → 常开 `ESTOP` → 线圈 `C1_FWD`。",
+      "why": "STOP 和 ESTOP 都是常闭输入，所以都用常开触点串在里面：任何一个按下，梯级就断、自锁也断。",
+      "target": {"sel": ".lde-tools [data-tool=\"NO\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"all": [{"ld_par": ["START", "C1_FWD"]}, {"ld": {"var": "STOP", "t": "NO"}}, {"ld": {"var": "ESTOP", "t": "NO"}}, {"ld_coil": "C1_FWD"}]},
+      "wrong": [{"when": {"any": [{"ld": {"var": "STOP", "t": "NC"}}, {"ld": {"var": "ESTOP", "t": "NC"}}]}, "msg": "STOP / ESTOP 是常闭按钮（没按时 = 1），要用常开触点。用常闭触点的话梯级永远不通。"}],
+      "hints": [{"after": 45, "text": "空梯级下面有「插入示例：启停自锁」，会按 I/O 表放好启动、停止、急停（再检查一下线圈是不是 C1_FWD）。"}]
+    },
+    {
+      "id": "lamps",
+      "title": "运行灯和停止灯",
+      "do": "加两条梯级：常开 `C1_FWD` → 线圈 `LAMP_RUN`；**常闭** `C1_FWD` → 线圈 `LAMP_STOP`（不转的时候停止灯亮）。",
+      "target": {"sel": ".lde-tools [data-tool=\"RUNG\"]"},
+      "goto": {"panel": "plc-editor-float", "plc_tab": "prog"},
+      "done": {"all": [{"ld_coil": "LAMP_RUN"}, {"ld_coil": "LAMP_STOP"}]}
+    },
+    {
+      "id": "download",
+      "title": "下载到 PLC",
+      "do": "点编程窗口工具栏上的「**下载**」（带向下箭头的按钮）。",
+      "target": {"sel": ".pw-bar .dl"},
+      "goto": {"panel": "plc-editor-float"},
+      "done": {"all": [{"downloaded": true}, {"plc": "RUN"}]}
+    },
+    {
+      "id": "start",
+      "title": "按「启动」",
+      "do": "按一下「**启动**」：输送带转、运行灯亮、停止灯灭。",
+      "target": {"tour": "btn-START"},
+      "goto": {"console": true},
+      "done": {"check": "start_ok"},
+      "wrong": [{"when": {"check_fail": "start_ok"}, "msg": "按了启动输送带没转，看日志里的「诊断」。"}]
+    },
+    {
+      "id": "estop",
+      "title": "拍「急停」，再复位",
+      "do": "输送带转着时点一下红色的「**急停**」：马上停。急停会一直保持（按钮变成「复位」），**再点一下**才复位——复位后输送带不能自己转。",
+      "why": "急停复位后自己转起来很危险。急停断开了自锁，所以复位后要重新按启动。",
+      "target": {"tour": "btn-ESTOP"},
+      "goto": {"console": true},
+      "done": {"check": "estop_ok"},
+      "hints": [{"after": 30, "text": "急停要拍两次：第一次拍下，第二次复位。"}]
+    },
+    {
+      "id": "restart",
+      "title": "复位后重新启动",
+      "do": "急停复位以后按「**启动**」，输送带重新转。",
+      "target": {"tour": "btn-START"},
+      "goto": {"console": true},
+      "done": {"check": "restart_ok"}
+    },
+    {
+      "id": "stop",
+      "title": "按「停止」",
+      "do": "按一下「**停止**」：输送带停、停止灯亮，松开后也不能自己再转。",
+      "target": {"tour": "btn-STOP"},
+      "goto": {"console": true},
+      "done": {"check": "stop_ok"}
+    },
+    {
+      "id": "run-long",
+      "title": "让它多转一会儿",
+      "do": "再按启动，让输送带转 1 分钟左右：线尾出口要收到至少 6 件（检查表里「送达件数」会显示当前件数）。",
+      "target": {"sel": ".task-panel [data-tour=\"checklist\"]"},
+      "goto": {"teach_tab": "goals"},
+      "done": {"checks_all": true},
+      "hints": [{"after": 90, "text": "等不及的话点检查表上的「自动测试预检」，系统会按评分标准把整套测试跑一遍（几秒钟）。"}]
+    },
+    {
+      "id": "submit",
+      "title": "提交评分",
+      "do": "点绿色的「**提交评分**」。",
+      "target": [{"sel": "[data-act=\"checklist-submit\"]"}, {"sel": "[data-k=\"submit-score\"]"}],
+      "goto": {"teach_tab": "goals"},
+      "done": {"submitted": true}
+    }
+  ]
+}

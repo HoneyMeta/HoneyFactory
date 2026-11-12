@@ -1,0 +1,143 @@
+# 控制单元演示：电机正反转互锁（按面板按钮操作）
+# 由 python -m vfactory.control.showcase --templates 生成：场景 s02_fwd_rev + 参考答案（程序在 PLC 块的 params.program，信号线接单元 I/O）
+version: 2
+
+plant:
+  name: 控制单元演示：电机正反转互锁（按面板按钮操作）
+  product: 实训零件
+  seed: 7
+  start: now
+  dt: 1.0
+  speed: 1
+  warmup_h: 0
+  floor: [22, 12]
+
+areas:
+- {name: 实训区, x: [0, 22], color: '#E3ECF2'}
+
+blocks:
+- id: CELL1
+  type: cell
+  name: 电机正反转互锁
+  pos: [11.0, 6.0]
+  size: [8, 4]
+  rot: 0
+  node: [300, 120]
+  params:
+    cell:
+      size: [8, 4]
+      components:
+      - id: M1
+        type: motor
+        pos: [-2.6, -1.0, 0]
+        rot: 0
+        label: 输送电机
+        params: {reversible: true, ramp: 0.8, kw: 1.5}
+      - id: C1
+        type: belt_conveyor
+        pos: [0.2, 0, 0]
+        rot: 0
+        size: [6.6, 0.6]
+        label: 输送带（由 M1 拖动）
+        params: {speed: 0.3, motor: M1}
+      - id: FWD
+        type: button
+        pos: [-3.6, 1.6, 0.95]
+        rot: 0
+        label: 正转
+        params:
+          color: green
+      - id: REV
+        type: button
+        pos: [-3.4, 1.6, 0.95]
+        rot: 0
+        label: 反转
+        params:
+          color: blue
+      - id: STOP
+        type: button
+        pos: [-3.2, 1.6, 0.95]
+        rot: 0
+        label: 停止
+        params: {color: red, nc: true}
+      - id: LAMP_FWD
+        type: lamp
+        pos: [-2.95, 1.6, 0.95]
+        rot: 0
+        label: 正转
+        params:
+          color: green
+      - id: LAMP_REV
+        type: lamp
+        pos: [-2.75, 1.6, 0.95]
+        rot: 0
+        label: 反转
+        params:
+          color: yellow
+      io:
+      - {name: M1_RUNNING, dir: in, type: BOOL, addr: '%I0.0', comp: M1, signal: running, comment: 输送电机 M1 运行反馈, contact: 'NO', idle: 0}
+      - {name: M1_OL_OK, dir: in, type: BOOL, addr: '%I0.1', comp: M1, signal: ol_ok, comment: 输送电机 M1 热继电器正常（常闭）, contact: NC, idle: 1}
+      - {name: M1_FWD, dir: out, type: BOOL, addr: '%Q0.0', comp: M1, signal: fwd, comment: 输送电机 M1 正转接触器, idle: false}
+      - {name: M1_REV, dir: out, type: BOOL, addr: '%Q0.1', comp: M1, signal: rev, comment: 输送电机 M1 反转接触器, idle: false}
+      - {name: FWD, dir: in, type: BOOL, addr: '%I0.2', comp: FWD, signal: value, comment: 正转 FWD 触点, contact: 'NO', idle: 0}
+      - {name: REV, dir: in, type: BOOL, addr: '%I0.3', comp: REV, signal: value, comment: 反转 REV 触点, contact: 'NO', idle: 0}
+      - {name: STOP, dir: in, type: BOOL, addr: '%I0.4', comp: STOP, signal: value, comment: 停止 STOP 触点, contact: NC, idle: 1}
+      - {name: LAMP_FWD, dir: out, type: BOOL, addr: '%Q0.2', comp: LAMP_FWD, signal: 'on', comment: 正转 LAMP_FWD 点亮, idle: false}
+      - {name: LAMP_REV, dir: out, type: BOOL, addr: '%Q0.3', comp: LAMP_REV, signal: 'on', comment: 反转 LAMP_REV 点亮, idle: false}
+      metrics: [hard_reversals]
+- id: PLC1
+  type: plc
+  name: 电机正反转互锁 PLC
+  pos: [16.5, 4.5]
+  size: [1.2, 0.6]
+  rot: 0
+  params:
+    model: generic
+    scan_ms: 20
+    mode: internal
+    program: {id: reference, name: 参考答案, lang: ST, vars: [], source: 'PROGRAM FwdRev
+
+        (* 正转：启动并联自锁，串停止、热继电器和反转互锁 *)
+
+        M1_FWD := (FWD OR M1_FWD) AND STOP AND M1_OL_OK AND NOT M1_REV;
+
+        (* 反转：同样，串正转互锁 *)
+
+        M1_REV := (REV OR M1_REV) AND STOP AND M1_OL_OK AND NOT M1_FWD;
+
+        LAMP_FWD := M1_FWD;
+
+        LAMP_REV := M1_REV;
+
+        END_PROGRAM
+
+        '}
+    di: 5
+    do: 4
+    ai: 0
+    ao: 0
+    migrated_from: CELL1
+  node: [300, 290]
+
+links:
+- id: SIG1
+  kind: signal
+  from: CELL1
+  to: PLC1
+  signals:
+  - {point: M1_RUNNING, ch: I0.0, dir: in}
+  - {point: M1_OL_OK, ch: I0.1, dir: in}
+  - {point: M1_FWD, ch: Q0.0, dir: out}
+  - {point: M1_REV, ch: Q0.1, dir: out}
+  - {point: FWD, ch: I0.2, dir: in}
+  - {point: REV, ch: I0.3, dir: in}
+  - {point: STOP, ch: I0.4, dir: in}
+  - {point: LAMP_FWD, ch: Q0.2, dir: out}
+  - {point: LAMP_REV, ch: Q0.3, dir: out}
+  all_io: true
+
+groups: []
+
+notes: []
+
+scene: s02_fwd_rev

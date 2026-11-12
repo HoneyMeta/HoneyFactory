@@ -1,0 +1,1727 @@
+{
+ "note": "Chinese literals that intentionally stay as they are (see tests/i18n_check.py)",
+ "items": [
+  {
+   "file": "vfactory/analysis.py",
+   "text": "返修",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/analysis.py",
+   "text": "辅助对象",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/api2.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels) / separator parsing of user input"
+  },
+  {
+   "file": "vfactory/api2.py",
+   "text": "故障停机",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels) / separator parsing of user input"
+  },
+  {
+   "file": "vfactory/api2.py",
+   "text": "待机/等待",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels) / separator parsing of user input"
+  },
+  {
+   "file": "vfactory/api2.py",
+   "text": "换型/换刀",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels) / separator parsing of user input"
+  },
+  {
+   "file": "vfactory/api2.py",
+   "text": "计划停机",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels) / separator parsing of user input"
+  },
+  {
+   "file": "vfactory/apidocs.py",
+   "text": "令牌",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/assistant.py",
+   "text": "正在处理…",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/comm.py",
+   "text": "范围",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/comm.py",
+   "text": "格式",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备编码",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备类型",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "宽(m)",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "深(m)",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "朝向(°)",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "3D模型文件",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "理想节拍(s)",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "点位编码",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "含义",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "数据类型",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "读写",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "偏移",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "采集周期(ms)",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "报警下限",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "报警上限",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "正常范围",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "生产车间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "HFM-2000 水平分型造型线",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "GW-3T 中频感应炉",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "QH-520 喂丝球化站",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "SP-60 砂处理",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "LS-80 冷却输送线",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Q378 吊钩抛丸机",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "IRB-4600 去毛刺单元",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "EV-10 内窥检测",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "AS-600 立体库",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "AGV-1T 潜伏式",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "S7-1200 兼容",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "EG-200 工业网关",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "IES-24 工业交换机",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "（高级）$",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "{} 台 AGV 组成的车队（VDA 5050 状态见 README）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "有动作级信号（Actions/…）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备名称",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "型号",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "厂家",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "车间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "产线",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "工位",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "备注",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "蜂元虚拟工厂（仿真设备）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "公共",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "；",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "，{} 个寄存器（功能码 03，04 同址镜像）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "；状态码：",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "、",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "有报警 = 1（线圈 01，离散输入 02 同址镜像）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "线圈 01（离散输入 02 同址镜像）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "状态：Idle 待机、Executing 运行、Starved 缺料、Blocked 堵料、Stopped 停机、Setup 换型、Planned 计划停机",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "单位",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "用途",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "协议",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "地址",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "缩放",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "（协议服务未开：在客户端设置或服务器上打开）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "ns={};s={}/<通道>.<控制器>.<地址>，例如 ns={};s={}/S7.PLC2.DB10.DBD4、ns={};s={}/CNC.M3.M3_ZZFZ",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "ns={};s={}/<设备编码>/<点位>，例如 ns={};s={}/CNC1/Monitoring/Spindle/Load",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "vfactory/{}/<边缘网关>/<PLC>/<地址>、vfactory/{}/jj/<机床号_拼音缩写> 等（以点表为准；个别主题不规整，有一台 PLC 的载荷是纯文本数值）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "vfactory/{}/<区域>/<设备编码>/<点位>，例如 vfactory/{}/machining/CNC1/Monitoring/Spindle/Load",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "端点",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "安全策略 None（无加密）；匿名登录",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "命名空间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "按 URI 解析命名空间序号，不要写死",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "NodeId 规则",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "字符串型 NodeId；数值点带 EngineeringUnits / EURange",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "时间戳",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "SourceTimestamp = 对外时间（仿真时钟或墙钟，见下）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "动作信号的 SourceTimestamp 是动作的精确时刻（毫秒）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "写入",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Write Value 属性；越界 BadOutOfRange、只读 BadUserAccessDenied",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "MQTT 3.1.1；匿名",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "可读写",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "只读",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "禁止（用户名随意，密码填 API 令牌）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "主题前缀",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "订阅 vfactory/<工厂>/# 可收到全部",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "点位主题",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "只在变化时发（report by exception），retain",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "载荷",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "ts 是对外时间（ISO 8601，带时区）；动作信号的 ts / sim_ts 精确到毫秒",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "<点位主题>/set，载荷 {\"value\": x} 或纯数值；回执 <点位主题>/set/ack",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "retain 的 /set 不执行",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "状态 / 报工",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "vfactory/{}/_status（心跳）、vfactory/{}/_mes/part（零件事件）、vfactory/{}/_mes/event（生产日志）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "扫码 / 报工网关，不受原始现场模式影响",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "VDA 5050 风格状态",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "每台设备一个从站（Unit ID），见点表 地址 = 从站:表:地址",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "地址约定",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "地址从 0 起（PDU 地址；4x 寄存器 40001 = 地址 0）；表 hr = 保持寄存器（功能码 03/06/16），coil = 线圈（01/05/15）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "保持寄存器同址镜像到输入寄存器（04），线圈镜像到离散输入（02）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "默认 {}，字序 {}；int16 点按 缩放 换算（工程值 = 原始值 × 缩放 + 偏移）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "运行状态是 int16 状态码；报警是线圈",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "电能表",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Unit 10：0–1 全厂功率 kW、2–3 全厂电能 kWh（float32），之后每个区域 4 个寄存器",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "全部",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "对外时间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "仿真时间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "墙钟",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "协议设置里可改；仿真可能快进，节拍分析请用仿真时间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备唯一编码（和协议地址、图纸块属性 CODE、三维节点名一致）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备名称 / 设备类型 / 型号 / 厂家",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "台账信息",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "车间 / 产线 / 工位",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "组织结构：车间 → 产线（区域）→ 工位（WS-设备编码）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备中心在工厂坐标系的位置：原点在厂房左下角，X 向右，Y 向上（与 layout.dxf 一致）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "宽(m) / 深(m)",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备外形：宽沿设备自身 X 方向，深沿设备自身 Y 方向（朝向为 0 时与工厂坐标轴一致）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备绕竖直轴的转角，逆时针为正（与 DXF 块插入角一致）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "交付包里的 glTF 二进制模型（米，Y 向上）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设计节拍（标准循环时间），算性能开动率用；空 = 不适用",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "点位唯一编码",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "属于哪台设备（对应设备表）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "含义 / 单位",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "点位的中文含义和工程单位",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "bool / int / float / string（按工程值）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "R 只读 / RW 可写（设定值）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "state 运行状态、alarm 报警、count 计数、power 功率、energy 电能、load 负载、temp 温度、quality 质量、action 动作信号（阀 / 到位 / 循环）、step 程序段号、param 设定参数、other 其它",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "OPC UA：完整 NodeId（ns=…;s=…）；MQTT：完整主题；Modbus：从站:表:地址（表 hr 保持寄存器 / coil 线圈，地址从 0 起）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "缩放 / 偏移",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "工程值 = 原始值 × 缩放 + 偏移（只有 Modbus 整数寄存器会用到）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "建议的采集（轮询 / 订阅采样）周期；0 = 变化即推送（MQTT）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "报警下限 / 报警上限",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "超出即报警；空 = 不设",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "正常工况范围（文字，如 0~85）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Modbus 寄存器编码、状态码对照等",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "点表",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "项目",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "值",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "说明",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "表",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "列",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "交付包",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "格式",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "蜂元交付包 点表格式 v1（docs/interface/点表格式.md）；MES 接入规范用同一格式",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "工厂",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "{}（{}）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "生成时间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "现场状态",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "原始现场：点表只有 点位编码 / 协议 / 地址 / 数据类型，含义、单位、设备待补全",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "已整理：点表完整",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "墙体 / 厂房外轮廓",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "区域（多边形 + 名称）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "通道",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "设备外形（块，属性 CODE / NAME / TYPE）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "输送线（块，属性同设备）",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "AGV 路径与站点",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "文字标注",
+   "kind": "untranslated",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "不是 GLB 文件",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "GLB 头不对（版本或长度）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "GLB 第一块不是 JSON",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "不是 glTF 2.0",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "# 交付包：{}（{}）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "生成时间 {}，蜂元虚拟工厂。格式：蜂元交付包 点表格式 v1（和蜂元智能 MES 接入规范一致）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "> **原始现场**：这是集成商刚调完、还没整理的现场。点表只有 点位编码 / 协议 / 地址 / 数据类型，含义、单位、所属设备需要接入方自己摸清（读值、看变化、对照设备清单和图纸）。地址命名是 PLC / 数控系统的原始地址和拼音缩写，个别 MQTT 主题不规整，有一台 PLC 的网关发的是纯文本数值（不是 JSON）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 文件",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| 文件 | 内容 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| README.md | 本说明 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| points.xlsx | 设备（{} 台）、点表（{} 行）、协议、说明 四张表 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| layout.dxf | 平面布置图（DXF R12，单位米），每类一层，设备是带属性的块 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| {} | 设备三维模型（glTF 2.0 二进制，米，Y 向上） |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| models/scene.glb | 整厂三维场景：每台设备一个节点，节点名 = 设备编码，extras 里有编码、名称、类型 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 坐标系",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 工厂坐标：原点在厂房左下角，X 向右，Y 向上，单位米。设备表的 X(m)/Y(m) 是设备中心；朝向(°) 逆时针为正。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- layout.dxf 和工厂坐标完全一致（$INSUNITS = 6 米）。设备块插入点 = 设备中心，插入角 = 朝向，块里画了一根短线指向设备自身 +X。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 三维（glTF，Y 向上）：glTF X = 工厂 X，glTF Y = 高度，glTF Z = −工厂 Y；朝向 a 对应绕 +Y 轴转 a。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 图层（layout.dxf）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "| 图层 | 内容 |",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "块属性：CODE（设备编码，可见）、NAME（设备名称）、TYPE（设备类型）。中文按 \\U+XXXX 转义（AutoCAD、ezdxf 都能识别）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 协议接入",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 端点：`{}`（安全策略 None，匿名）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "OPC UA|端点",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 命名空间：{}",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "OPC UA|命名空间",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- NodeId：{}",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "OPC UA|NodeId 规则",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 时间戳：SourceTimestamp = 对外时间；动作信号的 SourceTimestamp 是动作发生的精确时刻（毫秒）。数值点带 EngineeringUnits、EURange，支持 HistoryRead。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- Broker：`{}`，MQTT 3.1.1",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 点位主题：{}",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "MQTT|点位主题",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 载荷（JSON，retain，只在变化时发）：",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "  quality：good / bad（通讯故障时）；ts 按协议设置是仿真时间或墙钟；动作信号的 ts / sim_ts 精确到毫秒。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 写入：`<点位主题>/set`，载荷 `{\"value\": 60}` 或纯数值；回执 `<点位主题>/set/ack`（ok / error / code）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 心跳与报工：{}",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "MQTT|状态 / 报工",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- AGV：{}",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 端点：`{}`；每台设备一个从站（Unit ID），点表地址写成 `从站:表:地址`，例如 `11:hr:1000`、`11:coil:1000`。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Modbus TCP|端点",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- {}；保持寄存器同址镜像到输入寄存器（04），线圈镜像到离散输入（02）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Modbus TCP|地址约定",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- {}；多寄存器的类型和字序写在点表 备注 里（例如 `float32 ABCD，2 个寄存器`）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Modbus TCP|数据类型",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 运行状态 Common/State 是 int16 状态码：0 待机、1 运行、2 缺料、3 堵料、4 停机、5 换型、6 计划停机；报警是线圈（有报警 = 1）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "Modbus TCP|电能表",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 动作级信号（节拍分析）",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "有动作信号的设备：{}（点表里 用途 = action / step 的 {} 行）。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 加工中心：防护门关门指令 DoorCloseCmd、关到位 DoorClosed、开到位 DoorOpened；夹具电磁阀 ClampValve、夹紧到位 ClampExtended、松开到位 ClampRetracted；主轴 SpindleRun；程序段号 ProgramStep（10…60 = OP10…OP60，0 = 空闲）；循环 CycleOn（上升沿启动，下降沿结束）、CycleCount。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 造型线：射砂阀 FillValve、压实气缸 SqueezeValve / SqueezeExtended / SqueezeRetracted、推型气缸 PushValve / PushExtended / PushRetracted、段号 1–4。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 机器人单元：夹爪 GripperValve / GripperClosed / GripperOpened、工装夹紧 ClampValve / ClampExtended / ClampRetracted、RobotAtHome、段号 1–5。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 每个动作的用时 = 指令（阀）变化 → 到位传感器变化；设备另给 Actions/Last/<动作> 上次用时（秒）和 Actions/Last/Cycle 上次循环用时。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "- 只在变化时发；MQTT 每个变化单独一条，ts 是动作时刻（毫秒）；OPC UA 每个变化写一次，SourceTimestamp 是动作时刻。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "这座工厂没有带动作级信号的设备。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "## 点表格式",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "列说明见 points.xlsx 的\"说明\"表；完整规范见 docs/interface/点表格式.md。",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "原始现场模式已",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "打开：协议层改用集成商原始地址命名",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/delivery.py",
+   "text": "关闭：协议层恢复标准命名",
+   "kind": "hard-coded",
+   "reason": "delivery package for HoneyMOM: sheet/column names, README and point descriptions are the import contract (HoneyMOM reads Chinese headers)"
+  },
+  {
+   "file": "vfactory/history.py",
+   "text": "熔炼区",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels), not display text"
+  },
+  {
+   "file": "vfactory/history.py",
+   "text": "故障停机",
+   "kind": "hard-coded",
+   "reason": "keys of the utilization table (module-level CLS_UTIL labels), not display text"
+  },
+  {
+   "file": "vfactory/netmodel.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/report_export.py",
+   "text": "在制品平均 {} 件",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/report_export.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/report_export.py",
+   "text": "（",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "工位",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "点位",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "说明",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "单位",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "类型",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "可写",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/server.py",
+   "text": "MQTT 主题",
+   "kind": "hard-coded",
+   "reason": "point table column keys (/api/p/{pid}/points, CSV): stable data contract read by the teaching MES and the frontend"
+  },
+  {
+   "file": "vfactory/store.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/store.py",
+   "text": "（",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/tutor.py",
+   "text": "［此处原有代码，助教不直接给代码］",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/__main__.py",
+   "text": "仿真时长h",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/__main__.py",
+   "text": "墙钟秒",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/control/showcase.py",
+   "text": "    RUN : BOOL := TRUE;     (* 演示：上电即运行 *)",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "对",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "是",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "正确",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "错",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "否",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "错误",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/rules.py",
+   "text": "作答",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese answers (true/false words) next to English ones"
+  },
+  {
+   "file": "vfactory/courses/scoring.py",
+   "text": "作答",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/flow/model.py",
+   "text": "返修",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/models/people.py",
+   "text": "班长",
+   "kind": "hard-coded",
+   "reason": "detects shift leads from role names (Chinese or English)"
+  },
+  {
+   "file": "vfactory/models/people.py",
+   "text": "组长",
+   "kind": "hard-coded",
+   "reason": "detects shift leads from role names (Chinese or English)"
+  },
+  {
+   "file": "vfactory/plc/demo.py",
+   "text": "件",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/plc/ld.py",
+   "text": "元素",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/plc/runtime.py",
+   "text": "真",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese TRUE/FALSE words in forced values"
+  },
+  {
+   "file": "vfactory/plc/runtime.py",
+   "text": "假",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese TRUE/FALSE words in forced values"
+  },
+  {
+   "file": "vfactory/protocols/modbus.py",
+   "text": "全厂",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/protocols/opcua.py",
+   "text": "故障",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/teach/myplants.py",
+   "text": "完整示范",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/teach/scenes.py",
+   "text": "#+\\s*(?:评分|Scoring|Grading)",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/teach/scenes.py",
+   "text": "[。；\\n]|(?<=[.;])\\s",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/tenancy/coursesync.py",
+   "text": "答案",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  },
+  {
+   "file": "vfactory/tenancy/ops.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfactory/tenancy/orgs.py",
+   "text": "，",
+   "kind": "hard-coded",
+   "reason": "splits user input / texts on Chinese punctuation (ASCII handled too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "熔炼区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "造型区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "清理区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "机加区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "检测区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "收货区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "仓储区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "物流",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "人员",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "区",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "工位",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "MQTT 主题",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "线圈",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "点位",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "类型",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "单位",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/collector.py",
+   "text": "说明",
+   "kind": "hard-coded",
+   "reason": "parses the Virtual Factory point table (Chinese column keys) and area names (English names are matched too)"
+  },
+  {
+   "file": "vfmes/db.py",
+   "text": "是",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese \"yes\" in imported booleans"
+  },
+  {
+   "file": "vfmes/edu.py",
+   "text": "稳定",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese yes/stable words in student answers"
+  },
+  {
+   "file": "vfmes/edu.py",
+   "text": "受控",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese yes/stable words in student answers"
+  },
+  {
+   "file": "vfmes/edu.py",
+   "text": "是",
+   "kind": "hard-coded",
+   "reason": "accepts Chinese yes/stable words in student answers"
+  },
+  {
+   "file": "vfmes/seed.py",
+   "text": "先点\"从虚拟工厂导入\"建设备和点表",
+   "kind": "data",
+   "reason": "demo data value without English entry (stays Chinese in English mode)"
+  },
+  {
+   "file": "vfmes/services/equipment.py",
+   "text": "停机",
+   "kind": "hard-coded",
+   "reason": "Chinese loss keys kept for compatibility; English aliases down/setup/idle/run next to them"
+  },
+  {
+   "file": "vfmes/services/equipment.py",
+   "text": "换型换刀",
+   "kind": "hard-coded",
+   "reason": "Chinese loss keys kept for compatibility; English aliases down/setup/idle/run next to them"
+  },
+  {
+   "file": "vfmes/services/equipment.py",
+   "text": "待机/等待",
+   "kind": "hard-coded",
+   "reason": "Chinese loss keys kept for compatibility; English aliases down/setup/idle/run next to them"
+  },
+  {
+   "file": "vfmes/services/equipment.py",
+   "text": "运行",
+   "kind": "hard-coded",
+   "reason": "Chinese loss keys kept for compatibility; English aliases down/setup/idle/run next to them"
+  },
+  {
+   "file": "vfmes/services/warehouse.py",
+   "text": "完成",
+   "kind": "hard-coded",
+   "reason": "matches Chinese input/stored values (keywords, regex, comparisons, dict keys) or a data contract"
+  }
+ ]
+}

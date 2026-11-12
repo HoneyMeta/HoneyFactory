@@ -1,0 +1,69 @@
+# 虚拟工厂配置：参照某汽车零部件企业的转向器壳体（球墨铸铁）"铸造 + 机加 + 去毛刺 + 内窥检测 + 立库"流程。
+# 坐标单位 m：x 沿厂房长度方向，y 为进深方向；size = [长, 宽]。改这份文件就能换成另一家工厂。
+plant:
+  name: 虚拟工厂 · 转向器壳体铸造机加示范线
+  product: SGH-450 商用车转向器壳体（QT450-10）
+  seed: 42
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 10
+  modbus_port: 5020
+  warmup_h: 3        # 启动时先快进 3 小时到稳态
+  floor: [150, 56]
+
+areas:
+  - {name: 熔炼区, x: [0, 22], color: '#F4E3D7'}
+  - {name: 造型区, x: [22, 70], color: '#EDE6DA'}
+  - {name: 清理区, x: [70, 84], color: '#E6E9EC'}
+  - {name: 机加区, x: [84, 112], color: '#E3ECF2'}
+  - {name: 检测区, x: [112, 128], color: '#E8E3F2'}
+  - {name: 仓储区, x: [128, 150], color: '#E3F0E6'}
+
+buffers:            # 工序之间的缓存（件）
+  shot_in: 240      # 落砂后待抛丸
+  raw: 300          # 毛坯暂存（抛丸后）
+  cnc_in: 40        # 机加线边库
+  deb_in: 24        # 待去毛刺
+  ins_in: 24        # 待检测
+  fg: 200           # 待入库成品
+
+stations:
+  - {id: FUR1, type: induction_furnace, name: 1#中频炉 3t, pos: [6, 9], size: [4, 4], capacity_kg: 3000, power_kw: 2000, modbus_unit: 3, mtbf_h: 300, mttr_min: 45}
+  - {id: FUR2, type: induction_furnace, name: 2#中频炉 3t, pos: [6, 18], size: [4, 4], capacity_kg: 3000, power_kw: 2000, modbus_unit: 4, mtbf_h: 300, mttr_min: 45, heel_kg: 1800}
+  - {id: TRT1, type: treatment, name: 球化孕育站, pos: [15, 13], size: [4, 3], ladles: 2, ladle_kg: 520, mtbf_h: 500, mttr_min: 20, pour_point: [27, 8]}
+  - {id: SAND1, type: sand_system, name: 砂处理系统, pos: [33, 20], size: [10, 6], modbus_unit: 1, mtbf_h: 200, mttr_min: 30}
+  - {id: MOLD1, type: molding_line, name: 水平分型造型线, pos: [40, 8], size: [26, 4], cycle_s: 40, castings_per_mold: 2, pour_kg: 45, casting_kg: 18.5, pour_buffer: 8, mtbf_h: 80, mttr_min: 25}
+  - {id: COOL1, type: cooling_line, name: 冷却输送线, pos: [52, 14], size: [32, 3], cool_min: 45, capacity_molds: 80}
+  - {id: SHOT1, type: shot_blast, name: 吊钩抛丸机, pos: [76, 12], size: [6, 6], modbus_unit: 2, mtbf_h: 150, mttr_min: 30}
+  - {id: CNC1, type: cnc, group: CNC, name: 1#加工中心, pos: [90, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC2, type: cnc, group: CNC, name: 2#加工中心, pos: [97, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC3, type: cnc, group: CNC, name: 3#加工中心, pos: [104, 10], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC4, type: cnc, group: CNC, name: 4#加工中心, pos: [90, 18], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC5, type: cnc, group: CNC, name: 5#加工中心, pos: [97, 18], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: CNC6, type: cnc, group: CNC, name: 6#加工中心, pos: [104, 18], size: [4, 3.4], mtbf_h: 120, mttr_min: 40}
+  - {id: DEB1, type: deburr_cell, name: 机器人去毛刺单元, pos: [116, 12], size: [5, 5], mtbf_h: 200, mttr_min: 20}
+  - {id: INS1, type: inspection, name: 自动内窥检测站, pos: [123, 12], size: [4, 4], mtbf_h: 300, mttr_min: 20}
+  - {id: ASRS1, type: warehouse, name: 成品立体仓库, pos: [139, 13], size: [12, 18], slots: 600, ship_every_h: 4}
+  - id: AGV
+    type: agv_fleet
+    name: AGV 车队
+    pos: [70, -8]
+    size: [1, 1]
+    count: 3
+    speed: 1.2
+    corridor_y: -3
+    nodes: {raw: [80, 4], cnc_in: [97, 3], fg: [126, 4], asrs: [133, 4], store: [80, -16], charger: [60, -12]}
+  - id: CREW
+    type: worker_crew
+    name: 生产班组
+    pos: [60, 30]
+    size: [1, 1]
+    roles:
+      - {name: 炉前工, count: 1, stations: [FUR1, FUR2]}
+      - {name: 球化浇包工, count: 1, stations: [TRT1]}
+      - {name: 浇注工, count: 1, stations: [MOLD1]}
+      - {name: 抛丸挂件工, count: 1, stations: [SHOT1]}
+      - {name: CNC 操作工, count: 3, stations: [CNC1, CNC2, CNC3, CNC4, CNC5, CNC6]}
+      - {name: 去毛刺/返修工, count: 1, stations: [DEB1, INS1]}
+      - {name: 仓管员, count: 1, stations: [ASRS1]}
+      - {name: 班长, count: 1, stations: [], home: [60, -6], patrol: [[10, -4], [45, -4], [80, -4], [110, -4], [130, -4], [110, 26], [60, 26], [20, 26]]}

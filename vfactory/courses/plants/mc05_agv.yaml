@@ -1,0 +1,106 @@
+version: 2
+
+plant:
+  name: 某精密机加厂·物流
+  product: HSG-200 壳体
+  seed: 7
+  start: '2026-11-02T07:00:00'
+  dt: 1.0
+  speed: 60
+  warmup_h: 0
+  floor: [80, 30]
+  layout:
+    paths:
+      nodes:
+      - {id: P1, x: 8, y: 3}
+      - {id: P2, x: 8, y: 26}
+      - {id: P3, x: 40, y: 26}
+      - {id: P4, x: 40, y: 3}
+      - {id: P5, x: 72, y: 26}
+      - {id: P6, x: 72, y: 3}
+      edges:
+      - {a: P1, b: P2}
+      - {a: P2, b: P3}
+      - {a: P3, b: P4}
+      - {a: P3, b: P5}
+      - {a: P5, b: P6}
+
+areas:
+- {name: 收货区, x: [0, 16], color: '#F2EEE3'}
+- {name: 机加区, x: [16, 60], color: '#E3ECF2'}
+- {name: 仓储区, x: [60, 80], color: '#E3F0E6'}
+
+blocks:
+- id: SRC
+  type: source
+  name: 毛坯到货
+  pos: [2, 6]
+  size: [4, 4]
+  node: [80, 160]
+  params:
+    interval: expo(55)
+- id: B0
+  type: buffer
+  name: 收货暂存
+  pos: [8, 6]
+  size: [3, 3]
+  node: [280, 160]
+  params:
+    capacity: 200
+- id: TR1
+  type: transporter
+  name: AGV 车队
+  pos: [20, 22]
+  size: [2, 2]
+  node: [480, 160]
+  params: {count: 1, speed_mps: 1.0, capacity: 2, load_s: 30}
+- id: B1
+  type: buffer
+  name: 线边库
+  pos: [36, 6]
+  size: [3, 3]
+  node: [680, 160]
+  params:
+    capacity: 20
+- id: M1
+  type: processor
+  name: 1#加工中心
+  pos: [42, 4]
+  size: [4, 3.4]
+  node: [880, 160]
+  params: {time: 'normal(100,5)', run_kw: 14, idle_kw: 2}
+- id: M2
+  type: processor
+  name: 2#加工中心
+  pos: [42, 10]
+  size: [4, 3.4]
+  node: [1080, 160]
+  params: {time: 'normal(100,5)', run_kw: 14, idle_kw: 2}
+- id: B2
+  type: buffer
+  name: 下线暂存
+  pos: [50, 6]
+  size: [3, 3]
+  node: [1280, 160]
+  params:
+    capacity: 20
+- id: OUT
+  type: sink
+  name: 成品库
+  pos: [72, 6]
+  size: [5, 5]
+  node: [1480, 160]
+  params: {}
+
+links:
+- {id: L1, from: SRC, from_port: out, to: B0, to_port: in}
+- {id: L2, from: B0, from_port: out, to: B1, to_port: in, via: TR1}
+- {id: L3, from: B1, from_port: out, to: M1, to_port: in}
+- {id: L4, from: B1, from_port: out, to: M2, to_port: in}
+- {id: L5, from: M1, from_port: out, to: B2, to_port: in}
+- {id: L6, from: M2, from_port: out, to: B2, to_port: in}
+- {id: L7, from: B2, from_port: out, to: OUT, to_port: in, via: TR1}
+
+groups: []
+
+notes: []
