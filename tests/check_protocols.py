@@ -29,7 +29,7 @@ TOKEN = ''
 def http(path, body=None, method=None):
     req = urllib.request.Request(f'http://{HOST}:{__import__("os").environ.get("VF_HTTP", "8800")}{path}', data=json.dumps(body).encode() if body is not None else None,
                                  headers={'Content-Type': 'application/json', **({'Authorization': 'Bearer ' + TOKEN} if TOKEN else {})}, method=method)
-    return json.loads(urllib.request.urlopen(req, timeout=10).read())
+    return json.loads(urllib.request.urlopen(req, timeout=60).read())   # slow CI runners: creating/copying a plant can take >10 s
 
 
 async def opcua():

@@ -56,7 +56,8 @@ try:
 except urllib.error.HTTPError as e:
     ok('甘特图参数校验', e.code == 400)
 e = call('GET', P + '/analysis/energy?hours=24')
-ok('能耗接口', e['kwh'] > 0 and e['cost'] > 0 and e['peak_kw'] > 0 and e['curve'], {k: e[k] for k in ('kwh', 'cost', 'peak_kw', 'co2_kg')})
+ok('能耗接口', e['kwh'] > 0 and e['cost'] > 0 and (e['peak_kw'] > 0 or len(e['curve']) <= 1) and e['curve'],  # 峰值需量只算满 15 分钟的时段
+   {k: e[k] for k in ('kwh', 'cost', 'peak_kw', 'co2_kg')})
 old = call('GET', P + '/energy/settings')
 new = call('PUT', P + '/energy/settings', {**old, 'tou': [], 'default_price': 1.0})
 e2 = call('GET', P + '/analysis/energy?hours=24')
